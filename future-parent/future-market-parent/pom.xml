@@ -8,6 +8,10 @@
   <artifactId>future-market-parent</artifactId>
   <packaging>pom</packaging>
   <description>行情工程</description>
+  
+  <properties>
+    <future-market-api.version>0.0.1-SNAPSHOT</future-market-api.version>
+  </properties>
   <modules>
   	<module>future-market-api</module>
   	<module>future-market-service</module>
