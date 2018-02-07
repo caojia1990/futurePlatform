@@ -2,18 +2,9 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>com.future.caojia</groupId>
-    <artifactId>future-parent</artifactId>
+    <artifactId>future-market-parent</artifactId>
     <version>0.0.1-SNAPSHOT</version>
   </parent>
-  <artifactId>future-market</artifactId>
-  <name>market</name>
+  <artifactId>future-market-service</artifactId>
   <description>行情服务</description>
-  
-  <dependencies>
-    <dependency>
-        <groupId>org.springframework.amqp</groupId>
-        <artifactId>spring-rabbit</artifactId>
-        <version>${spring-rabbit.version}</version>
-    </dependency>
-  </dependencies>
 </project>

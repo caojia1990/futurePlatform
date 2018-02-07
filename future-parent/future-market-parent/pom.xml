@@ -5,5 +5,11 @@
     <artifactId>future-parent</artifactId>
     <version>0.0.1-SNAPSHOT</version>
   </parent>
-  <artifactId>future-trade</artifactId>
+  <artifactId>future-market-parent</artifactId>
+  <packaging>pom</packaging>
+  <description>行情工程</description>
+  <modules>
+  	<module>future-market-api</module>
+  	<module>future-market-service</module>
+  </modules>
 </project>
