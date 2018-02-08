@@ -13,21 +13,23 @@
     <rabbit:connection-factory id="connectionFactory" host="localhost"/>
     <rabbit:admin connection-factory="connectionFactory" />
     
-    <!-- <rabbit:template id="amqpTemplate" connection-factory="connectionFactory"
-        exchange="myExchange" message-converter="messageConverter"/> -->
+    <rabbit:template id="marketTemplate" connection-factory="connectionFactory"
+        exchange="com.future.market" message-converter="messageConverter"/>
     
-    
-    <rabbit:queue id="marketQ" />
+    <!-- <rabbit:queue id="marketQ" />
     
     <rabbit:fanout-exchange name="com.caojia.test.exchange">
         <rabbit:bindings>
             <rabbit:binding queue="marketQ"></rabbit:binding>
         </rabbit:bindings>
-    </rabbit:fanout-exchange>
+    </rabbit:fanout-exchange> -->
+    
+    <rabbit:topic-exchange name="com.future.market">
+    </rabbit:topic-exchange>
     
     
     <rabbit:listener-container connection-factory="connectionFactory" message-converter="messageConverter">
-        <rabbit:listener ref="messageHandle" method="onMarketRsp" queues="marketQ"/>
+        <!-- <rabbit:listener ref="messageHandle" method="onMarketRsp" queues="marketQ"/> -->
     </rabbit:listener-container>
     
     <bean id="messageHandle" class="com.future.market.service.mq.MessageHandle" />

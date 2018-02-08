@@ -8,34 +8,24 @@ import org.hraink.futures.ctp.thostftdcuserapistruct.CThostFtdcSpecificInstrumen
 import org.hraink.futures.ctp.thostftdcuserapistruct.CThostFtdcUserLogoutField;
 import org.hraink.futures.jctp.md.JCTPMdApi;
 import org.hraink.futures.jctp.md.JCTPMdSpi;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 
-import com.caojia.trader.javafx.main.TraderMain;
+import com.future.market.api.vo.DepthMarketData;
 import com.future.market.service.Main;
 
 public class MyMdSpi extends JCTPMdSpi {
 	private JCTPMdApi mdApi;
-	
-	
-	//private FutureMarketService futureMarketService;
-	
-	
-	int volume = 0;
-	
-    double openInterest = 0;
+	private RabbitTemplate template;
     
 	public MyMdSpi(JCTPMdApi mdApi) {
 		this.mdApi = mdApi;
 	}
 	
-	public MyMdSpi(JCTPMdApi mdApi) {
+	public MyMdSpi(JCTPMdApi mdApi,RabbitTemplate template) {
 	    this.mdApi = mdApi;
+	    this.template = template;
 	    
 	}
-	
-	/*public MyMdSpi(JCTPMdApi mdApi,FutureMarketService futureMarketService) {
-		this.mdApi = mdApi;
-		this.futureMarketService = futureMarketService;
-	}*/
 	
 	@Override
 	public void onFrontConnected() {
@@ -58,44 +48,43 @@ public class MyMdSpi extends JCTPMdSpi {
 		//订阅
 		int subResult = -1;
 		
-		/*String s = FileUtil.read("C:\\合约test.txt");
-		String s1 = s.replaceAll("\r\n", "");
-		String[] ss = s1.split(",");*/
-		
-		subResult = mdApi.subscribeMarketData();
+		subResult = mdApi.subscribeMarketData("cu1804");
 		System.out.println(subResult == 0 ? "订阅成功" : "订阅失败");
 	}
 
 	@Override
 	public void onRtnDepthMarketData(CThostFtdcDepthMarketDataField pDepthMarketData) {
-		/*System.out.print(pDepthMarketData.getUpdateTime() + " " + pDepthMarketData.getUpdateMillisec() + "   ");
-		System.out.println(pDepthMarketData.getInstrumentID()+": "+JSON.toJSONString(pDepthMarketData));*/
 		
-		int volumeChange = 0;
-		double openInterestChange = 0;
+		DepthMarketData marketData = new DepthMarketData();
+		marketData.setAskPrice1(pDepthMarketData.getAskPrice1());
+		marketData.setAskVolume1(pDepthMarketData.getAskVolume1());
+		marketData.setAveragePrice(pDepthMarketData.getAveragePrice());
+		marketData.setBidPrice1(pDepthMarketData.getBidPrice1());
+		marketData.setBidVolume1(pDepthMarketData.getBidVolume1());
+		marketData.setClosePrice(pDepthMarketData.getClosePrice());
+		marketData.setHighestPrice(pDepthMarketData.getHighestPrice());
+		marketData.setInstrumentID(pDepthMarketData.getInstrumentID());
+		marketData.setLastPrice(pDepthMarketData.getLastPrice());
+		marketData.setLowerLimitPrice(pDepthMarketData.getLowerLimitPrice());
+		marketData.setLowestPrice(pDepthMarketData.getLowestPrice());
+		marketData.setOpenPrice(pDepthMarketData.getOpenPrice());
+		marketData.setOpenInterest(pDepthMarketData.getOpenInterest());
+		marketData.setPreOpenInterest(pDepthMarketData.getPreOpenInterest());
+		marketData.setPreClosePrice(pDepthMarketData.getPreClosePrice());
+		marketData.setPreSettlementPrice(pDepthMarketData.getPreSettlementPrice());
+		marketData.setSettlementPrice(pDepthMarketData.getSettlementPrice());
+		marketData.setTradingDate(pDepthMarketData.getTradingDay());
+		marketData.setUpperLimitPrice(pDepthMarketData.getUpperLimitPrice());
+		marketData.setVolume(pDepthMarketData.getVolume());
+		marketData.setUpdateTime(pDepthMarketData.getUpdateTime());
+		marketData.setUpdateMillisec(pDepthMarketData.getUpdateMillisec());
+		marketData.setExchangeID(pDepthMarketData.getExchangeID());
+		marketData.setExchangeInstId(pDepthMarketData.getExchangeInstID());
+		marketData.setTurnover(pDepthMarketData.getTurnover());
+		marketData.setCurrDelta(pDepthMarketData.getCurrDelta());
+		marketData.setPreDelta(pDepthMarketData.getPreDelta());
+		this.template.convertAndSend("com.future.market", marketData.getInstrumentID(), marketData);
 		
-		traderMain.onRtnDepthMarketData(pDepthMarketData);
-		
-		/*if(pDepthMarketData.getInstrumentID().equals("cu1707")){
-		    if(volume == 0){
-		        volume = pDepthMarketData.getVolume();
-		        openInterest = pDepthMarketData.getOpenInterest();
-		    }else {
-		        volumeChange = pDepthMarketData.getVolume() - volume;
-		        System.out.println("上次成交量："+volume);
-		        System.out.println("本次成交量："+pDepthMarketData.getVolume());
-		        System.out.println("成交量："+volumeChange);
-		        openInterestChange = pDepthMarketData.getOpenInterest() - openInterest;
-		        System.out.println("增仓量量："+volumeChange);
-		        volume = pDepthMarketData.getVolume();
-		        openInterest = pDepthMarketData.getOpenInterest();
-		    }
-		    //保存行情
-		    if(futureMarketService != null){
-		        System.out.println(JSON.toJSONString(pDepthMarketData));
-		        this.futureMarketService.saveFutureMarket(pDepthMarketData,volumeChange,(int)openInterestChange);
-		    }
-		}*/
 	}
 //	
 	@Override
@@ -103,7 +92,7 @@ public class MyMdSpi extends JCTPMdSpi {
 			boolean bIsLast) {
 		
 		System.out.println("订阅回报:" + bIsLast +" : "+ pRspInfo.getErrorID()+":"+pRspInfo.getErrorMsg());
-		System.out.println("InstrumentID:" + pSpecificInstrument.getInstrumentID());
+		//System.out.println("InstrumentID:" + pSpecificInstrument.getInstrumentID());
 	}
 	
 	@Override

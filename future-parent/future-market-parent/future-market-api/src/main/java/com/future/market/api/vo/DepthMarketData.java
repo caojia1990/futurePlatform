@@ -4,12 +4,31 @@ package com.future.market.api.vo;
  * 深度行情实体类
  * @author caojia
  */
+/**
+ * @author BHQH-CXYWB
+ *
+ */
 public class DepthMarketData {
     
     /**
      * 合约代码
      */
     private String instrumentID;
+    
+    /**
+     * 交易所代码
+     */
+    private String exchangeID;
+    
+    /**
+     * 合约在交易所的代码
+     */
+    private String exchangeInstId;
+    
+    /**
+     * 开盘价
+     */
+    private Double openPrice;
     
     /**
      * 最新价
@@ -20,6 +39,11 @@ public class DepthMarketData {
      * 总成交量
      */
     private Integer volume;
+    
+    /**
+     * 成交金额
+     */
+    private Double turnover;
     
     /**
      * 本次成交量
@@ -87,6 +111,11 @@ public class DepthMarketData {
     private Double preSettlementPrice;
     
     /**
+     * 昨持仓
+     */
+    private Double preOpenInterest;
+    
+    /**
      * 收盘价
      */
     private Double closePrice;
@@ -102,9 +131,19 @@ public class DepthMarketData {
     private Double averagePrice;
     
     /**
+     * 今虚实度
+     */
+    private Double currDelta;
+    
+    /**
+     * 昨虚实度
+     */
+    private Double preDelta;
+    
+    /**
      * 交易日
      */
-    private String tradeDate;
+    private String tradingDate;
     
     /**
      * 更新时间（秒级）
@@ -268,12 +307,12 @@ public class DepthMarketData {
         this.averagePrice = averagePrice;
     }
 
-    public String getTradeDate() {
-        return tradeDate;
+    public String getTradingDate() {
+        return tradingDate;
     }
 
-    public void setTradeDate(String tradeDate) {
-        this.tradeDate = tradeDate;
+    public void setTradingDate(String tradingDate) {
+        this.tradingDate = tradingDate;
     }
 
     public String getUpdateTime() {
@@ -291,19 +330,81 @@ public class DepthMarketData {
     public void setUpdateMillisec(int updateMillisec) {
         this.updateMillisec = updateMillisec;
     }
+    
+
+    public String getExchangeID() {
+        return exchangeID;
+    }
+
+    public void setExchangeID(String exchangeID) {
+        this.exchangeID = exchangeID;
+    }
+
+    public String getExchangeInstId() {
+        return exchangeInstId;
+    }
+
+    public void setExchangeInstId(String exchangeInstId) {
+        this.exchangeInstId = exchangeInstId;
+    }
+
+    public Double getOpenPrice() {
+        return openPrice;
+    }
+
+    public void setOpenPrice(Double openPrice) {
+        this.openPrice = openPrice;
+    }
+
+    public Double getTurnover() {
+        return turnover;
+    }
+
+    public void setTurnover(Double turnover) {
+        this.turnover = turnover;
+    }
+
+    public Double getCurrDelta() {
+        return currDelta;
+    }
+
+    public void setCurrDelta(Double currDelta) {
+        this.currDelta = currDelta;
+    }
+
+    public Double getPreDelta() {
+        return preDelta;
+    }
+
+    public void setPreDelta(Double preDelta) {
+        this.preDelta = preDelta;
+    }
+    
+    
+
+    public Double getPreOpenInterest() {
+        return preOpenInterest;
+    }
+
+    public void setPreOpenInterest(Double preOpenInterest) {
+        this.preOpenInterest = preOpenInterest;
+    }
 
     @Override
     public String toString() {
-        return "DepthMarketData [instrumentID=" + instrumentID + ", lastPrice=" + lastPrice + ", volume=" + volume
-                + ", volumeChange=" + volumeChange + ", openInterest=" + openInterest + ", openInterestChange="
-                + openInterestChange + ", bidPrice1=" + bidPrice1 + ", bidVolume1=" + bidVolume1 + ", askPrice1="
-                + askPrice1 + ", askVolume1=" + askVolume1 + ", highestPrice=" + highestPrice + ", lowestPrice="
-                + lowestPrice + ", upperLimitPrice=" + upperLimitPrice + ", lowerLimitPrice=" + lowerLimitPrice
-                + ", preClosePrice=" + preClosePrice + ", preSettlementPrice=" + preSettlementPrice + ", closePrice="
-                + closePrice + ", settlementPrice=" + settlementPrice + ", averagePrice=" + averagePrice
-                + ", tradeDate=" + tradeDate + ", updateTime=" + updateTime + ", updateMillisec=" + updateMillisec
-                + "]";
+        return "DepthMarketData [instrumentID=" + instrumentID + ", exchangeID=" + exchangeID + ", exchangeInstId="
+                + exchangeInstId + ", openPrice=" + openPrice + ", lastPrice=" + lastPrice + ", volume=" + volume
+                + ", turnover=" + turnover + ", volumeChange=" + volumeChange + ", openInterest=" + openInterest
+                + ", openInterestChange=" + openInterestChange + ", bidPrice1=" + bidPrice1 + ", bidVolume1="
+                + bidVolume1 + ", askPrice1=" + askPrice1 + ", askVolume1=" + askVolume1 + ", highestPrice="
+                + highestPrice + ", lowestPrice=" + lowestPrice + ", upperLimitPrice=" + upperLimitPrice
+                + ", lowerLimitPrice=" + lowerLimitPrice + ", preClosePrice=" + preClosePrice + ", preSettlementPrice="
+                + preSettlementPrice + ", preOpenInterest=" + preOpenInterest + ", closePrice=" + closePrice
+                + ", settlementPrice=" + settlementPrice + ", averagePrice=" + averagePrice + ", currDelta=" + currDelta
+                + ", preDelta=" + preDelta + ", tradingDate=" + tradingDate + ", updateTime=" + updateTime
+                + ", updateMillisec=" + updateMillisec + "]";
     }
 
+    
     
 }

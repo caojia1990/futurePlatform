@@ -6,6 +6,8 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import com.future.market.service.ctp.MyMdSpi;
+
 public class Main {
     
     public static String BROKER_ID = "9999";
@@ -19,20 +21,22 @@ public class Main {
     static JCTPMdSpi mdSpi;
 
     public static void main(String[] args) {
-        // TODO Auto-generated method stub
         AbstractApplicationContext ctx =
                 new ClassPathXmlApplicationContext("rabbit-product.xml");
             RabbitTemplate template = ctx.getBean(RabbitTemplate.class);
             
-            while(true){
-                try {
-                    Thread.sleep(10);
-                    template.convertAndSend("hello world!");
-                } catch (InterruptedException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }
-            }
+            mdApi = JCTPMdApi.createFtdcTraderApi("ctpdata/market/",false);
+            
+            mdSpi = new MyMdSpi(mdApi,template);
+            //注册spi
+            mdApi.registerSpi(mdSpi);
+            //注册前置机地址
+            mdApi.registerFront(marketFront);
+            mdApi.Init();
+            
+            mdApi.Join();
+            
+            mdApi.Release();
     }
 
 }
