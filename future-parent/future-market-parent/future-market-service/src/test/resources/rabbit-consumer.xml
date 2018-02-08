@@ -28,9 +28,9 @@
     </rabbit:topic-exchange>
     
     
-    <rabbit:listener-container connection-factory="connectionFactory" message-converter="messageConverter">
-        <!-- <rabbit:listener ref="messageHandle" method="onMarketRsp" queues="marketQ"/> -->
-    </rabbit:listener-container>
+<!--     <rabbit:listener-container connection-factory="connectionFactory" message-converter="messageConverter" 
+        <rabbit:listener ref="messageHandle" method="onMarketRsp" queues="marketQ"/>
+    </rabbit:listener-container> -->
     
     <bean id="messageHandle" class="com.future.market.service.mq.MessageHandle" />
        

@@ -1,6 +1,7 @@
 package com.future.market.service;
 
 import org.springframework.amqp.core.AnonymousQueue;
+import org.springframework.amqp.core.BindingBuilder;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.core.MessageListener;
 import org.springframework.amqp.core.Queue;
@@ -24,27 +25,20 @@ public class ConsumerTest {
                 new ClassPathXmlApplicationContext("rabbit-consumer.xml");
         
         CachingConnectionFactory connectionFactory = ctx.getBean(CachingConnectionFactory.class);
-        RabbitTemplate template = (RabbitTemplate) ctx.getBean("marketTemplate");
         TopicExchange topicExchange = (TopicExchange) ctx.getBean("com.future.market");
-        
         RabbitAdmin admin = ctx.getBean(RabbitAdmin.class);
-        
-        admin.declareExchange(topicExchange);
         Queue queue = new AnonymousQueue();
         admin.declareQueue(queue);
-        
-        template.setQueue(queue.getName());
-        template.setExchange("com.future.market");
-        template.setRoutingKey("cu1804");
+        admin.declareBinding(BindingBuilder.bind(queue).to(topicExchange).with("instrument.cu1804"));
         
         //设置监听
         SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
         container.setConnectionFactory(connectionFactory);
         container.setQueueNames(queue.getName());
-
         MessageListenerAdapter listenerAdapter = new MessageListenerAdapter(new MessageHandle(),
                 new Jackson2JsonMessageConverter());
         listenerAdapter.setDefaultListenerMethod("onMarketRsp");
+        container.setMessageListener(listenerAdapter);
         container.start();
         /*container.setMessageListener(listenerAdapter);
         SimpleMessageListenerContainer listenerContainer = ctx.getBean(SimpleMessageListenerContainer.class);

@@ -83,7 +83,7 @@ public class MyMdSpi extends JCTPMdSpi {
 		marketData.setTurnover(pDepthMarketData.getTurnover());
 		marketData.setCurrDelta(pDepthMarketData.getCurrDelta());
 		marketData.setPreDelta(pDepthMarketData.getPreDelta());
-		this.template.convertAndSend("com.future.market", marketData.getInstrumentID(), marketData);
+		this.template.convertAndSend("com.future.market", "instrument."+marketData.getInstrumentID(), marketData);
 		
 	}
 //	

@@ -2,6 +2,11 @@ package com.future.market.service;
 
 import org.hraink.futures.jctp.md.JCTPMdApi;
 import org.hraink.futures.jctp.md.JCTPMdSpi;
+import org.springframework.amqp.core.AnonymousQueue;
+import org.springframework.amqp.core.BindingBuilder;
+import org.springframework.amqp.core.Queue;
+import org.springframework.amqp.core.TopicExchange;
+import org.springframework.amqp.rabbit.core.RabbitAdmin;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -24,6 +29,7 @@ public class Main {
         AbstractApplicationContext ctx =
                 new ClassPathXmlApplicationContext("rabbit-product.xml");
             RabbitTemplate template = ctx.getBean(RabbitTemplate.class);
+            
             
             mdApi = JCTPMdApi.createFtdcTraderApi("ctpdata/market/",false);
             
