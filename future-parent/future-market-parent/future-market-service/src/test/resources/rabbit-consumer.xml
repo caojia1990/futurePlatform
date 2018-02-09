@@ -22,8 +22,8 @@
     <rabbit:queue id="marketQ"></rabbit:queue>
     
     <!-- 设置监听 -->
-    <rabbit:listener-container connection-factory="connectionFactory" message-converter="messageConverter" 
-        <rabbit:listener ref="messageHandle" queues="marketQ"/>
+    <rabbit:listener-container connection-factory="connectionFactory" message-converter="messageConverter">
+        <rabbit:listener ref="messageHandle" queues="marketQ" method="handleMessage"/>
     </rabbit:listener-container>
     
 <!--     <bean id="listenerContainer" class="org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer">
