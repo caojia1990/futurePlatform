@@ -12,5 +12,5 @@ public interface MessageReceive {
      * 行情接收接口
      * @param market
      */
-    public void onMarketRsp(DepthMarketData marketData);
+    public void handleMessage(DepthMarketData marketData);
 }

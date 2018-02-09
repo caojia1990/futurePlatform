@@ -6,7 +6,7 @@ import com.future.market.api.vo.DepthMarketData;
 public class MessageHandle implements MessageReceive{
 
     @Override
-    public void onMarketRsp(DepthMarketData marketData) {
+    public void handleMessage(DepthMarketData marketData) {
         
         System.out.println(marketData);
         
