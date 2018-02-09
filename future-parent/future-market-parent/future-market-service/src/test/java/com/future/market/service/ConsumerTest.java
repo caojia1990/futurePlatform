@@ -1,5 +1,9 @@
 package com.future.market.service;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
 import org.springframework.amqp.core.AnonymousQueue;
 import org.springframework.amqp.core.BindingBuilder;
 import org.springframework.amqp.core.Queue;
@@ -11,20 +15,23 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 public class ConsumerTest {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         
         AbstractApplicationContext ctx =
                 new ClassPathXmlApplicationContext("rabbit-consumer.xml");
         
         TopicExchange topicExchange = (TopicExchange) ctx.getBean("com.future.market");
+        Queue marketQ = ctx.getBean(Queue.class);
         RabbitAdmin admin = ctx.getBean(RabbitAdmin.class);
-        Queue queue = new AnonymousQueue();
-        admin.declareQueue(queue);
-        admin.declareBinding(BindingBuilder.bind(queue).to(topicExchange).with("instrument.cu1804"));
+        admin.declareBinding(BindingBuilder.bind(marketQ).to(topicExchange).with("instrument.cu1804"));
         
         //设置监听
-        SimpleMessageListenerContainer container = ctx.getBean(SimpleMessageListenerContainer.class);
-        container.addQueueNames(queue.getName());
+        
+        while(true){
+            BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+            String inputStr = br.readLine();
+            admin.declareBinding(BindingBuilder.bind(marketQ).to(topicExchange).with("instrument."+inputStr));
+        }
         
         /*container.setMessageListener(listenerAdapter);
         SimpleMessageListenerContainer listenerContainer = ctx.getBean(SimpleMessageListenerContainer.class);
