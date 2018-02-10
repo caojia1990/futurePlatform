@@ -37,5 +37,7 @@
   </build>
   <modules>
   	<module>future-market-parent</module>
+  	<module>future-instrument-parent</module>
+  	<module>future-member-parent</module>
   </modules>
 </project>
