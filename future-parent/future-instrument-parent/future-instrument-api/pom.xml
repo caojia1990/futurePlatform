@@ -2,13 +2,9 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>com.future.caojia</groupId>
-    <artifactId>future-parent</artifactId>
+    <artifactId>future-instrument-parent</artifactId>
     <version>0.0.1-SNAPSHOT</version>
   </parent>
-  <artifactId>future-instrument-parent</artifactId>
-  <packaging>pom</packaging>
-  <description>合约中心</description>
-  <modules>
-  	<module>future-instrument-api</module>
-  </modules>
+  <artifactId>future-instrument-api</artifactId>
+  <description>合约api</description>
 </project>
