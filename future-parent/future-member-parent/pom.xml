@@ -8,4 +8,7 @@
   <artifactId>future-member-parent</artifactId>
   <packaging>pom</packaging>
   <description>用户中心</description>
+  <modules>
+  	<module>future-member-api</module>
+  </modules>
 </project>

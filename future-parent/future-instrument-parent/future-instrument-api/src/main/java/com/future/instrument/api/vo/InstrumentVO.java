@@ -5,7 +5,7 @@ package com.future.instrument.api.vo;
  * 合约信息
  * @author caojia
  */
-public class InstrumentField implements java.io.Serializable{
+public class InstrumentVO implements java.io.Serializable{
     
     
     /**
@@ -62,6 +62,11 @@ public class InstrumentField implements java.io.Serializable{
     private double longMarginRatio;
     ///空头保证金率
     private double shortMarginRatio;
+    
+    /**
+     * 交易日
+     */
+    private String tradingDate;
     
     public String getInstrumentID() {
         return instrumentID;
@@ -212,6 +217,12 @@ public class InstrumentField implements java.io.Serializable{
     }
     public void setShortMarginRatio(double shortMarginRatio) {
         this.shortMarginRatio = shortMarginRatio;
+    }
+    public String getTradingDate() {
+        return tradingDate;
+    }
+    public void setTradingDate(String tradingDate) {
+        this.tradingDate = tradingDate;
     }
     
 
