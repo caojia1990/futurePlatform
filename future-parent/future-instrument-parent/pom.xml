@@ -8,7 +8,15 @@
   <artifactId>future-instrument-parent</artifactId>
   <packaging>pom</packaging>
   <description>合约中心</description>
+  
+  <properties>
+    <spring.version>5.0.3-SNAPSHOT</spring.version>
+    <future-instrument-api.version>0.0.1-SNAPSHOT</future-instrument-api.version>
+    <spring-data-redis.version>2.0.3.RELEASE</spring-data-redis.version>
+  </properties>
+  
   <modules>
   	<module>future-instrument-api</module>
+  	<module>future-instrument-service</module>
   </modules>
 </project>
