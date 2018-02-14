@@ -10,10 +10,23 @@
   <description>合约中心</description>
   
   <properties>
-    <spring.version>5.0.3-SNAPSHOT</spring.version>
+    <spring.version>5.0.3.RELEASE</spring.version>
     <future-instrument-api.version>0.0.1-SNAPSHOT</future-instrument-api.version>
     <spring-data-redis.version>2.0.3.RELEASE</spring-data-redis.version>
   </properties>
+  
+  <dependencies>
+    <dependency>
+        <artifactId>log4j</artifactId>
+        <groupId>log4j</groupId>
+        <version>1.2.16</version>
+    </dependency>
+    <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-log4j12</artifactId>
+        <version>1.7.25</version>
+    </dependency>
+  </dependencies>
   
   <modules>
   	<module>future-instrument-api</module>
