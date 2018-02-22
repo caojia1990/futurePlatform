@@ -11,6 +11,7 @@
   
   <properties>
     <future-market-api.version>0.0.1-SNAPSHOT</future-market-api.version>
+    <future-instrument-api.version>0.0.1-SNAPSHOT</future-instrument-api.version>
   </properties>
   <modules>
   	<module>future-market-api</module>

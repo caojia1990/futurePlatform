@@ -40,5 +40,6 @@
   	<module>future-instrument-parent</module>
   	<module>future-member-parent</module>
   	<module>future-account-parent</module>
+  	<module>future-trade-parent</module>
   </modules>
 </project>

@@ -10,20 +10,23 @@ import org.hraink.futures.jctp.md.JCTPMdApi;
 import org.hraink.futures.jctp.md.JCTPMdSpi;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 
+import com.future.instrument.api.service.InstrumentService;
 import com.future.market.api.vo.DepthMarketData;
 import com.future.market.service.Main;
 
 public class MyMdSpi extends JCTPMdSpi {
 	private JCTPMdApi mdApi;
 	private RabbitTemplate template;
+	private InstrumentService instrumentService;
     
 	public MyMdSpi(JCTPMdApi mdApi) {
 		this.mdApi = mdApi;
 	}
 	
-	public MyMdSpi(JCTPMdApi mdApi,RabbitTemplate template) {
+	public MyMdSpi(JCTPMdApi mdApi,RabbitTemplate template,InstrumentService instrumentService) {
 	    this.mdApi = mdApi;
 	    this.template = template;
+	    this.instrumentService = instrumentService;
 	    
 	}
 	
@@ -48,7 +51,10 @@ public class MyMdSpi extends JCTPMdSpi {
 		//订阅
 		int subResult = -1;
 		
-		subResult = mdApi.subscribeMarketData("cu1804","cu1805","cu1806");
+		String[] instruments = instrumentService.queryInstrumentName().toArray(new String[0]);
+		
+		
+		subResult = mdApi.subscribeMarketData(instruments);
 		System.out.println(subResult == 0 ? "订阅成功" : "订阅失败");
 	}
 

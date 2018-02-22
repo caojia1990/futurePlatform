@@ -11,6 +11,7 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import com.future.instrument.api.service.InstrumentService;
 import com.future.market.service.ctp.MyMdSpi;
 
 public class Main {
@@ -27,13 +28,13 @@ public class Main {
 
     public static void main(String[] args) {
         AbstractApplicationContext ctx =
-                new ClassPathXmlApplicationContext("rabbit-product.xml");
+                new ClassPathXmlApplicationContext("applicationContext.xml");
             RabbitTemplate template = ctx.getBean(RabbitTemplate.class);
-            
+            InstrumentService instrumentService = ctx.getBean(InstrumentService.class);
             
             mdApi = JCTPMdApi.createFtdcTraderApi("ctpdata/market/",false);
             
-            mdSpi = new MyMdSpi(mdApi,template);
+            mdSpi = new MyMdSpi(mdApi, template, instrumentService);
             //注册spi
             mdApi.registerSpi(mdSpi);
             //注册前置机地址

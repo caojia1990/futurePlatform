@@ -14,11 +14,25 @@
         <artifactId>future-market-api</artifactId>
         <version>${future-market-api.version}</version>
     </dependency>
+    
+    <dependency>
+        <groupId>com.future.caojia</groupId>
+        <artifactId>future-instrument-api</artifactId>
+        <version>${future-instrument-api.version}</version>
+    </dependency>
+    
     <dependency>
         <groupId>org.springframework.amqp</groupId>
         <artifactId>spring-rabbit</artifactId>
         <version>${spring-rabbit.version}</version>
     </dependency>
+    
+    <dependency>
+        <groupId>org.apache.commons</groupId>
+        <artifactId>commons-lang3</artifactId>
+        <version>3.7</version>
+    </dependency>
+
     <dependency>
         <artifactId>log4j</artifactId>
         <groupId>log4j</groupId>
