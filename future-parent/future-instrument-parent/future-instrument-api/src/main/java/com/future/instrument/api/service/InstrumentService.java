@@ -39,9 +39,28 @@ public interface InstrumentService {
     public List<String> queryInstrumentName(String tradingDate);
     
     /**
-     * 保存合约信息
+     * 保存合约信息到redis
      * @param instrumentVO
      */
     public void saveInstrument(InstrumentVO instrumentVO);
+    
+    /**
+     * 保存合约信息到数据库
+     * @param instrumentVO
+     */
+    public void saveInstrument(String tradingDate, InstrumentVO instrumentVO);
+    
+    /**
+     * 从redis中删除合约
+     */
+    public void removeInstrument();
+    
+    /**
+     * 从数据库中删除合约
+     * @param tradingDate
+     */
+    public void removeInstrument(String tradingDate);
+    
+    
 
 }

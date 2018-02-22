@@ -4,7 +4,7 @@ import javax.annotation.Resource;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
@@ -20,6 +20,8 @@ public class InstrumentServiceTest extends AbstractJUnit4SpringContextTests{
     @Resource(name="redisTemplate")
     private ValueOperations<String, Object> valueOperations;
     
+    @Resource(name="redisTemplate")
+    private HashOperations<String, String , InstrumentVO> hashOperations;
     
     @Test
     public void test(){
@@ -29,7 +31,8 @@ public class InstrumentServiceTest extends AbstractJUnit4SpringContextTests{
         instrumentVO.setExchangeID("SHEF");
         instrumentVO.setLongMarginRatio(0.00005);
         this.valueOperations.set("test", instrumentVO);
-
+        this.hashOperations.put("instrument", instrumentVO.getInstrumentID(), instrumentVO);
+        
     }
 
 }

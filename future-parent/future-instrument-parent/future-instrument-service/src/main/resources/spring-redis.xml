@@ -8,14 +8,16 @@
         p:host-name="localhost" p:port="6379" p:use-pool="true"/>
         
         
-        <bean id="stringRedisTemplate" class="org.springframework.data.redis.core.StringRedisTemplate" 
+        <bean id="redisTemplate" class="org.springframework.data.redis.core.StringRedisTemplate" 
                 p:connection-factory-ref="jedisConnectionFactory">
           <property name="keySerializer">  
               <bean class="org.springframework.data.redis.serializer.StringRedisSerializer" /> 
           </property>
           
           <property name="valueSerializer">  
-              <bean class="org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer" />
+              <bean id="jsonSerializer" class="org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer" >
+                <constructor-arg type="java.lang.Class" value="java.lang.Object" />
+              </bean>
           </property>
           
           <property name="hashKeySerializer">  
@@ -23,7 +25,9 @@
           </property>
           
           <property name="hashValueSerializer">  
-              <bean class="org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer" />  
+              <bean id="jsonSerializer" class="org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer" >
+                <constructor-arg type="java.lang.Class" value="java.lang.Object" />
+              </bean>
           </property>
         </bean>
     

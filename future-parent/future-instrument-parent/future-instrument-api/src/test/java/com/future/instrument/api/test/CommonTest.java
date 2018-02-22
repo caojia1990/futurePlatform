@@ -6,10 +6,11 @@ public class CommonTest {
     
     public static void main(String[] args) {
         
-        String exchange = ExchangeName.SHFE.toString();
-        if(exchange.equals("SHFE")){
+        if(ExchangeName.SHFE.toString().equals("SHFE")){
             System.out.println(ExchangeName.SHFE);
         }
+        
+        
     }
 
 }
