@@ -16,8 +16,10 @@ public class ReqOrderInsertVO implements Serializable{
     private static final long serialVersionUID = -7390751012439707057L;
 
     
-  ///请求编号
-    TThostFtdcRequestIDType RequestID;
+    /**
+     * 请求编号
+     */
+    private String RequestID;
     
     /**
      * 经纪公司代码
@@ -47,16 +49,17 @@ public class ReqOrderInsertVO implements Serializable{
     /**
      * 报单价格条件
      */
-    private char OrderPriceType;
+    private OrderPriceType orderPriceType;
     
     /**
      * 买卖方向
      */
-    TThostFtdcDirectionType Direction;
+    private Direction direction;
+    
     ///组合开平标志
-    TThostFtdcCombOffsetFlagType CombOffsetFlag;
+    private CombOffsetFlag combOffsetFlag;
     ///组合投机套保标志
-    TThostFtdcCombHedgeFlagType CombHedgeFlag;
+    private CombHedgeFlag combHedgeFlag;
     
     /**
      * 价格
@@ -71,7 +74,7 @@ public class ReqOrderInsertVO implements Serializable{
     /**
      * 有效期类型
      */
-    TThostFtdcTimeConditionType TimeCondition;
+    private TimeCondition timeCondition;
     
     /**
      * GTD 日期
@@ -101,7 +104,7 @@ public class ReqOrderInsertVO implements Serializable{
     TThostFtdcBoolType IsAutoSuspend;
     
     ///业务单元
-    TThostFtdcBusinessUnitTypeBusinessUnit;
+    TThostFtdcBusinessUnitType BusinessUnit;
     
 
 }
