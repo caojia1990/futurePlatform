@@ -10,7 +10,11 @@ public enum CombOffsetFlag {
     
     CloseToday("3", "平今"),
     
-    CloseYesterday("4", "平昨");
+    CloseYesterday("4", "平昨"),
+	
+	ForceOff("5", "强减"),
+	
+	LocalForceClose("6", "本地强平");
     
     final String code;
     

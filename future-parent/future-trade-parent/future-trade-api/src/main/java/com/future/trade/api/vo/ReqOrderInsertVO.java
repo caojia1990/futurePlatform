@@ -56,9 +56,13 @@ public class ReqOrderInsertVO implements Serializable{
      */
     private Direction direction;
     
-    ///组合开平标志
+    /**
+     * 组合开平标志
+     */
     private CombOffsetFlag combOffsetFlag;
-    ///组合投机套保标志
+    /**
+     * 组合投机套保标志
+     */
     private CombHedgeFlag combHedgeFlag;
     
     /**
@@ -84,7 +88,7 @@ public class ReqOrderInsertVO implements Serializable{
     /**
      * 成交量类型
      */
-    TThostFtdcVolumeConditionType VolumeCondition;
+    private VolumeCondition volumeCondition;
     
     /**
      * 最小成交量
