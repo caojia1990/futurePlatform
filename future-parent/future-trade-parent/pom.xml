@@ -8,6 +8,11 @@
   <artifactId>future-trade-parent</artifactId>
   <packaging>pom</packaging>
   <description>交易接口</description>
+  
+  <properties>
+    <future-trade-api.version>0.0.1-SNAPSHOT</future-trade-api.version>
+  </properties>
+  
   <modules>
   	<module>future-trade-api</module>
   	<module>future-trade-service</module>
