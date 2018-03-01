@@ -11,6 +11,8 @@
   
   <properties>
     <future-trade-api.version>0.0.1-SNAPSHOT</future-trade-api.version>
+    <log4j.version>1.2.16</log4j.version>
+    <slf4j-log4j12.version>1.7.25</slf4j-log4j12.version>
   </properties>
   
   <modules>

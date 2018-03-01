@@ -14,5 +14,16 @@
         <groupId>com.future.caojia</groupId>
         <version>${future-trade-api.version}</version>
     </dependency>
+    
+    <dependency>
+        <artifactId>log4j</artifactId>
+        <groupId>log4j</groupId>
+        <version>${log4j.version}</version>
+    </dependency>
+    <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-log4j12</artifactId>
+        <version>${slf4j-log4j12.version}</version>
+    </dependency>
   </dependencies>
 </project>

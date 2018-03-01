@@ -1,4 +1,4 @@
-package com.future.trade.service;
+package com.future.trade.service.impl;
 
 import com.future.trade.api.service.TradeService;
 import com.future.trade.api.vo.ReqOrderInsertVO;
