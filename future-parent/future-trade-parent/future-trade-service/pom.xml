@@ -2,14 +2,9 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>com.future.caojia</groupId>
-    <artifactId>future-parent</artifactId>
+    <artifactId>future-trade-parent</artifactId>
     <version>0.0.1-SNAPSHOT</version>
   </parent>
-  <artifactId>future-trade-parent</artifactId>
-  <packaging>pom</packaging>
-  <description>交易接口</description>
-  <modules>
-  	<module>future-trade-api</module>
-  	<module>future-trade-service</module>
-  </modules>
+  <artifactId>future-trade-service</artifactId>
+  <description>交易服务</description>
 </project>
