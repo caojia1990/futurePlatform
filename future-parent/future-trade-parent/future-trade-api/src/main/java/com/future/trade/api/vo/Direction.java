@@ -33,4 +33,13 @@ public enum Direction {
         return this.text;
     }
     
+    public static Direction ofCode(char code){
+        for(Direction direction : Direction.values()){
+          if(code == direction.getCode()){
+            return direction;
+          }
+        }
+        return null;  
+    }
+    
 }

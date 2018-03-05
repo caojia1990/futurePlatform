@@ -33,4 +33,13 @@ public enum CombOffsetFlag {
         return text;
     }
     
+    public static CombOffsetFlag ofCode(String code){
+        for(CombOffsetFlag combOffsetFlag : CombOffsetFlag.values()){
+          if(code.equals(combOffsetFlag.getCode())){
+            return combOffsetFlag;
+          }
+        }
+        return null;  
+    }
+    
 }

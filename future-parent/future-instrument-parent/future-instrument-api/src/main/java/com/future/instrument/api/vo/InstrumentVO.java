@@ -23,11 +23,11 @@ public class InstrumentVO implements java.io.Serializable{
     ///产品代码
     private String productID;
     ///产品类型
-    private String productClass;
+    private char productClass;
     ///交割年份
-    private String deliveryYear;
+    private int deliveryYear;
     ///交割月
-    private String deliveryMonth;
+    private int deliveryMonth;
     ///市价单最大下单量
     private int maxMarketOrderVolume;
     ///市价单最小下单量
@@ -98,22 +98,22 @@ public class InstrumentVO implements java.io.Serializable{
     public void setProductID(String productID) {
         this.productID = productID;
     }
-    public String getProductClass() {
+    public char getProductClass() {
         return productClass;
     }
-    public void setProductClass(String productClass) {
+    public void setProductClass(char productClass) {
         this.productClass = productClass;
     }
-    public String getDeliveryYear() {
+    public int getDeliveryYear() {
         return deliveryYear;
     }
-    public void setDeliveryYear(String deliveryYear) {
+    public void setDeliveryYear(int deliveryYear) {
         this.deliveryYear = deliveryYear;
     }
-    public String getDeliveryMonth() {
+    public int getDeliveryMonth() {
         return deliveryMonth;
     }
-    public void setDeliveryMonth(String deliveryMonth) {
+    public void setDeliveryMonth(int deliveryMonth) {
         this.deliveryMonth = deliveryMonth;
     }
     public int getMaxMarketOrderVolume() {

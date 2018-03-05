@@ -19,15 +19,25 @@ import org.hraink.futures.ctp.thostftdcuserapistruct.CThostFtdcSettlementInfoCon
 import org.hraink.futures.ctp.thostftdcuserapistruct.CThostFtdcTradeField;
 import org.hraink.futures.jctp.trader.JCTPTraderApi;
 import org.hraink.futures.jctp.trader.JCTPTraderSpi;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 
 import com.alibaba.fastjson.JSON;
-import com.caojia.trader.bean.InstrumentInfo;
-import com.caojia.trader.dao.CommonRedisDao;
-import com.caojia.trader.dao.InstrumentInfoRedisDaoImpl;
-import com.caojia.trader.javafx.main.TraderMain;
-import com.caojia.trader.util.SpringContextUtil;
-
-import javafx.application.Application;
+import com.future.instrument.api.service.InstrumentService;
+import com.future.instrument.api.vo.InstrumentCommissionRateVO;
+import com.future.instrument.api.vo.InstrumentVO;
+import com.future.trade.api.vo.CombHedgeFlag;
+import com.future.trade.api.vo.CombOffsetFlag;
+import com.future.trade.api.vo.ContingentCondition;
+import com.future.trade.api.vo.Direction;
+import com.future.trade.api.vo.ForceCloseReason;
+import com.future.trade.api.vo.OnRtnOrderVO;
+import com.future.trade.api.vo.OrderPriceType;
+import com.future.trade.api.vo.OrderStatus;
+import com.future.trade.api.vo.OrderSubmitStatus;
+import com.future.trade.api.vo.TimeCondition;
+import com.future.trade.api.vo.VolumeCondition;
+import com.future.trade.service.Main;
+import com.future.trade.service.util.SpringContextUtil;
 
 /**
  * Custom TraderSpi
@@ -40,7 +50,6 @@ public class MyTraderSpi extends JCTPTraderSpi {
     static Logger logger = Logger.getLogger(MyTraderSpi.class);
     
 	JCTPTraderApi traderApi;
-	private TraderMain traderMain;
 	int nRequestID = 0;
 	
 	//中证
@@ -48,27 +57,29 @@ public class MyTraderSpi extends JCTPTraderSpi {
 	String userId = "090985";
 	String password = "caojiactp";*/
 	
-	private InstrumentInfoRedisDaoImpl instrumentInfoRedisDao;
+	private InstrumentService instrumentService;
 	
-	public MyTraderSpi(JCTPTraderApi traderApi) {
+	private RabbitTemplate template;
+	
+	public MyTraderSpi(JCTPTraderApi traderApi, RabbitTemplate template) {
 		this.traderApi = traderApi;
+		this.template = template;
 	}
 	
-	public MyTraderSpi(JCTPTraderApi traderApi, TraderMain traderMain) {
+	public MyTraderSpi(JCTPTraderApi traderApi, Main main) {
 	    this.traderApi = traderApi;
-	    this.traderMain = traderMain;
 	}
 	public void onFrontConnected() {
 		System.out.println("前置机连接");
 		CThostFtdcReqUserLoginField userLoginField = new CThostFtdcReqUserLoginField();
 		
-		userLoginField.setBrokerID(TraderMain.BROKER_ID);
-		userLoginField.setUserID(TraderMain.USER_ID);
-		userLoginField.setPassword(TraderMain.PASSWORD);
+		userLoginField.setBrokerID(Main.BROKER_ID);
+		userLoginField.setUserID(Main.USER_ID);
+		userLoginField.setPassword(Main.PASSWORD);
 		
 		traderApi.reqUserLogin(userLoginField, 112);
 		
-		instrumentInfoRedisDao = (InstrumentInfoRedisDaoImpl) SpringContextUtil.getBean("instrumentInfoRedisDao");
+		instrumentService = (InstrumentService) SpringContextUtil.getBean("instrumentService");
 		
 	}
 	
@@ -86,16 +97,16 @@ public class MyTraderSpi extends JCTPTraderSpi {
 		
 		//查询持仓明细
 		CThostFtdcQryInvestorPositionDetailField positionField = new CThostFtdcQryInvestorPositionDetailField();
-		positionField.setBrokerID(TraderMain.BROKER_ID);
+		positionField.setBrokerID(Main.BROKER_ID);
 		positionField.setInstrumentID("cu1703");
-		positionField.setInvestorID(TraderMain.USER_ID);
+		positionField.setInvestorID(Main.USER_ID);
 		//traderApi.reqQryInvestorPositionDetail(positionField, ++nRequestID);
 		
 		
 		//确认结算单
 		CThostFtdcSettlementInfoConfirmField confirmField = new CThostFtdcSettlementInfoConfirmField();
-		confirmField.setBrokerID(TraderMain.BROKER_ID);
-		confirmField.setInvestorID(TraderMain.USER_ID);
+		confirmField.setBrokerID(Main.BROKER_ID);
+		confirmField.setInvestorID(Main.USER_ID);
 		traderApi.reqSettlementInfoConfirm(confirmField, ++nRequestID);
 		
 		//查询合约信息
@@ -104,17 +115,67 @@ public class MyTraderSpi extends JCTPTraderSpi {
 		
 		
 		//从redis中查询持仓信息
-		CommonRedisDao commonRedisDao = (CommonRedisDao) SpringContextUtil.getBean("commonRedisDao");
+		/*CommonRedisDao commonRedisDao = (CommonRedisDao) SpringContextUtil.getBean("commonRedisDao");
 		commonRedisDao.setValueByKey(TraderMain.BUY+"cu1803", "0");
-		commonRedisDao.setValueByKey(TraderMain.SELL+"cu1803", "0");
+		commonRedisDao.setValueByKey(TraderMain.SELL+"cu1803", "0");*/
 	}
 	
 	//报单回报
 	@Override
 	public void onRtnOrder(CThostFtdcOrderField pOrder) {
 		System.out.println(pOrder.getStatusMsg());
-		traderMain.onRtnOrder(pOrder);
 		
+		OnRtnOrderVO onRtnOrderVO = new OnRtnOrderVO();
+		onRtnOrderVO.setActiveTime(pOrder.getActiveTime());
+		onRtnOrderVO.setActiveTraderID(pOrder.getActiveTraderID());
+		onRtnOrderVO.setBusinessUnit(pOrder.getBusinessUnit());
+		onRtnOrderVO.setCancelTime(pOrder.getCancelTime());
+		onRtnOrderVO.setClearingPartID(pOrder.getClearingPartID());
+		onRtnOrderVO.setClientID(pOrder.getClientID());
+		onRtnOrderVO.setCombHedgeFlag(CombHedgeFlag.ofCode(pOrder.getCombHedgeFlag()));
+		onRtnOrderVO.setCombOffsetFlag(CombOffsetFlag.ofCode(pOrder.getCombOffsetFlag()));
+		onRtnOrderVO.setContingentCondition(ContingentCondition.ofCode(pOrder.getContingentCondition()));
+		onRtnOrderVO.setDirection(Direction.ofCode(pOrder.getDirection()));
+		onRtnOrderVO.setExchangeID(pOrder.getExchangeID());
+		onRtnOrderVO.setExchangeInstID(pOrder.getExchangeInstID());
+		onRtnOrderVO.setForceCloseReason(ForceCloseReason.ofCode(pOrder.getForceCloseReason()));
+		onRtnOrderVO.setgTDDate(pOrder.getGTDDate());
+		onRtnOrderVO.setInsertDate(pOrder.getInsertDate());
+		onRtnOrderVO.setInsertTime(pOrder.getInsertTime());
+		onRtnOrderVO.setInstallID(pOrder.getInstallID());
+		onRtnOrderVO.setInstrumentID(pOrder.getInstrumentID());
+		onRtnOrderVO.setInvestorID(pOrder.getInvestorID());
+		onRtnOrderVO.setIsAutoSuspend(pOrder.getIsAutoSuspend());
+		onRtnOrderVO.setLimitPrice(pOrder.getLimitPrice());
+		onRtnOrderVO.setMinVolume(pOrder.getMinVolume());
+		onRtnOrderVO.setNotifySequence(pOrder.getNotifySequence());
+		onRtnOrderVO.setOrderLocalID(pOrder.getOrderLocalID());
+		onRtnOrderVO.setOrderPriceType(OrderPriceType.ofCode(pOrder.getOrderPriceType()));
+		onRtnOrderVO.setOrderRef(pOrder.getOrderRef());
+		onRtnOrderVO.setOrderSource(pOrder.getOrderSource());
+		onRtnOrderVO.setOrderStatus(OrderStatus.ofCode(pOrder.getOrderStatus()));
+		onRtnOrderVO.setOrderSubmitStatus(OrderSubmitStatus.ofCode(pOrder.getOrderSubmitStatus()));
+		onRtnOrderVO.setOrderSysID(pOrder.getOrderSysID());
+		onRtnOrderVO.setOrderType(pOrder.getOrderType());
+		onRtnOrderVO.setParticipantID(pOrder.getParticipantID());
+		onRtnOrderVO.setRequestID(pOrder.getRequestID());
+		onRtnOrderVO.setSequenceNo(pOrder.getSequenceNo());
+		onRtnOrderVO.setSessionID(pOrder.getSessionID());
+		onRtnOrderVO.setSettlementID(pOrder.getSettlementID());
+		onRtnOrderVO.setStatusMsg(pOrder.getStatusMsg());
+		onRtnOrderVO.setStopPrice(pOrder.getStopPrice());
+		onRtnOrderVO.setSuspendTime(pOrder.getSuspendTime());
+		onRtnOrderVO.setTimeCondition(TimeCondition.ofCode(pOrder.getTimeCondition()));
+		onRtnOrderVO.setTraderID(pOrder.getTraderID());
+		onRtnOrderVO.setTradingDay(pOrder.getTradingDay());
+		onRtnOrderVO.setUpdateTime(pOrder.getUpdateTime());
+		onRtnOrderVO.setUserID(pOrder.getUserID());
+		onRtnOrderVO.setUserProductInfo(pOrder.getUserProductInfo());
+		onRtnOrderVO.setVolumeCondition(VolumeCondition.ofCode(pOrder.getVolumeCondition()));
+		onRtnOrderVO.setVolumeTotal(pOrder.getVolumeTotal());
+		onRtnOrderVO.setVolumeTotalOriginal(pOrder.getVolumeTotalOriginal());
+		onRtnOrderVO.setVolumeTraded(pOrder.getVolumeTraded());
+		this.template.convertAndSend("future.trade.onRtnOrder", routingKey, onRtnOrderVO);
 	}
 	
 	//报单响应
@@ -122,7 +183,7 @@ public class MyTraderSpi extends JCTPTraderSpi {
 	public void onRspOrderInsert(CThostFtdcInputOrderField pInputOrder,
 			CThostFtdcRspInfoField pRspInfo, int nRequestID, boolean bIsLast) {
 		logger.error("报单失败："+JSON.toJSONString(pRspInfo)+JSON.toJSONString(pInputOrder));
-		traderMain.onRspOrderInsert(pInputOrder, pRspInfo, nRequestID, bIsLast);
+		//traderMain.onRspOrderInsert(pInputOrder, pRspInfo, nRequestID, bIsLast);
 	}
 	
 	//撤单
@@ -137,7 +198,7 @@ public class MyTraderSpi extends JCTPTraderSpi {
 	@Override
 	public void onRtnTrade(CThostFtdcTradeField pTrade) {
 		//System.out.println("成交"+pTrade.getInstrumentID());
-	    traderMain.onRtnTrade(pTrade);
+	    //traderMain.onRtnTrade(pTrade);
 		
 	}
 	
@@ -204,20 +265,34 @@ public class MyTraderSpi extends JCTPTraderSpi {
 	@Override
     public void onRspQryInstrument(CThostFtdcInstrumentField pInstrument, CThostFtdcRspInfoField pRspInfo, int nRequestID, boolean bIsLast) {
 	    
-	    InstrumentInfo info = new InstrumentInfo();
+	    InstrumentVO info = new InstrumentVO();
 	    info.setInstrumentID(pInstrument.getInstrumentID());
+	    info.setInstrumentName(pInstrument.getInstrumentName());//合约名称
 	    info.setVolumeMultiple(pInstrument.getVolumeMultiple());
 	    info.setPriceTick(pInstrument.getPriceTick());
 	    info.setExchangeID(pInstrument.getExchangeID());
 	    info.setExchangeInstID(pInstrument.getExchangeInstID());
 	    info.setProductID(pInstrument.getProductID());
+	    info.setProductClass(pInstrument.getProductClass());//产品类型
 	    info.setMaxMarketOrderVolume(pInstrument.getMaxMarketOrderVolume());
 	    info.setMaxLimitOrderVolume(pInstrument.getMaxLimitOrderVolume());
 	    info.setMinMarketOrderVolume(pInstrument.getMinMarketOrderVolume());
 	    info.setMinLimitOrderVolume(pInstrument.getMinLimitOrderVolume());
 	    info.setLongMarginRatio(pInstrument.getLongMarginRatio());
 	    info.setShortMarginRatio(pInstrument.getShortMarginRatio());
-	    instrumentInfoRedisDao.saveInstrument(info);
+	    info.setTradingDate(this.traderApi.getTradingDay());//交易日
+	    info.setDeliveryMonth(pInstrument.getDeliveryMonth());//交割月
+	    info.setDeliveryYear(pInstrument.getDeliveryYear());//交割年
+	    info.setStartDelivDate(pInstrument.getStartDelivDate());//开始交割日
+	    info.setEndDelivDate(pInstrument.getEndDelivDate());//结束交割日
+	    info.setOpenDate(pInstrument.getOpenDate());//上市日
+	    info.setExpireDate(pInstrument.getExpireDate());//到期日
+	    info.setInstLifePhase(pInstrument.getInstLifePhase());//合约生命周期状态
+	    info.setIsTrading(pInstrument.getIsTrading());//当前是否交易
+	    info.setPositionDateType(pInstrument.getPositionDateType());//持仓日期类型
+	    info.setPositionType(pInstrument.getPositionType());//持仓类型
+	    this.instrumentService.saveInstrument(info);
+	    
 	    
 	  /*//查询合约手续费
         CThostFtdcQryInstrumentCommissionRateField pQryInstrumentCommissionRate = new CThostFtdcQryInstrumentCommissionRateField();
@@ -237,7 +312,9 @@ public class MyTraderSpi extends JCTPTraderSpi {
     public void onRspQryInstrumentCommissionRate(CThostFtdcInstrumentCommissionRateField pInstrumentCommissionRate, 
             CThostFtdcRspInfoField pRspInfo, int nRequestID, boolean bIsLast) {
         
-        InstrumentInfo info = new InstrumentInfo();
+        InstrumentCommissionRateVO info = new InstrumentCommissionRateVO();
+        info.setInvestorID(pInstrumentCommissionRate.getInvestorID());
+        info.setInvestorRange(pInstrumentCommissionRate.getInvestorRange());
         info.setInstrumentID(pInstrumentCommissionRate.getInstrumentID());
         info.setOpenRatioByMoney(pInstrumentCommissionRate.getOpenRatioByMoney());
         info.setOpenRatioByVolume(pInstrumentCommissionRate.getOpenRatioByVolume());

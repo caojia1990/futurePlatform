@@ -59,5 +59,12 @@ public enum OrderSubmitStatus {
         return text;
     }
     
-    
+    public static OrderSubmitStatus ofCode(char code){
+        for(OrderSubmitStatus orderSubmitStatus : OrderSubmitStatus.values()){
+          if(code == orderSubmitStatus.getCode()){
+            return orderSubmitStatus;
+          }
+        }
+        return null;  
+    }
 }

@@ -104,5 +104,12 @@ public enum ContingentCondition {
         return text;
     }
 	
-    
+    public static ContingentCondition ofCode(char code){
+        for(ContingentCondition contingentCondition : ContingentCondition.values()){
+          if(code == contingentCondition.getCode()){
+            return contingentCondition;
+          }
+        }
+        return null;  
+    }
 }

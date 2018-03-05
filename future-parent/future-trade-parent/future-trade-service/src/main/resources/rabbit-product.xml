@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:rabbit="http://www.springframework.org/schema/rabbit"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/rabbit
+       http://www.springframework.org/schema/rabbit/spring-rabbit.xsd">
+       
+    <rabbit:annotation-driven/>
+    
+    <rabbit:connection-factory id="connectionFactory" host="localhost"/>
+    
+    <rabbit:template id="amqpTemplate" connection-factory="connectionFactory"
+         message-converter="messageConverter"/>
+    
+    <rabbit:admin connection-factory="connectionFactory" />
+    
+    <!-- 报单回报 -->
+    <rabbit:topic-exchange name="future.trade.onRtnOrder">
+    </rabbit:topic-exchange>
+    
+    <!-- 成交回报 -->
+    <rabbit:topic-exchange name="future.trade.onRtnTrade">
+    </rabbit:topic-exchange>
+    
+    <!-- CTP报单检查失败 -->
+    <rabbit:topic-exchange name="future.trade.onRspOrderInsert">
+    </rabbit:topic-exchange>
+    
+    <!-- 撤单 -->
+    <rabbit:topic-exchange name="future.trade.onRspOrderAction">
+    </rabbit:topic-exchange>
+    
+    <!-- 错误回调 -->
+    <rabbit:topic-exchange name="future.trade.onRspError">
+    </rabbit:topic-exchange>
+    
+    <!-- 报单录入错误回调 -->
+    <rabbit:topic-exchange name="future.trade.onErrRtnOrderInsert">
+    </rabbit:topic-exchange>
+    
+    <!-- json转换器，消息可以自动根据转换器转换格式，不配置时默认为java序列化，可以自行配置 -->
+    <bean id="messageConverter" class="org.springframework.amqp.support.converter.Jackson2JsonMessageConverter" />
+    
+</beans>

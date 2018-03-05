@@ -29,5 +29,14 @@ public enum CombHedgeFlag {
     public String getText() {
         return text;
     }
+    
+    public static CombHedgeFlag ofCode(String code){
+        for(CombHedgeFlag combHedgeFlag : CombHedgeFlag.values()){
+          if(code.equals(combHedgeFlag.getCode())){
+            return combHedgeFlag;
+          }
+        }
+        return null;  
+    }
 
 }

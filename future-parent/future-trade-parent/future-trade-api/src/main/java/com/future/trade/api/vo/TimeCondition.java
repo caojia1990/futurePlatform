@@ -47,4 +47,12 @@ public enum TimeCondition {
         return code;
     }
     
+    public static TimeCondition ofCode(char code){
+        for(TimeCondition timeCondition : TimeCondition.values()){
+          if(code == timeCondition.getCode()){
+            return timeCondition;
+          }
+        }
+        return null;  
+    }
 }

@@ -63,5 +63,12 @@ public enum ForceCloseReason {
         return text;
     }
     
-    
+    public static ForceCloseReason ofCode(char code){
+        for(ForceCloseReason forceCloseReason : ForceCloseReason.values()){
+          if(code == forceCloseReason.getCode()){
+            return forceCloseReason;
+          }
+        }
+        return null;  
+    }
 }

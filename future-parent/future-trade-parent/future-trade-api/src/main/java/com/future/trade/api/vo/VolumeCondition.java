@@ -39,5 +39,13 @@ public enum VolumeCondition {
 		return text;
 	}
 	
+	public static VolumeCondition ofCode(char code){
+        for(VolumeCondition volumeCondition : VolumeCondition.values()){
+          if(code == volumeCondition.getCode()){
+            return volumeCondition;
+          }
+        }
+        return null;  
+    }
 	
 }

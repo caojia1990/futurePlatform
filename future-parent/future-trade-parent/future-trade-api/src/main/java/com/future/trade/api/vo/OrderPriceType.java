@@ -57,5 +57,14 @@ public enum OrderPriceType {
     public void setCode(char code) {
         this.code = code;
     }
+    
+    public static OrderPriceType ofCode(char code){
+        for(OrderPriceType orderPriceType : OrderPriceType.values()){
+          if(code == orderPriceType.getCode()){
+            return orderPriceType;
+          }
+        }
+        return null;  
+    }
 
 }

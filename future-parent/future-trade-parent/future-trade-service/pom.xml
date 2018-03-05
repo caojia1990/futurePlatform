@@ -16,6 +16,24 @@
     </dependency>
     
     <dependency>
+        <artifactId>future-instrument-api</artifactId>
+        <groupId>com.future.caojia</groupId>
+        <version>${future-instrument-api.version}</version>
+    </dependency>
+    
+    <dependency>
+        <groupId>org.springframework.amqp</groupId>
+        <artifactId>spring-rabbit</artifactId>
+        <version>${spring-rabbit.version}</version>
+    </dependency>
+    
+    <dependency>
+        <groupId>com.alibaba</groupId>
+        <artifactId>fastjson</artifactId>
+        <version>${fastjson.version}</version>
+    </dependency>
+    
+    <dependency>
         <artifactId>log4j</artifactId>
         <groupId>log4j</groupId>
         <version>${log4j.version}</version>

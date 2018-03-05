@@ -138,7 +138,7 @@ public class OnRtnOrderVO implements Serializable{
     /**
      * 安装编号
      */
-    private String installID;
+    private int installID;
     /**
      * 报单提交状态
      */
@@ -402,10 +402,10 @@ public class OnRtnOrderVO implements Serializable{
     public void setTraderID(String traderID) {
         this.traderID = traderID;
     }
-    public String getInstallID() {
+    public int getInstallID() {
         return installID;
     }
-    public void setInstallID(String installID) {
+    public void setInstallID(int installID) {
         this.installID = installID;
     }
     public OrderSubmitStatus getOrderSubmitStatus() {

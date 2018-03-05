@@ -69,6 +69,13 @@ public enum OrderStatus {
         return text;
     }
     
-    
+    public static OrderStatus ofCode(char code){
+        for(OrderStatus orderStatus : OrderStatus.values()){
+          if(code == orderStatus.getCode()){
+            return orderStatus;
+          }
+        }
+        return null;  
+    }
 
 }
