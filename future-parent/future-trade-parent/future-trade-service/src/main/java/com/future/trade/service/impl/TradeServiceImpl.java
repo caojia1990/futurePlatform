@@ -16,8 +16,6 @@ import com.future.trade.service.Main;
 @Service("tradeService")
 public class TradeServiceImpl implements TradeService{
     
-    private JCTPTraderApi traderApi;
-
     @Override
     public int reqOrderInsert(ReqOrderInsertVO reqOrderInsertVO) {
         // TODO Auto-generated method stub
@@ -46,14 +44,6 @@ public class TradeServiceImpl implements TradeService{
         pInputOrder.setVolumeTotalOriginal(reqOrderInsertVO.getVolumeTotalOriginal());//手数
         
         return traderApi.reqOrderInsert(pInputOrder, reqOrderInsertVO.getRequestID());
-    }
-
-    public JCTPTraderApi getTraderApi() {
-        return traderApi;
-    }
-
-    public void setTraderApi(JCTPTraderApi traderApi) {
-        this.traderApi = traderApi;
     }
 
     
