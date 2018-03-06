@@ -30,7 +30,10 @@ import com.future.trade.api.vo.CombOffsetFlag;
 import com.future.trade.api.vo.ContingentCondition;
 import com.future.trade.api.vo.Direction;
 import com.future.trade.api.vo.ForceCloseReason;
+import com.future.trade.api.vo.HedgeFlag;
+import com.future.trade.api.vo.OffsetFlag;
 import com.future.trade.api.vo.OnRtnOrderVO;
+import com.future.trade.api.vo.OnRtnTradeVO;
 import com.future.trade.api.vo.OrderPriceType;
 import com.future.trade.api.vo.OrderStatus;
 import com.future.trade.api.vo.OrderSubmitStatus;
@@ -175,7 +178,10 @@ public class MyTraderSpi extends JCTPTraderSpi {
 		onRtnOrderVO.setVolumeTotal(pOrder.getVolumeTotal());
 		onRtnOrderVO.setVolumeTotalOriginal(pOrder.getVolumeTotalOriginal());
 		onRtnOrderVO.setVolumeTraded(pOrder.getVolumeTraded());
-		this.template.convertAndSend("future.trade.onRtnOrder", routingKey, onRtnOrderVO);
+		
+		//TODO
+		String routerKey = "investorNo.onRtnOrder";
+		this.template.convertAndSend("future.trade.onRtnOrder", routerKey, onRtnOrderVO);
 	}
 	
 	//报单响应
@@ -198,8 +204,32 @@ public class MyTraderSpi extends JCTPTraderSpi {
 	@Override
 	public void onRtnTrade(CThostFtdcTradeField pTrade) {
 		//System.out.println("成交"+pTrade.getInstrumentID());
-	    //traderMain.onRtnTrade(pTrade);
-		
+	    OnRtnTradeVO onRtnTradeVO = new OnRtnTradeVO();
+	    //TODO 账户号
+	    onRtnTradeVO.setInvestorID("");
+	    onRtnTradeVO.setAccountNo("");
+	    onRtnTradeVO.setDirection(Direction.ofCode(pTrade.getDirection()));
+	    onRtnTradeVO.setExchangeID(pTrade.getExchangeID());
+	    onRtnTradeVO.setExchangeInstID(pTrade.getExchangeInstID());
+	    onRtnTradeVO.setHedgeFlag(HedgeFlag.ofCode(pTrade.getHedgeFlag()));
+	    onRtnTradeVO.setInstrumentID(pTrade.getInstrumentID());
+	    onRtnTradeVO.setOffsetFlag(OffsetFlag.ofCode(pTrade.getOffsetFlag()));
+	    onRtnTradeVO.setOrderLocalID(pTrade.getOrderLocalID());
+	    onRtnTradeVO.setOrderRef(pTrade.getOrderRef());
+	    onRtnTradeVO.setOrderSysID(pTrade.getOrderSysID());
+	    onRtnTradeVO.setPrice(pTrade.getPrice());
+	    onRtnTradeVO.setSequenceNo(pTrade.getSequenceNo());
+	    onRtnTradeVO.setTradeDate(pTrade.getTradeDate());
+	    onRtnTradeVO.setTradeTime(pTrade.getTradeTime());
+	    onRtnTradeVO.setTradeID(pTrade.getTradeID());//成交编号（重要）
+	    onRtnTradeVO.setTradeType(pTrade.getTradeType());
+	    onRtnTradeVO.setTradingDay(pTrade.getTradingDay());//交易日
+	    onRtnTradeVO.setUserID(pTrade.getUserID());
+	    onRtnTradeVO.setVolume(pTrade.getVolume());//成交量
+	    
+	    //TODO
+        String routerKey = "investorNo.onRtnTrade";
+        this.template.convertAndSend("future.trade.onRtnTrade", routerKey, onRtnTradeVO);
 	}
 	
 	@Override

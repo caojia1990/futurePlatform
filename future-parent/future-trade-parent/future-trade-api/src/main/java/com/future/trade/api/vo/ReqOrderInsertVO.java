@@ -22,11 +22,6 @@ public class ReqOrderInsertVO implements Serializable{
     private int requestID;
     
     /**
-     * 经纪公司代码
-     */
-    private String brokerID;
-    
-    /**
      * 投资者代码
      */
     private String investorID;
@@ -131,14 +126,6 @@ public class ReqOrderInsertVO implements Serializable{
 
     public void setRequestID(int requestID) {
         this.requestID = requestID;
-    }
-
-    public String getBrokerID() {
-        return brokerID;
-    }
-
-    public void setBrokerID(String brokerID) {
-        this.brokerID = brokerID;
     }
 
     public String getInvestorID() {
