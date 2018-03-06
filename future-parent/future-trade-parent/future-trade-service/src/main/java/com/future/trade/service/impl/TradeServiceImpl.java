@@ -2,6 +2,7 @@ package com.future.trade.service.impl;
 
 import org.hraink.futures.ctp.thostftdcuserapistruct.CThostFtdcInputOrderField;
 import org.hraink.futures.jctp.trader.JCTPTraderApi;
+import org.springframework.stereotype.Service;
 
 import com.future.trade.api.service.TradeService;
 import com.future.trade.api.vo.ReqOrderInsertVO;
@@ -12,6 +13,7 @@ import com.future.trade.service.Main;
  * @author caojia
  *
  */
+@Service("tradeService")
 public class TradeServiceImpl implements TradeService{
     
     private JCTPTraderApi traderApi;
@@ -46,4 +48,13 @@ public class TradeServiceImpl implements TradeService{
         return traderApi.reqOrderInsert(pInputOrder, reqOrderInsertVO.getRequestID());
     }
 
+    public JCTPTraderApi getTraderApi() {
+        return traderApi;
+    }
+
+    public void setTraderApi(JCTPTraderApi traderApi) {
+        this.traderApi = traderApi;
+    }
+
+    
 }

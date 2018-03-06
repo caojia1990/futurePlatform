@@ -7,6 +7,7 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import com.future.trade.api.service.TradeService;
 import com.future.trade.service.ctp.MyTraderSpi;
 
 public class Main {
@@ -26,7 +27,7 @@ public class Main {
             RabbitTemplate template = ctx.getBean(RabbitTemplate.class);
             
             traderApi = JCTPTraderApi.createFtdcTraderApi("ctpdata/trade/");
-
+            
             traderSpi = new MyTraderSpi(traderApi,template);
             
             //注册traderpi
