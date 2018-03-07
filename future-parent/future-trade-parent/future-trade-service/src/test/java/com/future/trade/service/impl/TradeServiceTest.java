@@ -1,6 +1,7 @@
 package com.future.trade.service.impl;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 
 import org.junit.Test;
@@ -37,7 +38,7 @@ public class TradeServiceTest extends AbstractJUnit4SpringContextTests{
     private RabbitAdmin admin;
     
     @Test
-    public void reqOrderInsert(){
+    public void reqOrderInsert() throws IOException{
         
         Queue onRtnOrderQ = (Queue) applicationContext.getBean("onRtnOrderQ");
         TopicExchange onRtnOrderExchange = (TopicExchange) applicationContext.getBean("onRtnOrder");
@@ -58,7 +59,7 @@ public class TradeServiceTest extends AbstractJUnit4SpringContextTests{
         reqOrderInsertVO.setForceCloseReason(ForceCloseReason.NotForceClose);
         tradeService.reqOrderInsert(reqOrderInsertVO);
         
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        System.in.read();
     }
 
 }
