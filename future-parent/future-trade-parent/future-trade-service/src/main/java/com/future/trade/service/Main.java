@@ -17,7 +17,7 @@ public class Main {
     public static String PASSWORD = "caojiactp1";
     
     public static String tradeFront = "tcp://180.168.146.187:10001";
-    static JCTPTraderApi traderApi;
+    public static JCTPTraderApi traderApi;
     static JCTPTraderSpi traderSpi;
     
     public static void main(String[] args) {

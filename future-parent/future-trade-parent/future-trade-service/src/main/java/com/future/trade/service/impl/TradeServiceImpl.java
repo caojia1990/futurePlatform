@@ -1,7 +1,6 @@
 package com.future.trade.service.impl;
 
 import org.hraink.futures.ctp.thostftdcuserapistruct.CThostFtdcInputOrderField;
-import org.hraink.futures.jctp.trader.JCTPTraderApi;
 import org.springframework.stereotype.Service;
 
 import com.future.trade.api.service.TradeService;
@@ -43,7 +42,8 @@ public class TradeServiceImpl implements TradeService{
         pInputOrder.setVolumeCondition(reqOrderInsertVO.getVolumeCondition().getCode());
         pInputOrder.setVolumeTotalOriginal(reqOrderInsertVO.getVolumeTotalOriginal());//手数
         
-        return traderApi.reqOrderInsert(pInputOrder, reqOrderInsertVO.getRequestID());
+        int r = Main.traderApi.reqOrderInsert(pInputOrder, reqOrderInsertVO.getRequestID());
+        return r;
     }
 
     

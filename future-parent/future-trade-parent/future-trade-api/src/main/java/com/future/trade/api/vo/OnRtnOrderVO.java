@@ -540,6 +540,27 @@ public class OnRtnOrderVO implements Serializable{
     public void setStatusMsg(String statusMsg) {
         this.statusMsg = statusMsg;
     }
+    @Override
+    public String toString() {
+        return "OnRtnOrderVO [brokerID=" + brokerID + ", investorID=" + investorID + ", instrumentID=" + instrumentID
+                + ", OrderRef=" + OrderRef + ", userID=" + userID + ", orderPriceType=" + orderPriceType
+                + ", direction=" + direction + ", combOffsetFlag=" + combOffsetFlag + ", combHedgeFlag=" + combHedgeFlag
+                + ", limitPrice=" + limitPrice + ", volumeTotalOriginal=" + volumeTotalOriginal + ", timeCondition="
+                + timeCondition + ", gTDDate=" + gTDDate + ", volumeCondition=" + volumeCondition + ", minVolume="
+                + minVolume + ", contingentCondition=" + contingentCondition + ", stopPrice=" + stopPrice
+                + ", forceCloseReason=" + forceCloseReason + ", isAutoSuspend=" + isAutoSuspend + ", businessUnit="
+                + businessUnit + ", requestID=" + requestID + ", orderLocalID=" + orderLocalID + ", exchangeID="
+                + exchangeID + ", orderSysID=" + orderSysID + ", participantID=" + participantID + ", clientID="
+                + clientID + ", exchangeInstID=" + exchangeInstID + ", traderID=" + traderID + ", installID="
+                + installID + ", orderSubmitStatus=" + orderSubmitStatus + ", notifySequence=" + notifySequence
+                + ", tradingDay=" + tradingDay + ", settlementID=" + settlementID + ", orderSource=" + orderSource
+                + ", orderStatus=" + orderStatus + ", orderType=" + orderType + ", volumeTraded=" + volumeTraded
+                + ", volumeTotal=" + volumeTotal + ", insertDate=" + insertDate + ", insertTime=" + insertTime
+                + ", activeTime=" + activeTime + ", suspendTime=" + suspendTime + ", updateTime=" + updateTime
+                + ", cancelTime=" + cancelTime + ", activeTraderID=" + activeTraderID + ", clearingPartID="
+                + clearingPartID + ", sequenceNo=" + sequenceNo + ", frontID=" + frontID + ", sessionID=" + sessionID
+                + ", userProductInfo=" + userProductInfo + ", statusMsg=" + statusMsg + "]";
+    }
     
     
 
