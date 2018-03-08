@@ -1,5 +1,6 @@
 package com.future.instrument.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -9,10 +10,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
+import org.springframework.stereotype.Service;
 
 import com.future.instrument.api.service.InstrumentService;
 import com.future.instrument.api.vo.InstrumentVO;
 
+@Service("instrumentService")
 public class InstrumentServiceImpl implements InstrumentService{
     
     static Logger logger = Logger.getLogger(InstrumentServiceImpl.class);
@@ -43,8 +46,8 @@ public class InstrumentServiceImpl implements InstrumentService{
 
     @Override
     public List<String> queryInstrumentName() {
-        // TODO Auto-generated method stub
-        return null;
+
+        return new ArrayList<String>(this.hashOperations.keys(INSTRUMENT_REDIS_KEY));
     }
 
     @Override

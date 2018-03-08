@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import com.future.instrument.api.service.InstrumentService;
 import com.future.instrument.api.vo.InstrumentVO;
 
-@Service("instrumentService")
+//@service("instrumentService")
 public class InstrumentServiceImpl implements InstrumentService{
 
     @Override

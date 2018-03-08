@@ -1,5 +1,6 @@
 package com.future.trade.api.service;
 
+import com.future.trade.api.exception.TradeException;
 import com.future.trade.api.vo.ReqOrderInsertVO;
 
 /**
@@ -13,6 +14,6 @@ public interface TradeService {
      * 下单接口
      * @return
      */
-    public int reqOrderInsert(ReqOrderInsertVO reqOrderInsertVO);
+    public int reqOrderInsert(ReqOrderInsertVO reqOrderInsertVO) throws TradeException;
 
 }

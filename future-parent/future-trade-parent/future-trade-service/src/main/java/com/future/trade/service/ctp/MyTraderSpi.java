@@ -64,9 +64,10 @@ public class MyTraderSpi extends JCTPTraderSpi {
 	
 	private RabbitTemplate template;
 	
-	public MyTraderSpi(JCTPTraderApi traderApi, RabbitTemplate template) {
+	public MyTraderSpi(JCTPTraderApi traderApi, RabbitTemplate template,InstrumentService instrumentService) {
 		this.traderApi = traderApi;
 		this.template = template;
+		this.instrumentService = instrumentService;
 	}
 	
 	public MyTraderSpi(JCTPTraderApi traderApi, Main main) {
@@ -82,14 +83,12 @@ public class MyTraderSpi extends JCTPTraderSpi {
 		
 		traderApi.reqUserLogin(userLoginField, 112);
 		
-		instrumentService = (InstrumentService) SpringContextUtil.getBean("instrumentService");
-		
 	}
 	
 	@Override
 	public void onRspUserLogin(CThostFtdcRspUserLoginField pRspUserLogin,
 			CThostFtdcRspInfoField pRspInfo, int nRequestID, boolean bIsLast) {
-		System.out.println("TradingDay:" + traderApi.getTradingDay());
+		System.out.println("TradingDay:" + traderApi.getTradingDay()+"请求编号："+nRequestID);
 		System.out.println(pRspInfo.getErrorID());
 		System.out.println(pRspUserLogin.getLoginTime());
 		System.out.println(pRspUserLogin.getCZCETime());

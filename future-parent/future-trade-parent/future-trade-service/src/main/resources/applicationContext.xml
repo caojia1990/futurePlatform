@@ -25,4 +25,5 @@
     
     <import resource="rabbit-product.xml" />
     <import resource="dubbo-provider.xml" />
+    <import resource="dubbo-consumer.xml" />
 </beans>

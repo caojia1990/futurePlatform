@@ -33,4 +33,13 @@ public class TradeException extends Exception{
         this.errorMsg = tradeError.errorMsg;
     }
 
+    public String getErrorCode() {
+        return errorCode;
+    }
+
+    public String getErrorMsg() {
+        return errorMsg;
+    }
+
+    
 }

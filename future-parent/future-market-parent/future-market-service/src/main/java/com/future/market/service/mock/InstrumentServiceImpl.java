@@ -13,7 +13,7 @@ import com.future.instrument.api.vo.InstrumentVO;
  * @author caoji_000
  *
  */
-@Service("InstrumentService")
+//@service("InstrumentService")
 public class InstrumentServiceImpl implements InstrumentService{
 
     @Override
@@ -37,6 +37,8 @@ public class InstrumentServiceImpl implements InstrumentService{
         list.add("rb1806");
         list.add("rb1807");
         list.add("rb1808");
+        list.add("m1805");
+        list.add("m1809");
         return list;
     }
 

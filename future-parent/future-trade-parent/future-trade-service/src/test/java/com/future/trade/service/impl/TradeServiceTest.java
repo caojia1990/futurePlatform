@@ -17,6 +17,7 @@ import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.util.StopWatch;
 
+import com.future.trade.api.exception.TradeException;
 import com.future.trade.api.service.TradeService;
 import com.future.trade.api.vo.CombHedgeFlag;
 import com.future.trade.api.vo.CombOffsetFlag;
@@ -71,7 +72,11 @@ public class TradeServiceTest extends AbstractJUnit4SpringContextTests{
             reqOrderInsertVO.setOrderPriceType(OrderPriceType.LimitPrice);
             reqOrderInsertVO.setContingentCondition(ContingentCondition.Immediately);
             reqOrderInsertVO.setForceCloseReason(ForceCloseReason.NotForceClose);
-            tradeService.reqOrderInsert(reqOrderInsertVO);
+            try {
+                tradeService.reqOrderInsert(reqOrderInsertVO);
+            } catch (TradeException e) {
+                logger.error(e.getErrorMsg(), e);
+            }
             
             //套利单
             
