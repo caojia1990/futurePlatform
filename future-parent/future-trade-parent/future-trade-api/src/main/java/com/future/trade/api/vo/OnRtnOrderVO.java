@@ -171,11 +171,11 @@ public class OnRtnOrderVO implements Serializable{
     /**
      * 今成交数量
      */
-    private double volumeTraded;
+    private int volumeTraded;
     /**
      * 剩余数量
      */
-    private double volumeTotal;
+    private int volumeTotal;
     /**
      * 报单日期
      */
@@ -453,13 +453,13 @@ public class OnRtnOrderVO implements Serializable{
     public double getVolumeTraded() {
         return volumeTraded;
     }
-    public void setVolumeTraded(double volumeTraded) {
+    public void setVolumeTraded(int volumeTraded) {
         this.volumeTraded = volumeTraded;
     }
     public double getVolumeTotal() {
         return volumeTotal;
     }
-    public void setVolumeTotal(double volumeTotal) {
+    public void setVolumeTotal(int volumeTotal) {
         this.volumeTotal = volumeTotal;
     }
     public String getInsertDate() {
