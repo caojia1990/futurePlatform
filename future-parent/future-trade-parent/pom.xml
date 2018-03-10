@@ -19,6 +19,14 @@
     <dubbo.version>2.6.0</dubbo.version>
   </properties>
   
+  <dependencies>
+  	<dependency>
+  		<artifactId>future-common</artifactId>
+  		<groupId>com.future.caojia</groupId>
+  		<version>${future-common.version}</version>
+  	</dependency>
+  </dependencies>
+  
   <modules>
   	<module>future-trade-api</module>
   	<module>future-trade-service</module>

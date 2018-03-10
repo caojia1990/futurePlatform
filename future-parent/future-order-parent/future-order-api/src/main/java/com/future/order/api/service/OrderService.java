@@ -1,4 +1,6 @@
-package com.future.order.api;
+package com.future.order.api.service;
+
+import com.future.trade.api.vo.ReqOrderInsertVO;
 
 /**
  * 报单接口
@@ -6,9 +8,15 @@ package com.future.order.api;
  *
  */
 public interface OrderService {
+	
+	/**
+	 * 报单接口
+	 * @param reqOrderInsertVO
+	 */
+	public void reqOrderInsert(ReqOrderInsertVO reqOrderInsertVO);
     
     /**
-     * 报单
+     * 开仓
      */
     public void openOrder();
     

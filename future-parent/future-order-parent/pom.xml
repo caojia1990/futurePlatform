@@ -8,6 +8,15 @@
   <artifactId>future-order-parent</artifactId>
   <packaging>pom</packaging>
   <description>报单中心</description>
+  
+  <properties>
+  	<future-order-api.version>0.0.1-SNAPSHOT</future-order-api.version>
+  	<future-account-api.version>0.0.1-SNAPSHOT</future-account-api.version>
+  	<future-member-api.version>0.0.1-SNAPSHOT</future-member-api.version>
+  	<future-instrument-api.version>0.0.1-SNAPSHOT</future-instrument-api.version>
+  	<future-market-api.version>0.0.1-SNAPSHOT</future-market-api.version>
+  	<future-trade-api.version>0.0.1-SNAPSHOT</future-trade-api.version>
+  </properties>
   <modules>
       <module>future-order-api</module>
       <module>future-order-service</module>

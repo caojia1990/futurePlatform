@@ -7,4 +7,12 @@
   </parent>
   <artifactId>future-order-api</artifactId>
   <description>报单中心接口</description>
+  
+  <dependencies>
+  	<dependency>
+  		<groupId>com.future.caojia</groupId>
+	    <artifactId>future-trade-api</artifactId>
+	    <version>${future-trade-api.version}</version>
+  	</dependency>
+  </dependencies>
 </project>

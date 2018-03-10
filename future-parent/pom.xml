@@ -7,12 +7,16 @@
   
   <properties>
       <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-      <spring.version>4.3.13.RELEASE</spring.version>
+      <spring.version>4.3.10.RELEASE</spring.version>
       <spring-rabbit.version>1.7.5.RELEASE</spring-rabbit.version>
       <dubbo.version>2.6.0</dubbo.version>
+      <spring-data-redis.version>1.8.6.RELEASE</spring-data-redis.version>
+      <future-common.version>0.0.1-SNAPSHOT</future-common.version>
   </properties>
   <dependencies>
-    <dependency>
+  
+  
+   <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <version>4.12</version>
@@ -43,5 +47,6 @@
   	<module>future-account-parent</module>
   	<module>future-trade-parent</module>
   	<module>future-order-parent</module>
+  	<module>future-common</module>
   </modules>
 </project>
