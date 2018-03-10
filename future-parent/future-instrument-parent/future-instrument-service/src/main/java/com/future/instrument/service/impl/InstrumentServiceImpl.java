@@ -13,6 +13,7 @@ import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 
 import com.future.instrument.api.service.InstrumentService;
+import com.future.instrument.api.vo.InstrumentCommissionRateVO;
 import com.future.instrument.api.vo.InstrumentVO;
 
 @Service("instrumentService")
@@ -80,6 +81,12 @@ public class InstrumentServiceImpl implements InstrumentService{
     public void removeInstrument(String tradingDate) {
         // TODO Auto-generated method stub
         
+    }
+
+    @Override
+    public InstrumentCommissionRateVO queryInstrumentCommission(String instrumentID) {
+        // TODO Auto-generated method stub
+        return null;
     }
 
 }
