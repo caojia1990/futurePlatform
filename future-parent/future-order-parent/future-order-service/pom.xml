@@ -2,14 +2,17 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>com.future.caojia</groupId>
-    <artifactId>future-parent</artifactId>
+    <artifactId>future-order-parent</artifactId>
     <version>0.0.1-SNAPSHOT</version>
   </parent>
-  <artifactId>future-order-parent</artifactId>
-  <packaging>pom</packaging>
-  <description>报单中心</description>
-  <modules>
-      <module>future-order-api</module>
-      <module>future-order-service</module>
-  </modules>
+  <artifactId>future-order-service</artifactId>
+  <description>报单服务</description>
+  
+  <dependencies>
+    <dependency>
+        <artifactId>future-order-api</artifactId>
+        <groupId>com.future.caojia</groupId>
+        <version>0.0.1-SNAPSHOT</version>
+    </dependency>
+  </dependencies>
 </project>
