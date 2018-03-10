@@ -42,5 +42,6 @@
   	<module>future-member-parent</module>
   	<module>future-account-parent</module>
   	<module>future-trade-parent</module>
+  	<module>future-order-parent</module>
   </modules>
 </project>
