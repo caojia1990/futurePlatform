@@ -1,9 +1,13 @@
 package com.future.trade.service.mq;
 
+import org.apache.log4j.Logger;
+
 import com.future.trade.api.vo.OnRtnOrderVO;
 import com.future.trade.api.vo.OnRtnTradeVO;
 
 public class MessageHandle {
+    
+    static Logger logger = Logger.getLogger(MessageHandle.class);
     
     /**
      * 报单回报
@@ -11,7 +15,10 @@ public class MessageHandle {
      */
     public void onRtnOrder(OnRtnOrderVO onRtnOrderVO){
         
-        System.out.println(onRtnOrderVO);
+        if(logger.isDebugEnabled()){
+            
+            logger.debug("报单回报"+onRtnOrderVO);
+        }
     }
     
     /**
@@ -19,7 +26,11 @@ public class MessageHandle {
      * @param onRtnTrade
      */
     public void onRtnTrade(OnRtnTradeVO onRtnTrade){
-        System.out.println("成交回报");
+        
+        if(logger.isDebugEnabled()){
+            
+            logger.debug("成交回报"+onRtnTrade);
+        }
     }
     
     /**

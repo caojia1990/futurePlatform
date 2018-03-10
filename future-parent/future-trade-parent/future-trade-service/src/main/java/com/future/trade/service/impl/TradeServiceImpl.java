@@ -3,6 +3,8 @@ package com.future.trade.service.impl;
 import org.hraink.futures.ctp.thostftdcuserapistruct.CThostFtdcInputOrderField;
 import org.springframework.stereotype.Service;
 
+import com.future.trade.api.exception.TradeError;
+import com.future.trade.api.exception.TradeException;
 import com.future.trade.api.service.TradeService;
 import com.future.trade.api.vo.ReqOrderInsertVO;
 import com.future.trade.service.Main;
@@ -16,7 +18,7 @@ import com.future.trade.service.Main;
 public class TradeServiceImpl implements TradeService{
     
     @Override
-    public int reqOrderInsert(ReqOrderInsertVO reqOrderInsertVO) {
+    public int reqOrderInsert(ReqOrderInsertVO reqOrderInsertVO) throws TradeException {
         // TODO Auto-generated method stub
         
         CThostFtdcInputOrderField pInputOrder = new CThostFtdcInputOrderField();
@@ -43,6 +45,17 @@ public class TradeServiceImpl implements TradeService{
         pInputOrder.setVolumeTotalOriginal(reqOrderInsertVO.getVolumeTotalOriginal());//手数
         
         int r = Main.traderApi.reqOrderInsert(pInputOrder, reqOrderInsertVO.getRequestID());
+        switch (r) {
+        case 1:
+            throw new TradeException(TradeError.ConnectFailed);
+        case 2:
+            throw new TradeException(TradeError.UnprocessedRequestsLimit);
+        case 3:
+            throw new TradeException(TradeError.RPSLimit);
+        default:
+            break;
+        }
+            
         return r;
     }
 

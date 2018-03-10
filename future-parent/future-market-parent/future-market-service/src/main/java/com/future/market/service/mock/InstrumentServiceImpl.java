@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.future.instrument.api.service.InstrumentService;
+import com.future.instrument.api.vo.InstrumentCommissionRateVO;
 import com.future.instrument.api.vo.InstrumentVO;
 
 /**
@@ -13,7 +14,7 @@ import com.future.instrument.api.vo.InstrumentVO;
  * @author caoji_000
  *
  */
-@Service("InstrumentService")
+//@service("InstrumentService")
 public class InstrumentServiceImpl implements InstrumentService{
 
     @Override
@@ -37,6 +38,8 @@ public class InstrumentServiceImpl implements InstrumentService{
         list.add("rb1806");
         list.add("rb1807");
         list.add("rb1808");
+        list.add("m1805");
+        list.add("m1809");
         return list;
     }
 
@@ -68,6 +71,12 @@ public class InstrumentServiceImpl implements InstrumentService{
     public void removeInstrument(String tradingDate) {
         // TODO Auto-generated method stub
         
+    }
+
+    @Override
+    public InstrumentCommissionRateVO queryInstrumentCommission(String instrumentID) {
+        // TODO Auto-generated method stub
+        return null;
     }
 
 }

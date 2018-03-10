@@ -5,12 +5,8 @@
 	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 	   http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd
 	   ">
-	<dubbo:application name="future-market-service" />
-	<!-- <dubbo:registry address="N/A" /> -->
-	
-	<dubbo:registry protocol="zookeeper" address="${dubbo.registry.address}" check="false" />
-    
+
     <!-- 合约接口 -->
-    <dubbo:reference id="instrumentService" interface="com.future.instrument.api.service.InstrumentService"  timeout="5000" check="false"/>
-	
+	<dubbo:reference id="instrumentService" interface="com.future.instrument.api.service.InstrumentService"  timeout="5000" check="false"/>
+
 </beans>

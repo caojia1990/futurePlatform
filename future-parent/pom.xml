@@ -7,8 +7,9 @@
   
   <properties>
       <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-      <spring.version>4.0.2.RELEASE</spring.version>
-      <spring-rabbit.version>1.7.4.RELEASE</spring-rabbit.version>
+      <spring.version>4.3.13.RELEASE</spring.version>
+      <spring-rabbit.version>1.7.5.RELEASE</spring-rabbit.version>
+      <dubbo.version>2.6.0</dubbo.version>
   </properties>
   <dependencies>
     <dependency>
@@ -41,5 +42,6 @@
   	<module>future-member-parent</module>
   	<module>future-account-parent</module>
   	<module>future-trade-parent</module>
+  	<module>future-order-parent</module>
   </modules>
 </project>

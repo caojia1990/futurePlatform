@@ -11,7 +11,7 @@ public enum CombHedgeFlag {
     
     Arbitrage("2", "套利"),
     
-    Hedge("1", "套保");
+    Hedge("3", "套保");
     
     final String code;
     
