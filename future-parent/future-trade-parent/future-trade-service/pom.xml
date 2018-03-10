@@ -9,6 +9,13 @@
   <description>交易服务</description>
   
   <dependencies>
+  
+  	<dependency>
+  		<groupId>org.hraink.futures</groupId>
+		<artifactId>JCTP</artifactId>
+	    <version>0.0.3-SNAPSHOT</version>
+  	</dependency>
+  	
     <dependency>
         <artifactId>future-trade-api</artifactId>
         <groupId>com.future.caojia</groupId>
