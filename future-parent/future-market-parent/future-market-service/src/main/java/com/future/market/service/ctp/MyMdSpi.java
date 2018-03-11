@@ -12,7 +12,7 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 
 import com.future.instrument.api.service.InstrumentService;
 import com.future.market.api.vo.DepthMarketData;
-import com.future.market.service.Main;
+import com.future.market.service.MarketMain;
 
 public class MyMdSpi extends JCTPMdSpi {
 	private JCTPMdApi mdApi;
@@ -35,9 +35,9 @@ public class MyMdSpi extends JCTPMdSpi {
 		System.out.println("准备登陆");
 		//登陆
 		CThostFtdcReqUserLoginField userLoginField = new CThostFtdcReqUserLoginField();
-		userLoginField.setBrokerID(Main.BROKER_ID);
-		userLoginField.setUserID(Main.USER_ID);
-		userLoginField.setPassword(Main.PASSWORD);
+		userLoginField.setBrokerID(MarketMain.BROKER_ID);
+		userLoginField.setUserID(MarketMain.USER_ID);
+		userLoginField.setPassword(MarketMain.PASSWORD);
 		
 		mdApi.reqUserLogin(userLoginField, 112);
 		System.out.println("登陆完成");

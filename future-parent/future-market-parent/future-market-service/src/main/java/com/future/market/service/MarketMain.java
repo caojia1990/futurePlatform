@@ -14,7 +14,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import com.future.instrument.api.service.InstrumentService;
 import com.future.market.service.ctp.MyMdSpi;
 
-public class Main {
+public class MarketMain {
     
     public static String BROKER_ID = "9999";
     public static String USER_ID = "105839";

@@ -5,7 +5,7 @@ import java.io.IOException;
 import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-public class Main {
+public class InstrumentMain {
 
     public static void main(String[] args) throws IOException {
         // TODO Auto-generated method stub

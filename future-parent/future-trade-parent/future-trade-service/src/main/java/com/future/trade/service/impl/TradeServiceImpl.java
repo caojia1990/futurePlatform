@@ -7,7 +7,7 @@ import com.future.trade.api.exception.TradeError;
 import com.future.trade.api.exception.TradeException;
 import com.future.trade.api.service.TradeService;
 import com.future.trade.api.vo.ReqOrderInsertVO;
-import com.future.trade.service.Main;
+import com.future.trade.service.TradeMain;
 
 /**
  * 交易接口实现
@@ -22,8 +22,8 @@ public class TradeServiceImpl implements TradeService{
         // TODO Auto-generated method stub
         
         CThostFtdcInputOrderField pInputOrder = new CThostFtdcInputOrderField();
-        pInputOrder.setBrokerID(Main.BROKER_ID);
-        pInputOrder.setInvestorID(Main.USER_ID);
+        pInputOrder.setBrokerID(TradeMain.BROKER_ID);
+        pInputOrder.setInvestorID(TradeMain.USER_ID);
         pInputOrder.setBusinessUnit(reqOrderInsertVO.getBusinessUnit());
         pInputOrder.setCombHedgeFlag(reqOrderInsertVO.getCombHedgeFlag().getCode());
         pInputOrder.setCombOffsetFlag(reqOrderInsertVO.getCombOffsetFlag().getCode());
@@ -40,11 +40,11 @@ public class TradeServiceImpl implements TradeService{
         pInputOrder.setRequestID(reqOrderInsertVO.getRequestID());
         pInputOrder.setStopPrice(reqOrderInsertVO.getStopPrice());
         pInputOrder.setTimeCondition(reqOrderInsertVO.getTimeCondition().getCode());
-        pInputOrder.setUserID(Main.USER_ID);
+        pInputOrder.setUserID(TradeMain.USER_ID);
         pInputOrder.setVolumeCondition(reqOrderInsertVO.getVolumeCondition().getCode());
         pInputOrder.setVolumeTotalOriginal(reqOrderInsertVO.getVolumeTotalOriginal());//手数
         
-        int r = Main.traderApi.reqOrderInsert(pInputOrder, reqOrderInsertVO.getRequestID());
+        int r = TradeMain.traderApi.reqOrderInsert(pInputOrder, reqOrderInsertVO.getRequestID());
         switch (r) {
         case 1:
             throw new TradeException(TradeError.ConnectFailed);

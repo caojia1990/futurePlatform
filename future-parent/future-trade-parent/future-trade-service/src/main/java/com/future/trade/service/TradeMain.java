@@ -11,7 +11,7 @@ import com.future.instrument.api.service.InstrumentService;
 import com.future.trade.api.service.TradeService;
 import com.future.trade.service.ctp.MyTraderSpi;
 
-public class Main {
+public class TradeMain {
     
     public static String BROKER_ID = "9999";
     public static String USER_ID = "105839";

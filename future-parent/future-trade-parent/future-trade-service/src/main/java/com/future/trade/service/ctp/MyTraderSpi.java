@@ -39,7 +39,7 @@ import com.future.trade.api.vo.OrderStatus;
 import com.future.trade.api.vo.OrderSubmitStatus;
 import com.future.trade.api.vo.TimeCondition;
 import com.future.trade.api.vo.VolumeCondition;
-import com.future.trade.service.Main;
+import com.future.trade.service.TradeMain;
 import com.future.trade.service.util.SpringContextUtil;
 
 /**
@@ -70,16 +70,16 @@ public class MyTraderSpi extends JCTPTraderSpi {
 		this.instrumentService = instrumentService;
 	}
 	
-	public MyTraderSpi(JCTPTraderApi traderApi, Main main) {
+	public MyTraderSpi(JCTPTraderApi traderApi, TradeMain main) {
 	    this.traderApi = traderApi;
 	}
 	public void onFrontConnected() {
 		System.out.println("前置机连接");
 		CThostFtdcReqUserLoginField userLoginField = new CThostFtdcReqUserLoginField();
 		
-		userLoginField.setBrokerID(Main.BROKER_ID);
-		userLoginField.setUserID(Main.USER_ID);
-		userLoginField.setPassword(Main.PASSWORD);
+		userLoginField.setBrokerID(TradeMain.BROKER_ID);
+		userLoginField.setUserID(TradeMain.USER_ID);
+		userLoginField.setPassword(TradeMain.PASSWORD);
 		
 		traderApi.reqUserLogin(userLoginField, 112);
 		
@@ -99,16 +99,16 @@ public class MyTraderSpi extends JCTPTraderSpi {
 		
 		//查询持仓明细
 		CThostFtdcQryInvestorPositionDetailField positionField = new CThostFtdcQryInvestorPositionDetailField();
-		positionField.setBrokerID(Main.BROKER_ID);
+		positionField.setBrokerID(TradeMain.BROKER_ID);
 		positionField.setInstrumentID("cu1703");
-		positionField.setInvestorID(Main.USER_ID);
+		positionField.setInvestorID(TradeMain.USER_ID);
 		//traderApi.reqQryInvestorPositionDetail(positionField, ++nRequestID);
 		
 		
 		//确认结算单
 		CThostFtdcSettlementInfoConfirmField confirmField = new CThostFtdcSettlementInfoConfirmField();
-		confirmField.setBrokerID(Main.BROKER_ID);
-		confirmField.setInvestorID(Main.USER_ID);
+		confirmField.setBrokerID(TradeMain.BROKER_ID);
+		confirmField.setInvestorID(TradeMain.USER_ID);
 		traderApi.reqSettlementInfoConfirm(confirmField, ++nRequestID);
 		
 		//查询合约信息
