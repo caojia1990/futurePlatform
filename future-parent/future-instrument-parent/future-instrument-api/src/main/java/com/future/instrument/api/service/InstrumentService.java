@@ -2,6 +2,7 @@ package com.future.instrument.api.service;
 
 import java.util.List;
 
+import com.future.instrument.api.exception.InstrumentException;
 import com.future.instrument.api.vo.InstrumentCommissionRateVO;
 import com.future.instrument.api.vo.InstrumentVO;
 
@@ -26,12 +27,21 @@ public interface InstrumentService {
     public InstrumentCommissionRateVO queryInstrumentCommission(String instrumentID);
     
     /**
+     * 查询用户当前交易日合约手续费
+     * @param instrumentID
+     * @return never returns null
+     * @exception InstrumentException if no InvestorCommission found
+     */
+    public InstrumentCommissionRateVO queryInvestorCommission(String investorNo, String instrumentID) throws InstrumentException;
+    
+    /**
      * 查询指定交易日合约详情
      * @param instrumentID
      * @param tradingDate
-     * @return
+     * @return never returns null
+     * @exception InstrumentException if no instrumentID found
      */
-    public InstrumentVO queryInstrument(String instrumentID, String tradingDate);
+    public InstrumentVO queryInstrument(String instrumentID, String tradingDate) throws InstrumentException;
     
     /**
      * 查询当前交易日所有合约名称

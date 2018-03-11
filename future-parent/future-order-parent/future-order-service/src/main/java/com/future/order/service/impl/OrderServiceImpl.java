@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import com.future.common.exception.CommonFutureException;
 import com.future.instrument.api.service.InstrumentService;
+import com.future.instrument.api.vo.InstrumentCommissionRateVO;
 import com.future.instrument.api.vo.InstrumentVO;
 import com.future.order.api.service.OrderService;
 import com.future.trade.api.vo.ReqOrderInsertVO;
@@ -60,6 +61,9 @@ public class OrderServiceImpl implements OrderService {
 		InstrumentVO instrumentVO = this.instrumentService.queryInstrument(instrumentID);
 		
 		//调用合约中心查询手续费率和保证金比例
+		InstrumentCommissionRateVO commissionRateVO = this.instrumentService.
+		        queryInvestorCommission(reqOrderInsertVO.getInvestorID(), instrumentID);
+		commissionRateVO.getOpenRatioByVolume();
 		
 		//计算应冻结手续费
 		//TODO

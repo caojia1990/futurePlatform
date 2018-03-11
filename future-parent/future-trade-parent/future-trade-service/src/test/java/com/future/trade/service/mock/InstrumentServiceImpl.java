@@ -1,6 +1,5 @@
-package com.future.market.service.mock;
+package com.future.trade.service.mock;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -9,12 +8,7 @@ import com.future.instrument.api.service.InstrumentService;
 import com.future.instrument.api.vo.InstrumentCommissionRateVO;
 import com.future.instrument.api.vo.InstrumentVO;
 
-/**
- * 合约接口mock
- * @author caoji_000
- *
- */
-//@service("InstrumentService")
+@Service("instrumentService")
 public class InstrumentServiceImpl implements InstrumentService{
 
     @Override
@@ -31,16 +25,8 @@ public class InstrumentServiceImpl implements InstrumentService{
 
     @Override
     public List<String> queryInstrumentName() {
-        List<String> list = new ArrayList<>();
-        list.add("cu1804");
-        list.add("cu1805");
-        list.add("cu1806");
-        list.add("rb1806");
-        list.add("rb1807");
-        list.add("rb1808");
-        list.add("m1805");
-        list.add("m1809");
-        return list;
+        // TODO Auto-generated method stub
+        return null;
     }
 
     @Override
@@ -75,6 +61,12 @@ public class InstrumentServiceImpl implements InstrumentService{
 
     @Override
     public InstrumentCommissionRateVO queryInstrumentCommission(String instrumentID) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public InstrumentCommissionRateVO queryInvestorCommission(String investorNo, String instrumentID) {
         // TODO Auto-generated method stub
         return null;
     }

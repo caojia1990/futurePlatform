@@ -26,6 +26,11 @@
         <artifactId>slf4j-log4j12</artifactId>
         <version>1.7.25</version>
     </dependency>
+    <dependency>
+        <artifactId>future-common</artifactId>
+        <groupId>com.future.caojia</groupId>
+        <version>${future-common.version}</version>
+    </dependency>
   </dependencies>
   
   <modules>

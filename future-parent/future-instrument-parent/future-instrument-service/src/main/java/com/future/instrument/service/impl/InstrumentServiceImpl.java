@@ -89,4 +89,10 @@ public class InstrumentServiceImpl implements InstrumentService{
         return null;
     }
 
+    @Override
+    public InstrumentCommissionRateVO queryInvestorCommission(String investorNo, String instrumentID) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
 }
