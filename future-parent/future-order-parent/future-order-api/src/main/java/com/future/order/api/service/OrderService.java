@@ -1,5 +1,6 @@
 package com.future.order.api.service;
 
+import com.future.common.exception.CommonFutureException;
 import com.future.trade.api.vo.ReqOrderInsertVO;
 
 /**
@@ -13,7 +14,7 @@ public interface OrderService {
 	 * 报单接口
 	 * @param reqOrderInsertVO
 	 */
-	public void reqOrderInsert(ReqOrderInsertVO reqOrderInsertVO);
+	public void reqOrderInsert(ReqOrderInsertVO reqOrderInsertVO) throws CommonFutureException;
     
     /**
      * 开仓

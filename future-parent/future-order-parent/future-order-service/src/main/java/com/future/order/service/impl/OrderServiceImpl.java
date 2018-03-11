@@ -4,6 +4,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.future.common.exception.CommonFutureException;
 import com.future.instrument.api.service.InstrumentService;
 import com.future.instrument.api.vo.InstrumentVO;
 import com.future.order.api.service.OrderService;
@@ -53,7 +54,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
 	@Override
-	public void reqOrderInsert(ReqOrderInsertVO reqOrderInsertVO) {
+	public void reqOrderInsert(ReqOrderInsertVO reqOrderInsertVO) throws CommonFutureException{
 
 		String instrumentID = reqOrderInsertVO.getInstrumentID();
 		InstrumentVO instrumentVO = this.instrumentService.queryInstrument(instrumentID);

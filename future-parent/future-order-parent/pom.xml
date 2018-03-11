@@ -17,6 +17,14 @@
   	<future-market-api.version>0.0.1-SNAPSHOT</future-market-api.version>
   	<future-trade-api.version>0.0.1-SNAPSHOT</future-trade-api.version>
   </properties>
+  
+  <dependencies>
+  	<dependency>
+  		<artifactId>future-common</artifactId>
+  		<groupId>com.future.caojia</groupId>
+  		<version>${future-common.version}</version>
+  	</dependency>
+  </dependencies>
   <modules>
       <module>future-order-api</module>
       <module>future-order-service</module>
