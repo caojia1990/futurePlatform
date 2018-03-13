@@ -29,6 +29,24 @@ public class MarginServiceImpl implements MarginService {
 
         InstrumentVO instrumentVO = this.instrumentService.queryInstrument(paramVO.getInstrumentID());
         
+        BigDecimal marginRatio = BigDecimal.ZERO;
+        if("0".equals(paramVO.getDirection())) {
+        		marginRatio = new BigDecimal(instrumentVO.getLongMarginRatio());
+        }else {
+			marginRatio = new BigDecimal(instrumentVO.getShortMarginRatio());
+		}
+        
+        if("1".equals(paramVO.getPriceType())) {
+        		//市价
+        }else if("2".equals(paramVO.getPriceType())) {
+			//限价
+        		//保证金=成交金额*保证金比例=指定价*合约乘数*手数*保证金比例
+        		return paramVO.getLimitPrice()
+        				.multiply(new BigDecimal(instrumentVO.getVolumeMultiple()))
+        				.multiply(new BigDecimal(paramVO.getVolume()))
+        				.multiply(marginRatio);
+		}
+        
         return null;
     }
 

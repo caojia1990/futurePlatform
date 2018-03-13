@@ -2,8 +2,7 @@ package com.future.account.api.service;
 
 import java.math.BigDecimal;
 
-import com.future.account.api.vo.FrozenCommissionParamVO;
-import com.future.account.api.vo.FrozenMarginParamVO;
+import com.future.account.api.exception.AccountException;
 
 /**
  * 账户接口
@@ -22,7 +21,7 @@ public interface AccountService {
      * 冻结手续费
      * @param paramVO
      */
-    public void frozenCommission(FrozenCommissionParamVO paramVO);
+    public void frozenCommission(String investorNo, String accountNo, BigDecimal amount);
     
     /**
      * 解冻手续费
@@ -31,6 +30,17 @@ public interface AccountService {
      * @param amount
      */
     public void thawCommission(String investorNo, String accountNo, BigDecimal amount);
+    
+    /**
+     * 冻结资金
+     * @param investorNo 投资者编号
+     * @param accountNo 账户编号
+     * @param commision 应冻结手续费
+     * @param margin 应冻结保证金
+     * @throws AccountException if there’s no more momey left or other reason 
+     */
+    public void frozenCapital(String investorNo, String accountNo, BigDecimal commision,
+    				BigDecimal margin) throws AccountException;
     
     /**
      * 扣除手续费
@@ -44,7 +54,7 @@ public interface AccountService {
      * 冻结保证金
      * @param paramVO
      */
-    public void frozenMargin(FrozenMarginParamVO paramVO);
+    public void frozenMargin(String investorNo, String accountNo, BigDecimal amount);
     
     /**
      * 解冻保证金
