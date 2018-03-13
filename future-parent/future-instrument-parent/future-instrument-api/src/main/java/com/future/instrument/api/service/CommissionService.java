@@ -17,8 +17,9 @@ public interface CommissionService {
      * 查询当前交易日合约手续费
      * @param instrumentID
      * @return
+     * @exception InstrumentException if no instrument commission found
      */
-    public InstrumentCommissionRateVO queryInstrumentCommission(String instrumentID);
+    public InstrumentCommissionRateVO queryInstrumentCommission(String instrumentID) throws InstrumentException;
     
     /**
      * 查询用户当前交易日合约手续费

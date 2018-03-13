@@ -16,8 +16,9 @@ public interface InstrumentService {
      * 查询当前交易日合约详情
      * @param instrumentID 合约代码
      * @return
+     * @exception if no instrument found
      */
-    public InstrumentVO queryInstrument(String instrumentID);
+    public InstrumentVO queryInstrument(String instrumentID) throws InstrumentException;
     
     /**
      * 查询指定交易日合约详情
