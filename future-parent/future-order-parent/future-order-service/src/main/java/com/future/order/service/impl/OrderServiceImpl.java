@@ -61,9 +61,6 @@ public class OrderServiceImpl implements OrderService {
 		InstrumentVO instrumentVO = this.instrumentService.queryInstrument(instrumentID);
 		
 		//调用合约中心查询手续费率和保证金比例
-		InstrumentCommissionRateVO commissionRateVO = this.instrumentService.
-		        queryInvestorCommission(reqOrderInsertVO.getInvestorID(), instrumentID);
-		commissionRateVO.getOpenRatioByVolume();
 		
 		//计算应冻结手续费
 		//TODO

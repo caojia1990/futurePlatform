@@ -18,12 +18,6 @@ public class InstrumentServiceImpl implements InstrumentService {
 	}
 
 	@Override
-	public InstrumentCommissionRateVO queryInstrumentCommission(String instrumentID) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public InstrumentVO queryInstrument(String instrumentID, String tradingDate) {
 		// TODO Auto-generated method stub
 		return null;
@@ -65,10 +59,5 @@ public class InstrumentServiceImpl implements InstrumentService {
 
 	}
 
-    @Override
-    public InstrumentCommissionRateVO queryInvestorCommission(String investorNo, String instrumentID) {
-        // TODO Auto-generated method stub
-        return null;
-    }
 
 }
