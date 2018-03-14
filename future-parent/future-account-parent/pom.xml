@@ -9,6 +9,12 @@
   <packaging>pom</packaging>
   <description>账户中心</description>
   
+  <properties>
+    <spring.version>4.3.10.RELEASE</spring.version>
+    <future-account-api.version>0.0.1-SNAPSHOT</future-account-api.version>
+    
+  </properties>
+  
   <dependencies>
     <dependency>
         <artifactId>future-common</artifactId>
@@ -19,5 +25,6 @@
   
   <modules>
   	<module>future-account-api</module>
+  	<module>future-account-service</module>
   </modules>
 </project>

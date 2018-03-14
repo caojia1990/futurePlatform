@@ -1,0 +1,76 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>com.future.caojia</groupId>
+    <artifactId>future-account-parent</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+  </parent>
+  <artifactId>future-account-service</artifactId>
+  <description>账户中心</description>
+  
+  <dependencies>
+    <dependency>
+        <artifactId>future-account-api</artifactId>
+        <groupId>com.future.caojia</groupId>
+        <version>${future-account-api.version}</version>
+    </dependency>
+    
+    <dependency>
+        <groupId>com.alibaba</groupId>
+        <artifactId>dubbo</artifactId>
+        <version>${dubbo.version}</version>
+        <exclusions>
+            <exclusion>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-context</artifactId>
+            </exclusion>
+            <exclusion>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-beans</artifactId>
+            </exclusion>
+            <exclusion>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-web</artifactId>
+            </exclusion>
+        </exclusions>
+    </dependency>
+    
+    <dependency>
+        <groupId>org.apache.zookeeper</groupId>
+        <artifactId>zookeeper</artifactId>
+        <version>3.4.6</version>
+    </dependency>
+    
+    <dependency>
+        <groupId>com.101tec</groupId>
+        <artifactId>zkclient</artifactId>
+        <version>0.4</version>
+    </dependency>
+    
+    <!-- redis -->
+    <dependency>
+        <groupId>org.springframework.data</groupId>
+        <artifactId>spring-data-redis</artifactId>
+        <version>${spring-data-redis.version}</version>
+    </dependency>
+    
+    <dependency>
+        <groupId>redis.clients</groupId>
+        <artifactId>jedis</artifactId>
+        <version>2.9.0</version>
+    </dependency>
+    
+    <dependency>
+        <groupId>com.fasterxml.jackson.core</groupId>
+        <artifactId>jackson-databind</artifactId>
+        <version>2.9.3</version>
+    </dependency>
+    
+    <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-test</artifactId>
+        <version>${spring.version}</version>
+        <scope>test</scope>
+    </dependency>
+  </dependencies>
+</project>
