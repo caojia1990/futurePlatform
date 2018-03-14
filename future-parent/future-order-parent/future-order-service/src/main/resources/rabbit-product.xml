@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:rabbit="http://www.springframework.org/schema/rabbit"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/rabbit
+       http://www.springframework.org/schema/rabbit/spring-rabbit.xsd">
+       
+    <rabbit:annotation-driven/>
+    
+    <rabbit:connection-factory id="connectionFactory" host="localhost"/>
+    <rabbit:admin connection-factory="connectionFactory" />
+    
+    <rabbit:template id="tradeTemplate" connection-factory="connectionFactory"
+        message-converter="messageConverter"/>
+    
+    <rabbit:queue name="onRtnOrderQ"></rabbit:queue>
+    <rabbit:queue name="onRtnTradeQ"></rabbit:queue>
+    <rabbit:queue name="onRspOrderInsertQ"></rabbit:queue>
+    <rabbit:queue name="onRspOrderActionQ"></rabbit:queue>
+    <rabbit:queue name="onRspErrorQ"></rabbit:queue>
+    <rabbit:queue name="onErrRtnOrderInsertQ"></rabbit:queue>
+    
+    <rabbit:topic-exchange id="onRtnOrder" name="future.trade.onRtnOrder">
+        <rabbit:bindings>
+            <rabbit:binding queue="onRtnOrderQ" pattern="com.future."></rabbit:binding>
+        </rabbit:bindings>
+    </rabbit:topic-exchange>
+    
+    <rabbit:topic-exchange name="future.trade.onRtnTrade">
+        <rabbit:bindings>
+            <rabbit:binding queue="onRtnTradeQ" pattern=""></rabbit:binding>
+        </rabbit:bindings>
+    </rabbit:topic-exchange>
+    
+    <rabbit:topic-exchange name="future.trade.onRspOrderInsert">
+        <rabbit:bindings>
+            <rabbit:binding queue="onRspOrderInsertQ" pattern=""></rabbit:binding>
+        </rabbit:bindings>
+    </rabbit:topic-exchange>
+    
+    <rabbit:topic-exchange name="future.trade.onRspOrderAction">
+        <rabbit:bindings>
+            <rabbit:binding queue="onRspOrderActionQ" pattern=""></rabbit:binding>
+        </rabbit:bindings>
+    </rabbit:topic-exchange>
+    
+    <rabbit:topic-exchange name="future.trade.onRspError">
+        <rabbit:bindings>
+            <rabbit:binding queue="onRspErrorQ" pattern=""></rabbit:binding>
+        </rabbit:bindings>
+    </rabbit:topic-exchange>
+    
+    <rabbit:topic-exchange name="future.trade.onErrRtnOrderInsert">
+        <rabbit:bindings>
+            <rabbit:binding queue="onErrRtnOrderInsertQ" pattern=""></rabbit:binding>
+        </rabbit:bindings>
+    </rabbit:topic-exchange>
+    
+    <!-- 设置监听 -->
+    <rabbit:listener-container connection-factory="connectionFactory" message-converter="messageConverter">
+        <rabbit:listener ref="messageHandle" queue-names="onRtnOrderQ" method="onRtnOrder"/>
+        <rabbit:listener ref="messageHandle" queue-names="onRtnTradeQ" method="onRtnTrade"/>
+        <rabbit:listener ref="messageHandle" queue-names="onRspOrderInsertQ" method="onRspOrderInsert"/>
+        <rabbit:listener ref="messageHandle" queue-names="onRspOrderActionQ" method="onRspOrderAction"/>
+        <rabbit:listener ref="messageHandle" queue-names="onRspErrorQ" method="onRspError"/>
+        <rabbit:listener ref="messageHandle" queue-names="onErrRtnOrderInsertQ" method="onErrRtnOrderInsert"/>
+    </rabbit:listener-container>
+    
+    <!-- 消息处理 -->
+    <bean id="messageHandle" class="com.future.trade.service.mq.MessageHandle" />
+       
+    <!-- json转换器，消息可以自动根据转换器转换格式，不配置时默认为java序列化，可以自行配置 -->
+    <bean id="messageConverter" class="org.springframework.amqp.support.converter.Jackson2JsonMessageConverter" />
+</beans>       

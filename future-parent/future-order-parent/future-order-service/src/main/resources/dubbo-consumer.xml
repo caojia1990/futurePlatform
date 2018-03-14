@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+	   http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd
+	   ">
+
+    <!-- 合约中心接口 -->
+	<dubbo:reference id="instrumentService" interface="com.future.instrument.api.service.InstrumentService"  timeout="5000" check="false"/>
+	
+    <dubbo:reference id="commissionService" interface="com.future.instrument.api.service.CommissionService"  timeout="5000" check="false"/>
+    
+    <dubbo:reference id="marginService" interface="com.future.instrument.api.service.MarginService"  timeout="5000" check="false"/>
+    
+    <!-- 账户中心接口 -->
+    <dubbo:reference id="accountService" interface="com.future.account.api.service.AccountService"  timeout="5000" check="false"/>
+    
+</beans>
