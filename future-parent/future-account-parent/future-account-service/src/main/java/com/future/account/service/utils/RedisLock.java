@@ -1,6 +1,7 @@
 package com.future.account.service.utils;
 
 import org.apache.log4j.Logger;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 
 /**
@@ -14,7 +15,9 @@ public class RedisLock {
     
     private ValueOperations<String, String> valueOperations;
     
-    private final static int DEFAULT_ACQUIRY_RESOLUTION_MILLIS = 5;
+    private StringRedisTemplate redisTemplate;
+    
+    private final static int DEFAULT_ACQUIRY_RESOLUTION_MILLIS = 10;
     
     private final static String REDIS_LOCK_KEY_SUFFIX = "-redis-lock-key";
     
@@ -32,18 +35,19 @@ public class RedisLock {
     
     private volatile boolean locked = false;
     
-    public RedisLock(ValueOperations<String, String> valueOperations, String key){
-        this.valueOperations = valueOperations;
+    public RedisLock(StringRedisTemplate redisTemplate, String key){
+        this.redisTemplate = redisTemplate;
+        this.valueOperations = redisTemplate.opsForValue();
         this.lockKey = key + REDIS_LOCK_KEY_SUFFIX;
     }
     
-    public RedisLock(ValueOperations<String, String> valueOperations, String key, long timeoutMsecs){
-        this(valueOperations, key);
+    public RedisLock(StringRedisTemplate redisTemplate, String key, long timeoutMsecs){
+        this(redisTemplate, key);
         this.timeoutMsecs = timeoutMsecs;
     }
     
-    public RedisLock(ValueOperations<String, String> valueOperations, String key, long timeoutMsecs, long expireMsecs){
-        this(valueOperations, key, timeoutMsecs);
+    public RedisLock(StringRedisTemplate redisTemplate, String key, long timeoutMsecs, long expireMsecs){
+        this(redisTemplate, key, timeoutMsecs);
         this.expireMsecs = expireMsecs;
     }
     
@@ -92,6 +96,7 @@ public class RedisLock {
             String expireStr = String.valueOf(expire);
             if(this.setNX(lockKey, expireStr)){
                 // lock acquired
+                System.out.println(Thread.currentThread().getName()+"获得锁");
                 locked = true;
                 return true;
             }
@@ -101,13 +106,13 @@ public class RedisLock {
                 
                 String oldValueStr = this.getSet(lockKey, expireStr);
                 if(oldValueStr != null && oldValueStr.equals(currentValueStr)) {
-                    
+                    System.out.println(Thread.currentThread().getName()+"获得锁");
                     locked = true;
                     return true;
                 }
                 
             }
-            
+            System.out.println(Thread.currentThread().getName()+"尝试重新获得锁");
             timeout -= DEFAULT_ACQUIRY_RESOLUTION_MILLIS;
             /**
              *   延迟100 毫秒,  这里使用随机时间可能会好一点,可以防止饥饿进程的出现,即,当同时到达多个进程,
@@ -116,15 +121,16 @@ public class RedisLock {
              */
             Thread.sleep(DEFAULT_ACQUIRY_RESOLUTION_MILLIS);
         }
-        
+        System.out.println(Thread.currentThread().getName()+"获取锁失败");
         return false;
     }
     
     public void unlock() {
         
         if (locked) {
-            valueOperations.set(lockKey, null);
+            redisTemplate.delete(lockKey);
             locked = false;
+            System.out.println(Thread.currentThread().getName()+"释放所成功");
         }
         
     }

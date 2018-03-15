@@ -12,7 +12,8 @@ import com.future.instrument.api.service.InstrumentService;
 import com.future.instrument.api.service.MarginService;
 import com.future.instrument.api.vo.InvestorTradeParamVO;
 import com.future.order.api.service.OrderService;
-import com.future.trade.api.vo.ReqOrderInsertVO;
+import com.future.order.api.vo.ReqOrderActionVO;
+import com.future.order.api.vo.ReqOrderInsertVO;
 
 /**
  * 报单接口实现类
@@ -40,7 +41,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public void cancelOrder() {
+    public void cancelOrder(String investorNo, String acountNo, String orderRef) {
         // TODO Auto-generated method stub
 
     }
@@ -89,6 +90,12 @@ public class OrderServiceImpl implements OrderService {
         
         //调用交易中心下单
         
+        
+    }
+
+    @Override
+    public void reqOrderAction(ReqOrderActionVO reqOrderActionVO) throws CommonFutureException {
+        // TODO Auto-generated method stub
         
     }
 

@@ -1,7 +1,8 @@
 package com.future.order.api.service;
 
 import com.future.common.exception.CommonFutureException;
-import com.future.trade.api.vo.ReqOrderInsertVO;
+import com.future.order.api.vo.ReqOrderActionVO;
+import com.future.order.api.vo.ReqOrderInsertVO;
 
 /**
  * 报单接口
@@ -11,10 +12,17 @@ import com.future.trade.api.vo.ReqOrderInsertVO;
 public interface OrderService {
 	
 	/**
-	 * 报单接口
+	 * 报单录入
 	 * @param reqOrderInsertVO
 	 */
 	public void reqOrderInsert(ReqOrderInsertVO reqOrderInsertVO) throws CommonFutureException;
+	
+	/**
+	 * 报单操作
+	 * @param reqOrderActionVO
+	 * @throws CommonFutureException
+	 */
+	public void reqOrderAction(ReqOrderActionVO reqOrderActionVO) throws CommonFutureException;
     
     /**
      * 开仓
@@ -24,7 +32,7 @@ public interface OrderService {
     /**
      * 撤单
      */
-    public void cancelOrder();
+    public void cancelOrder(String investorNo, String acountNo, String orderRef);
     
     /**
      * 平仓

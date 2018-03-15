@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import com.future.trade.api.exception.TradeError;
 import com.future.trade.api.exception.TradeException;
 import com.future.trade.api.service.TradeService;
+import com.future.trade.api.vo.ReqOrderActionVO;
 import com.future.trade.api.vo.ReqOrderInsertVO;
 import com.future.trade.service.TradeMain;
 
@@ -57,6 +58,12 @@ public class TradeServiceImpl implements TradeService{
         }
             
         return r;
+    }
+
+    @Override
+    public int reqOrderAction(ReqOrderActionVO reqOrderActionVO) throws TradeException {
+        // TODO Auto-generated method stub
+        return 0;
     }
 
     
