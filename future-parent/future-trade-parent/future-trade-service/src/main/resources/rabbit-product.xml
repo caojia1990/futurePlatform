@@ -17,29 +17,30 @@
     
     <rabbit:admin connection-factory="connectionFactory" />
     
-    <!-- 报单回报 -->
-    <rabbit:topic-exchange name="future.trade.onRtnOrder">
-    </rabbit:topic-exchange>
+    <!-- direct exchange -->
+    <rabbit:queue name="onRtnOrderQ"></rabbit:queue>
+    <rabbit:queue name="onRtnTradeQ"></rabbit:queue>
+    <rabbit:queue name="onRspOrderInsertQ"></rabbit:queue>
+    <rabbit:queue name="onRspOrderActionQ"></rabbit:queue>
+    <rabbit:queue name="onRspErrorQ"></rabbit:queue>
+    <rabbit:queue name="onErrRtnOrderInsertQ"></rabbit:queue>
     
-    <!-- 成交回报 -->
-    <rabbit:topic-exchange name="future.trade.onRtnTrade">
-    </rabbit:topic-exchange>
-    
-    <!-- CTP报单检查失败 -->
-    <rabbit:topic-exchange name="future.trade.onRspOrderInsert">
-    </rabbit:topic-exchange>
-    
-    <!-- 撤单 -->
-    <rabbit:topic-exchange name="future.trade.onRspOrderAction">
-    </rabbit:topic-exchange>
-    
-    <!-- 错误回调 -->
-    <rabbit:topic-exchange name="future.trade.onRspError">
-    </rabbit:topic-exchange>
-    
-    <!-- 报单录入错误回调 -->
-    <rabbit:topic-exchange name="future.trade.onErrRtnOrderInsert">
-    </rabbit:topic-exchange>
+    <rabbit:direct-exchange name="future.trade.direct">
+        <rabbit:bindings>
+            <!-- 报单回报 -->
+            <rabbit:binding queue="onRtnOrderQ" key="onRtnOrder"></rabbit:binding>
+            <!-- 成交回报 -->
+            <rabbit:binding queue="onRtnTradeQ" key="onRtnTrade"></rabbit:binding>
+            <!-- CTP报单检查失败 -->
+            <rabbit:binding queue="onRspOrderInsertQ" key="onRspOrderInsert"></rabbit:binding>
+            <!-- 撤单 -->
+            <rabbit:binding queue="onRspOrderActionQ" key="onRspOrderAction"></rabbit:binding>
+            <!-- 错误回调 -->
+            <rabbit:binding queue="onRspErrorQ" key="onRspError"></rabbit:binding>
+            <!-- 报单录入错误回调 -->
+            <rabbit:binding queue="onErrRtnOrderInsertQ" key="onErrRtnOrderInsert"></rabbit:binding>
+        </rabbit:bindings>
+    </rabbit:direct-exchange>
     
     <!-- json转换器，消息可以自动根据转换器转换格式，不配置时默认为java序列化，可以自行配置 -->
     <bean id="messageConverter" class="org.springframework.amqp.support.converter.Jackson2JsonMessageConverter" />

@@ -8,7 +8,6 @@ import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.future.instrument.api.service.InstrumentService;
-import com.future.trade.api.service.TradeService;
 import com.future.trade.service.ctp.MyTraderSpi;
 
 public class TradeMain {

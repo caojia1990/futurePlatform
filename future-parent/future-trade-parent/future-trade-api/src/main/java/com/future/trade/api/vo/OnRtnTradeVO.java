@@ -13,11 +13,6 @@ public class OnRtnTradeVO {
     private String investorID;
     
     /**
-     * 账户编号
-     */
-    private String accountNo;
-    
-    /**
      * 合约代码
      */
     private String instrumentID;
@@ -113,14 +108,6 @@ public class OnRtnTradeVO {
 
     public void setInvestorID(String investorID) {
         this.investorID = investorID;
-    }
-
-    public String getAccountNo() {
-        return accountNo;
-    }
-
-    public void setAccountNo(String accountNo) {
-        this.accountNo = accountNo;
     }
 
     public String getInstrumentID() {

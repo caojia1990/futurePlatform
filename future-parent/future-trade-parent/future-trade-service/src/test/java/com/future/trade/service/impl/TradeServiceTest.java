@@ -44,9 +44,9 @@ public class TradeServiceTest extends AbstractJUnit4SpringContextTests{
     @Test
     public void reqOrderInsert() throws IOException{
         
-        Queue onRtnOrderQ = (Queue) applicationContext.getBean("onRtnOrderQ");
-        TopicExchange onRtnOrderExchange = (TopicExchange) applicationContext.getBean("onRtnOrder");
-        admin.declareBinding(BindingBuilder.bind(onRtnOrderQ).to(onRtnOrderExchange).with("investorNo.onRtnOrder"));
+        //Queue onRtnOrderQ = (Queue) applicationContext.getBean("onRtnOrderQ");
+        /*TopicExchange onRtnOrderExchange = (TopicExchange) applicationContext.getBean("onRtnOrder");
+        admin.declareBinding(BindingBuilder.bind(onRtnOrderQ).to(onRtnOrderExchange).with("investorNo.onRtnOrder"));*/
         
         
         while (true) {

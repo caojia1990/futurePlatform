@@ -40,7 +40,6 @@ import com.future.trade.api.vo.OrderSubmitStatus;
 import com.future.trade.api.vo.TimeCondition;
 import com.future.trade.api.vo.VolumeCondition;
 import com.future.trade.service.TradeMain;
-import com.future.trade.service.util.SpringContextUtil;
 
 /**
  * Custom TraderSpi
@@ -55,10 +54,12 @@ public class MyTraderSpi extends JCTPTraderSpi {
 	JCTPTraderApi traderApi;
 	int nRequestID = 0;
 	
-	//中证
-	/*String brokerId = "9999";
-	String userId = "090985";
-	String password = "caojiactp";*/
+	final static String ONRTNORDER_KEY = "onRtnOrder";
+	final static String ONRTNTRADE_KEY = "onRtnTrade";
+	final static String ONRSPORDERINSERT_KEY = "onRspOrderInsert";
+	final static String ONRSPORDERACTION_KEY = "onRspOrderAction";
+	final static String ONRSPERROR_KEY = "onRspError";
+	final static String ONERRRTNORDERINSERT_KEY = "onErrRtnOrderInsert";
 	
 	private InstrumentService instrumentService;
 	
@@ -146,7 +147,7 @@ public class MyTraderSpi extends JCTPTraderSpi {
 		onRtnOrderVO.setInsertTime(pOrder.getInsertTime());
 		onRtnOrderVO.setInstallID(pOrder.getInstallID());
 		onRtnOrderVO.setInstrumentID(pOrder.getInstrumentID());
-		onRtnOrderVO.setInvestorID(pOrder.getInvestorID());
+		onRtnOrderVO.setInvestorID(pOrder.getInvestorID());//投资者编号 
 		onRtnOrderVO.setIsAutoSuspend(pOrder.getIsAutoSuspend());
 		onRtnOrderVO.setLimitPrice(pOrder.getLimitPrice());
 		onRtnOrderVO.setMinVolume(pOrder.getMinVolume());
@@ -178,9 +179,7 @@ public class MyTraderSpi extends JCTPTraderSpi {
 		onRtnOrderVO.setVolumeTotalOriginal(pOrder.getVolumeTotalOriginal());
 		onRtnOrderVO.setVolumeTraded(pOrder.getVolumeTraded());
 		
-		//TODO
-		String routerKey = "investorNo.onRtnOrder";
-		this.template.convertAndSend("future.trade.onRtnOrder", routerKey, onRtnOrderVO);
+		this.template.convertAndSend("future.trade.direct", ONRTNORDER_KEY, onRtnOrderVO);
 	}
 	
 	//报单响应
@@ -204,9 +203,9 @@ public class MyTraderSpi extends JCTPTraderSpi {
 	public void onRtnTrade(CThostFtdcTradeField pTrade) {
 		//System.out.println("成交"+pTrade.getInstrumentID());
 	    OnRtnTradeVO onRtnTradeVO = new OnRtnTradeVO();
-	    //TODO 账户号
-	    onRtnTradeVO.setInvestorID("");
-	    onRtnTradeVO.setAccountNo("");
+	    //TODO 账户号  不需要返回
+	    //onRtnTradeVO.setAccountNo("");
+	    onRtnTradeVO.setInvestorID(pTrade.getInvestorID());
 	    onRtnTradeVO.setDirection(Direction.ofCode(pTrade.getDirection()));
 	    onRtnTradeVO.setExchangeID(pTrade.getExchangeID());
 	    onRtnTradeVO.setExchangeInstID(pTrade.getExchangeInstID());
@@ -226,9 +225,7 @@ public class MyTraderSpi extends JCTPTraderSpi {
 	    onRtnTradeVO.setUserID(pTrade.getUserID());
 	    onRtnTradeVO.setVolume(pTrade.getVolume());//成交量
 	    
-	    //TODO
-        String routerKey = "investorNo.onRtnTrade";
-        this.template.convertAndSend("future.trade.onRtnTrade", routerKey, onRtnTradeVO);
+        this.template.convertAndSend("future.trade.direct", ONRTNTRADE_KEY, onRtnTradeVO);
 	}
 	
 	@Override
@@ -320,7 +317,7 @@ public class MyTraderSpi extends JCTPTraderSpi {
 	    info.setIsTrading(pInstrument.getIsTrading());//当前是否交易
 	    info.setPositionDateType(pInstrument.getPositionDateType());//持仓日期类型
 	    info.setPositionType(pInstrument.getPositionType());//持仓类型
-	    this.instrumentService.saveInstrument(info);
+	    //this.instrumentService.saveInstrument(info);
 	    
 	    
 	  /*//查询合约手续费
