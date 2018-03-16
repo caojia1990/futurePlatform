@@ -27,6 +27,11 @@ public class ReqOrderInsertVO implements Serializable{
     private String investorID;
     
     /**
+     * 账户编号
+     */
+    private String accountNo;
+    
+    /**
      * 合约代码
      */
     private String instrumentID;
@@ -247,6 +252,14 @@ public class ReqOrderInsertVO implements Serializable{
 
     public void setForceCloseReason(ForceCloseReason forceCloseReason) {
         this.forceCloseReason = forceCloseReason;
+    }
+
+    public String getAccountNo() {
+        return accountNo;
+    }
+
+    public void setAccountNo(String accountNo) {
+        this.accountNo = accountNo;
     }
 
 }

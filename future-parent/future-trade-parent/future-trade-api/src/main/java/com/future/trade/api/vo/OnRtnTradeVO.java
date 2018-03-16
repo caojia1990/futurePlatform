@@ -253,5 +253,16 @@ public class OnRtnTradeVO {
     public void setTradingDay(String tradingDay) {
         this.tradingDay = tradingDay;
     }
+
+    @Override
+    public String toString() {
+        return "OnRtnTradeVO [investorID=" + investorID + ", instrumentID=" + instrumentID + ", orderRef=" + orderRef
+                + ", userID=" + userID + ", exchangeID=" + exchangeID + ", tradeID=" + tradeID + ", direction="
+                + direction + ", orderSysID=" + orderSysID + ", exchangeInstID=" + exchangeInstID + ", offsetFlag="
+                + offsetFlag + ", hedgeFlag=" + hedgeFlag + ", price=" + price + ", volume=" + volume + ", tradeDate="
+                + tradeDate + ", tradeTime=" + tradeTime + ", tradeType=" + tradeType + ", orderLocalID=" + orderLocalID
+                + ", sequenceNo=" + sequenceNo + ", tradingDay=" + tradingDay + "]";
+    }
+    
     
 }

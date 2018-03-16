@@ -10,31 +10,12 @@
        
     <rabbit:annotation-driven/>
     
-    <rabbit:connection-factory id="connectionFactory" host="localhost"/>
-    <rabbit:admin connection-factory="connectionFactory" />
-    
-    <rabbit:template id="tradeTemplate" connection-factory="connectionFactory"
-        message-converter="messageConverter"/>
-    
-    <rabbit:topic-exchange id="onRtnOrder" name="future.trade.onRtnOrder">
-    </rabbit:topic-exchange>
-    <rabbit:topic-exchange name="future.trade.onRtnTrade">
-    </rabbit:topic-exchange>
-    <rabbit:topic-exchange name="future.trade.onRspOrderInsert">
-    </rabbit:topic-exchange>
-    <rabbit:topic-exchange name="future.trade.onRspOrderAction">
-    </rabbit:topic-exchange>
-    <rabbit:topic-exchange name="future.trade.onRspError">
-    </rabbit:topic-exchange>
-    <rabbit:topic-exchange name="future.trade.onErrRtnOrderInsert">
-    </rabbit:topic-exchange>
-    
-    <rabbit:queue id="onRtnOrderQ"></rabbit:queue>
-    <rabbit:queue id="onRtnTradeQ"></rabbit:queue>
-    <rabbit:queue id="onRspOrderInsertQ"></rabbit:queue>
-    <rabbit:queue id="onRspOrderActionQ"></rabbit:queue>
-    <rabbit:queue id="onRspErrorQ"></rabbit:queue>
-    <rabbit:queue id="onErrRtnOrderInsertQ"></rabbit:queue>
+    <rabbit:queue id="onRtnOrderQ" name="onRtnOrderQ" ></rabbit:queue>
+    <rabbit:queue id="onRtnTradeQ" name="onRtnTradeQ"></rabbit:queue>
+    <rabbit:queue id="onRspOrderInsertQ" name="onRspOrderInsertQ"></rabbit:queue>
+    <rabbit:queue id="onRspOrderActionQ" name="onRspOrderActionQ"></rabbit:queue>
+    <rabbit:queue id="onRspErrorQ" name="onRspErrorQ"></rabbit:queue>
+    <rabbit:queue id="onErrRtnOrderInsertQ" name="onErrRtnOrderInsertQ"></rabbit:queue>
     
     <!-- 设置监听 -->
     <rabbit:listener-container connection-factory="connectionFactory" message-converter="messageConverter">
@@ -47,7 +28,7 @@
     </rabbit:listener-container>
     
     <!-- 消息处理 -->
-    <bean id="messageHandle" class="com.future.trade.service.mq.MessageHandle" />
+    <bean id="messageHandle" class="com.future.order.service.mq.TradeMessageHandle" />
        
     <!-- json转换器，消息可以自动根据转换器转换格式，不配置时默认为java序列化，可以自行配置 -->
     <bean id="messageConverter" class="org.springframework.amqp.support.converter.Jackson2JsonMessageConverter" />
