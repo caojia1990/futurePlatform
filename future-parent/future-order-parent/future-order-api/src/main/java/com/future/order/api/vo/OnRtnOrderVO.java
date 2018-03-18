@@ -116,10 +116,6 @@ public class OnRtnOrderVO implements Serializable{
      */
     private OrderSubmitStatus orderSubmitStatus;
     /**
-     * 报单提示序号
-     */
-    private int notifySequence;
-    /**
      * 交易日
      */
     private String tradingDay;
@@ -178,11 +174,6 @@ public class OnRtnOrderVO implements Serializable{
      * 撤销时间
      */
     private String cancelTime;
-    
-    /**
-     * 序号
-     */
-    private int sequenceNo;
     
     /**
      * 前置编号
@@ -337,12 +328,6 @@ public class OnRtnOrderVO implements Serializable{
     public void setOrderSubmitStatus(OrderSubmitStatus orderSubmitStatus) {
         this.orderSubmitStatus = orderSubmitStatus;
     }
-    public int getNotifySequence() {
-        return notifySequence;
-    }
-    public void setNotifySequence(int notifySequence) {
-        this.notifySequence = notifySequence;
-    }
     public String getTradingDay() {
         return tradingDay;
     }
@@ -415,12 +400,6 @@ public class OnRtnOrderVO implements Serializable{
     public void setCancelTime(String cancelTime) {
         this.cancelTime = cancelTime;
     }
-    public int getSequenceNo() {
-        return sequenceNo;
-    }
-    public void setSequenceNo(int sequenceNo) {
-        this.sequenceNo = sequenceNo;
-    }
     public int getFrontID() {
         return frontID;
     }
@@ -447,22 +426,21 @@ public class OnRtnOrderVO implements Serializable{
         this.accountNo = accountNo;
     }
     @Override
-    public String toString() {
-        return "OnRtnOrderVO [investorID=" + investorID + ", accountNo=" + accountNo + ", instrumentID=" + instrumentID
-                + ", OrderRef=" + OrderRef + ", userID=" + userID + ", orderPriceType=" + orderPriceType
-                + ", direction=" + direction + ", combOffsetFlag=" + combOffsetFlag + ", combHedgeFlag=" + combHedgeFlag
-                + ", limitPrice=" + limitPrice + ", volumeTotalOriginal=" + volumeTotalOriginal + ", timeCondition="
-                + timeCondition + ", gTDDate=" + gTDDate + ", volumeCondition=" + volumeCondition + ", minVolume="
-                + minVolume + ", contingentCondition=" + contingentCondition + ", stopPrice=" + stopPrice
-                + ", forceCloseReason=" + forceCloseReason + ", requestID=" + requestID + ", exchangeID=" + exchangeID
-                + ", orderSysID=" + orderSysID + ", exchangeInstID=" + exchangeInstID + ", orderSubmitStatus="
-                + orderSubmitStatus + ", notifySequence=" + notifySequence + ", tradingDay=" + tradingDay
-                + ", orderSource=" + orderSource + ", orderStatus=" + orderStatus + ", orderType=" + orderType
-                + ", volumeTraded=" + volumeTraded + ", volumeTotal=" + volumeTotal + ", insertDate=" + insertDate
-                + ", insertTime=" + insertTime + ", activeTime=" + activeTime + ", suspendTime=" + suspendTime
-                + ", updateTime=" + updateTime + ", cancelTime=" + cancelTime + ", sequenceNo=" + sequenceNo
-                + ", frontID=" + frontID + ", sessionID=" + sessionID + ", statusMsg=" + statusMsg + "]";
-    }
+	public String toString() {
+		return "OnRtnOrderVO [investorID=" + investorID + ", accountNo=" + accountNo + ", instrumentID=" + instrumentID
+				+ ", OrderRef=" + OrderRef + ", userID=" + userID + ", orderPriceType=" + orderPriceType
+				+ ", direction=" + direction + ", combOffsetFlag=" + combOffsetFlag + ", combHedgeFlag=" + combHedgeFlag
+				+ ", limitPrice=" + limitPrice + ", volumeTotalOriginal=" + volumeTotalOriginal + ", timeCondition="
+				+ timeCondition + ", gTDDate=" + gTDDate + ", volumeCondition=" + volumeCondition + ", minVolume="
+				+ minVolume + ", contingentCondition=" + contingentCondition + ", stopPrice=" + stopPrice
+				+ ", forceCloseReason=" + forceCloseReason + ", requestID=" + requestID + ", exchangeID=" + exchangeID
+				+ ", orderSysID=" + orderSysID + ", exchangeInstID=" + exchangeInstID + ", orderSubmitStatus="
+				+ orderSubmitStatus + ", tradingDay=" + tradingDay + ", orderSource=" + orderSource + ", orderStatus="
+				+ orderStatus + ", orderType=" + orderType + ", volumeTraded=" + volumeTraded + ", volumeTotal="
+				+ volumeTotal + ", insertDate=" + insertDate + ", insertTime=" + insertTime + ", activeTime="
+				+ activeTime + ", suspendTime=" + suspendTime + ", updateTime=" + updateTime + ", cancelTime="
+				+ cancelTime + ", frontID=" + frontID + ", sessionID=" + sessionID + ", statusMsg=" + statusMsg + "]";
+	}
     
     
 
