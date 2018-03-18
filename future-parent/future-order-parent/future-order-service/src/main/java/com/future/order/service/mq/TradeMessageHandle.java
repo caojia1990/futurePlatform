@@ -112,6 +112,8 @@ public class TradeMessageHandle {
             logger.debug("成交回报"+onRtnTrade);
         }
         
+        String orderRef = onRtnTrade.getOrderRef();
+        
         
     }
     
