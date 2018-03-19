@@ -4,6 +4,7 @@ import org.apache.log4j.Logger;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.redis.core.StringRedisTemplate;
 
 import com.future.account.api.service.AccountService;
@@ -110,7 +111,12 @@ public class TradeMessageHandle {
         
         com.future.order.api.vo.OnRtnOrderVO message = 
         		new com.future.order.api.vo.OnRtnOrderVO();
-        OrderInput input = orderInputDao.selectByOrderRef(onRtnOrderVO.getOrderRef());
+        OrderInput input = null;
+		try {
+			input = orderInputDao.selectByOrderRef(onRtnOrderVO.getOrderRef());
+		} catch (EmptyResultDataAccessException e) {
+			return;
+		}
         message.setOrderRef(onRtnOrderVO.getOrderRef());
         message.setAccountNo(input.getAccountNo());
         message.setActiveTime(onRtnOrderVO.getActiveTime());

@@ -10,7 +10,7 @@
        
     <rabbit:annotation-driven/>
     
-    <rabbit:connection-factory id="connectionFactory" host="localhost"/>
+    <rabbit:connection-factory id="connectionFactory" host="192.168.1.14" username="future" password="future"/>
     <rabbit:admin connection-factory="connectionFactory" />
     
     <rabbit:template id="orderTemplate" connection-factory="connectionFactory"
