@@ -1,7 +1,12 @@
 package com.future.instrument.service.impl;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
 import javax.annotation.Resource;
 
+import org.apache.log4j.Logger;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +16,7 @@ import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.util.StopWatch;
 
 import com.future.instrument.api.vo.InstrumentVO;
 
@@ -18,6 +24,7 @@ import com.future.instrument.api.vo.InstrumentVO;
 @ContextConfiguration(locations = "classpath:spring-redis-test.xml")
 public class InstrumentServiceTest extends AbstractJUnit4SpringContextTests{
     
+    static Logger logger = Logger.getLogger(InstrumentServiceTest.class);
     
     @Resource(name="redisTemplate")
     private ValueOperations<String, Object> valueOperations;
@@ -41,10 +48,36 @@ public class InstrumentServiceTest extends AbstractJUnit4SpringContextTests{
     }
     
     @Test
-    public void queryInstrument(){
+    public void queryInstrument() throws IOException{
         
-        InstrumentVO instrumentVO = (InstrumentVO) this.redisTemplate.opsForHash().get(InstrumentServiceImpl.INSTRUMENT_REDIS_KEY, "cu1804");
-        System.out.println(instrumentVO);
+        while (true) {
+            BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+            String inputStr = br.readLine();
+            
+            if(inputStr.equals("bye")){
+                break;
+            }
+            StopWatch watch = new StopWatch();
+            watch.start();
+            if(logger.isDebugEnabled()){
+                logger.debug("开始");
+            }
+            
+            InstrumentVO instrumentVO;
+            try {
+                instrumentVO = hashOperations.get(InstrumentServiceImpl.INSTRUMENT_REDIS_KEY, "cu1804");
+                logger.debug(instrumentVO);
+            } catch (Exception e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+            
+            watch.stop();
+            if(logger.isDebugEnabled()){
+                logger.debug("耗时:"+watch.getTotalTimeMillis());
+            }
+        }
+       
     }
 
 }

@@ -5,7 +5,7 @@
 	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 	   http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd
 	   ">
-	<dubbo:application name="future-trade-service-test" />
+	<dubbo:application name="future-trade-consumer" />
 	<!-- <dubbo:registry address="N/A" /> -->
 	
 	<dubbo:registry protocol="zookeeper" address="${dubbo.registry.address}" check="false" />

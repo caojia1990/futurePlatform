@@ -107,10 +107,10 @@ public class OrderServiceImpl implements OrderService {
         paramVO.setPriceType(String.valueOf(reqOrderInsertVO.getOrderPriceType()));
         paramVO.setVolume(reqOrderInsertVO.getVolumeTotalOriginal());
         
-        //BigDecimal commission = this.commissionService.calculateCommission(paramVO);
+        BigDecimal commission = this.commissionService.calculateCommission(paramVO);
         
         //调用合约中心计算应冻结保证金
-        //BigDecimal margin = this.marginService.calculateMargin(paramVO);
+        BigDecimal margin = this.marginService.calculateMargin(paramVO);
         
         //调用账户中心冻结资金
         //TODO

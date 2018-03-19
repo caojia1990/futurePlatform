@@ -15,7 +15,7 @@
           </property>
           
           <property name="valueSerializer">  
-              <bean id="jsonSerializer" class="org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer" >
+              <bean class="com.future.instrument.service.utils.FastJson2JsonRedisSerializer" >
                 <constructor-arg type="java.lang.Class" value="java.lang.Object" />
               </bean>
           </property>
@@ -24,8 +24,8 @@
               <bean class="org.springframework.data.redis.serializer.StringRedisSerializer" />  
           </property>
           
-          <property name="hashValueSerializer">  
-              <bean id="jsonSerializer" class="org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer" >
+          <property name="hashValueSerializer">
+              <bean class="com.future.instrument.service.utils.FastJson2JsonRedisSerializer" >
                 <constructor-arg type="java.lang.Class" value="java.lang.Object" />
               </bean>
           </property>
