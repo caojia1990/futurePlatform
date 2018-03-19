@@ -74,16 +74,14 @@ public class CommissionServiceImpl implements CommissionService {
         }else if ("3".equals(paramVO.getOffset())) {
             //平今
             if(commissionRateVO.getCloseTodayRatioByVolume() != 0){
-                //按手数  手续费=交易手数*每手手续费
-                byVolume = new BigDecimal(paramVO.getVolume())
-                        .multiply(new BigDecimal(commissionRateVO.getCloseTodayRatioByVolume()))
+                //按手数  每手手续费=交易手数*每手手续费
+                byVolume = new BigDecimal(commissionRateVO.getCloseTodayRatioByVolume())
                         .setScale(2, RoundingMode.HALF_UP);
             }
             if(commissionRateVO.getCloseTodayRatioByMoney() != 0){
                 InstrumentVO instrumentVO = this.instrumentService.queryInstrument(paramVO.getInstrumentID());
-                //按金额    手续费=合约乘数*交易手数*指定价格*手续费比例
+                //按金额    每手手续费=合约乘数*指定价格*手续费比例
                 byMoney = new BigDecimal(instrumentVO.getVolumeMultiple())
-                        .multiply(new BigDecimal(paramVO.getVolume()))
                         .multiply(paramVO.getLimitPrice())
                         .multiply(new BigDecimal(commissionRateVO.getCloseTodayRatioByMoney()))
                         .setScale(2, RoundingMode.HALF_UP);

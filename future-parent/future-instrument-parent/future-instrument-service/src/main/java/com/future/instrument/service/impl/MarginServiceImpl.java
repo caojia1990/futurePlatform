@@ -1,6 +1,7 @@
 package com.future.instrument.service.impl;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -40,11 +41,10 @@ public class MarginServiceImpl implements MarginService {
         		//市价
         }else if("2".equals(paramVO.getPriceType())) {
 			//限价
-        		//保证金=成交金额*保证金比例=指定价*合约乘数*手数*保证金比例
+        		//每手保证金=成交金额*保证金比例=指定价*合约乘数*保证金比例
         		return paramVO.getLimitPrice()
         				.multiply(new BigDecimal(instrumentVO.getVolumeMultiple()))
-        				.multiply(new BigDecimal(paramVO.getVolume()))
-        				.multiply(marginRatio);
+        				.multiply(marginRatio).setScale(2, RoundingMode.HALF_UP);
 		}
         
         return null;
