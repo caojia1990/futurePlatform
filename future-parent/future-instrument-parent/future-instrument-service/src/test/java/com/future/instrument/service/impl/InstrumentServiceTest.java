@@ -4,7 +4,9 @@ import javax.annotation.Resource;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.HashOperations;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
@@ -23,6 +25,9 @@ public class InstrumentServiceTest extends AbstractJUnit4SpringContextTests{
     @Resource(name="redisTemplate")
     private HashOperations<String, String , InstrumentVO> hashOperations;
     
+    @Autowired
+    private StringRedisTemplate redisTemplate;
+    
     @Test
     public void test(){
         
@@ -33,6 +38,13 @@ public class InstrumentServiceTest extends AbstractJUnit4SpringContextTests{
         this.valueOperations.set("test", instrumentVO);
         this.hashOperations.put("instrument", instrumentVO.getInstrumentID(), instrumentVO);
         
+    }
+    
+    @Test
+    public void queryInstrument(){
+        
+        InstrumentVO instrumentVO = (InstrumentVO) this.redisTemplate.opsForHash().get(InstrumentServiceImpl.INSTRUMENT_REDIS_KEY, "cu1804");
+        System.out.println(instrumentVO);
     }
 
 }

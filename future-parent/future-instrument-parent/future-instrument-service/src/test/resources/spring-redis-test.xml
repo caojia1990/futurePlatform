@@ -8,7 +8,7 @@
         p:host-name="localhost" p:port="6379" p:use-pool="true"/>
         
         
-        <bean id="redisTemplate" class="org.springframework.data.redis.core.RedisTemplate" 
+        <bean id="redisTemplate" class="org.springframework.data.redis.core.StringRedisTemplate" 
                 p:connection-factory-ref="jedisConnectionFactory">
           <property name="keySerializer">  
               <bean class="org.springframework.data.redis.serializer.StringRedisSerializer" /> 

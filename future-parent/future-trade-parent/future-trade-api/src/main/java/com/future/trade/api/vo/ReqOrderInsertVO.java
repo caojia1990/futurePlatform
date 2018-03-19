@@ -8,14 +8,13 @@ import java.io.Serializable;
  *
  */
 public class ReqOrderInsertVO implements Serializable{
-    
+
     
     /**
      * 
      */
-    private static final long serialVersionUID = -7390751012439707057L;
+    private static final long serialVersionUID = 4943864265015243840L;
 
-    
     /**
      * 请求编号
      */

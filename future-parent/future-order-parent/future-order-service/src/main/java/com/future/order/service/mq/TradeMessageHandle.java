@@ -75,7 +75,7 @@ public class TradeMessageHandle {
         
         if(logger.isDebugEnabled()){
             
-            logger.debug("报单回报"+onRtnOrderVO);
+            logger.debug("报单回报:"+onRtnOrderVO);
         }
         
         //根据orderRef查询账户编号
@@ -111,6 +111,7 @@ public class TradeMessageHandle {
         com.future.order.api.vo.OnRtnOrderVO message = 
         		new com.future.order.api.vo.OnRtnOrderVO();
         OrderInput input = orderInputDao.selectByOrderRef(onRtnOrderVO.getOrderRef());
+        message.setOrderRef(onRtnOrderVO.getOrderRef());
         message.setAccountNo(input.getAccountNo());
         message.setActiveTime(onRtnOrderVO.getActiveTime());
         message.setCancelTime(onRtnOrderVO.getCancelTime());
@@ -150,7 +151,7 @@ public class TradeMessageHandle {
         message.setTimeCondition(TimeCondition.ofCode(
         		onRtnOrderVO.getTimeCondition().getCode()));
         //TODO
-        rabbitTemplate.convertAndSend(onRtnOrder, input.getInvestorID(), onRtnOrderVO);
+        rabbitTemplate.convertAndSend(onRtnOrder, input.getInvestorID(), message);
         
     }
     

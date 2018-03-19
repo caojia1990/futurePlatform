@@ -15,7 +15,8 @@ import com.future.instrument.api.service.MarginService;
 import com.future.instrument.api.vo.InvestorTradeParamVO;
 import com.future.order.api.service.OrderService;
 import com.future.order.api.vo.ReqOrderActionVO;
-import com.future.order.api.vo.ReqOrderInsertVO;
+import com.future.order.service.dao.OrderInputDao;
+import com.future.order.service.entity.OrderInput;
 import com.future.trade.api.service.TradeService;
 import com.future.trade.api.vo.CombHedgeFlag;
 import com.future.trade.api.vo.CombOffsetFlag;
@@ -23,6 +24,7 @@ import com.future.trade.api.vo.ContingentCondition;
 import com.future.trade.api.vo.Direction;
 import com.future.trade.api.vo.ForceCloseReason;
 import com.future.trade.api.vo.OrderPriceType;
+import com.future.trade.api.vo.ReqOrderInsertVO;
 import com.future.trade.api.vo.TimeCondition;
 import com.future.trade.api.vo.VolumeCondition;
 
@@ -57,6 +59,9 @@ public class OrderServiceImpl implements OrderService {
     
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
+    
+    @Autowired
+    private OrderInputDao orderInputDao;
 
     @Override
     public void openOrder() {
@@ -89,7 +94,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public void reqOrderInsert(ReqOrderInsertVO reqOrderInsertVO) throws CommonFutureException{
+    public void reqOrderInsert(com.future.order.api.vo.ReqOrderInsertVO reqOrderInsertVO) throws CommonFutureException{
 
         
         //调用合约中心查询应冻结手续费
@@ -101,20 +106,27 @@ public class OrderServiceImpl implements OrderService {
         paramVO.setOffset(reqOrderInsertVO.getCombOffsetFlag().getText());
         paramVO.setPriceType(String.valueOf(reqOrderInsertVO.getOrderPriceType()));
         paramVO.setVolume(reqOrderInsertVO.getVolumeTotalOriginal());
-        BigDecimal commission = this.commissionService.calculateCommission(paramVO);
+        
+        //BigDecimal commission = this.commissionService.calculateCommission(paramVO);
         
         //调用合约中心计算应冻结保证金
-        BigDecimal margin = this.marginService.calculateMargin(paramVO);
+        //BigDecimal margin = this.marginService.calculateMargin(paramVO);
         
         //调用账户中心冻结资金
         //TODO
         
         //生成委托编号
         Long orderRef = stringRedisTemplate.opsForValue().increment(ORDERREF_SEQUENCE_KEY, 1);
+        OrderInput r = new OrderInput();
+        r.setAccountNo(reqOrderInsertVO.getAccountNo());
+        r.setOrderRef(String.valueOf(orderRef));
+        r.setInvestorID(reqOrderInsertVO.getInvestorID());
+        orderInputDao.insert(r);
+        
         //缓存orderRef与账户关系
-        stringRedisTemplate.opsForHash().put(ORDERREF_KEY, orderRef, reqOrderInsertVO.getAccountNo());
+        stringRedisTemplate.opsForHash().put(ORDERREF_KEY, String.valueOf(orderRef), reqOrderInsertVO.getAccountNo());
         //调用交易中心下单
-        com.future.trade.api.vo.ReqOrderInsertVO orderInsertVO = new com.future.trade.api.vo.ReqOrderInsertVO();
+        ReqOrderInsertVO orderInsertVO = new ReqOrderInsertVO();
         orderInsertVO.setOrderRef(String.valueOf(orderRef));//报单引用
         orderInsertVO.setLimitPrice(reqOrderInsertVO.getLimitPrice());//指定价格
         orderInsertVO.setInstrumentID(reqOrderInsertVO.getInstrumentID());//合约

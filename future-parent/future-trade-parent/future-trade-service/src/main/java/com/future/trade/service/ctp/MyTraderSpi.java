@@ -317,7 +317,7 @@ public class MyTraderSpi extends JCTPTraderSpi {
 	    info.setIsTrading(pInstrument.getIsTrading());//当前是否交易
 	    info.setPositionDateType(pInstrument.getPositionDateType());//持仓日期类型
 	    info.setPositionType(pInstrument.getPositionType());//持仓类型
-	    //this.instrumentService.saveInstrument(info);
+	    this.instrumentService.saveInstrument(info);
 	    
 	    
 	  /*//查询合约手续费

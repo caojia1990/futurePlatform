@@ -19,4 +19,11 @@
 	<dubbo:service interface="com.future.instrument.api.service.InstrumentService" ref="instrumentService" retries="0"/>
 	<bean id="instrumentService" class="com.future.instrument.service.impl.InstrumentServiceImpl"/>
 
+    <!-- 手续费接口 -->
+	<dubbo:service interface="com.future.instrument.api.service.CommissionService" ref="commissionService" retries="0"/>
+	<bean id="commissionService" class="com.future.instrument.service.impl.CommissionServiceImpl"/>
+	
+	<!-- 保证金接口 -->
+	<dubbo:service interface="com.future.instrument.api.service.MarginService" ref="marginService" retries="0"/>
+	<bean id="marginService" class="com.future.instrument.service.impl.MarginServiceImpl"/>
 </beans>

@@ -11,7 +11,7 @@ public class InstrumentVO implements java.io.Serializable{
     /**
      * 
      */
-    private static final long serialVersionUID = -2799546851155216638L;
+    private static final long serialVersionUID = 6239948099813630423L;
     ///合约代码
     private String instrumentID;
     ///交易所代码
@@ -224,6 +224,20 @@ public class InstrumentVO implements java.io.Serializable{
     public void setTradingDate(String tradingDate) {
         this.tradingDate = tradingDate;
     }
+    @Override
+    public String toString() {
+        return "InstrumentVO [instrumentID=" + instrumentID + ", exchangeID=" + exchangeID + ", instrumentName="
+                + instrumentName + ", exchangeInstID=" + exchangeInstID + ", productID=" + productID + ", productClass="
+                + productClass + ", deliveryYear=" + deliveryYear + ", deliveryMonth=" + deliveryMonth
+                + ", maxMarketOrderVolume=" + maxMarketOrderVolume + ", minMarketOrderVolume=" + minMarketOrderVolume
+                + ", maxLimitOrderVolume=" + maxLimitOrderVolume + ", minLimitOrderVolume=" + minLimitOrderVolume
+                + ", volumeMultiple=" + volumeMultiple + ", priceTick=" + priceTick + ", createDate=" + createDate
+                + ", openDate=" + openDate + ", expireDate=" + expireDate + ", startDelivDate=" + startDelivDate
+                + ", endDelivDate=" + endDelivDate + ", instLifePhase=" + instLifePhase + ", isTrading=" + isTrading
+                + ", positionType=" + positionType + ", positionDateType=" + positionDateType + ", longMarginRatio="
+                + longMarginRatio + ", shortMarginRatio=" + shortMarginRatio + ", tradingDate=" + tradingDate + "]";
+    }
+    
     
 
 }

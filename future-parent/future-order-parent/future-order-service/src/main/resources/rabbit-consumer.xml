@@ -8,8 +8,6 @@
        http://www.springframework.org/schema/rabbit
        http://www.springframework.org/schema/rabbit/spring-rabbit.xsd">
        
-    <rabbit:annotation-driven/>
-    
     <rabbit:queue id="onRtnOrderQ" name="onRtnOrderQ" ></rabbit:queue>
     <rabbit:queue id="onRtnTradeQ" name="onRtnTradeQ"></rabbit:queue>
     <rabbit:queue id="onRspOrderInsertQ" name="onRspOrderInsertQ"></rabbit:queue>
@@ -30,6 +28,4 @@
     <!-- 消息处理 -->
     <bean id="messageHandle" class="com.future.order.service.mq.TradeMessageHandle" />
        
-    <!-- json转换器，消息可以自动根据转换器转换格式，不配置时默认为java序列化，可以自行配置 -->
-    <bean id="messageConverter" class="org.springframework.amqp.support.converter.Jackson2JsonMessageConverter" />
 </beans>       

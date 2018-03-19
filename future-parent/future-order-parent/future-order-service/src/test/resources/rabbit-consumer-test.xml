@@ -16,17 +16,17 @@
     <rabbit:template id="tradeTemplate" connection-factory="connectionFactory"
         message-converter="messageConverter"/>
     
-    <rabbit:topic-exchange id="onRtnOrderExchange" name="future.trade.onRtnOrder">
+    <rabbit:topic-exchange id="onRtnOrderExchange" name="future.order.onRtnOrder">
     </rabbit:topic-exchange>
-    <rabbit:topic-exchange id="onRtnTradeExchange" name="future.trade.onRtnTrade">
+    <rabbit:topic-exchange id="onRtnTradeExchange" name="future.order.onRtnTrade">
     </rabbit:topic-exchange>
-    <rabbit:topic-exchange name="future.trade.onRspOrderInsert">
+    <rabbit:topic-exchange name="future.order.onRspOrderInsert">
     </rabbit:topic-exchange>
-    <rabbit:topic-exchange name="future.trade.onRspOrderAction">
+    <rabbit:topic-exchange name="future.order.onRspOrderAction">
     </rabbit:topic-exchange>
-    <rabbit:topic-exchange name="future.trade.onRspError">
+    <rabbit:topic-exchange name="future.order.onRspError">
     </rabbit:topic-exchange>
-    <rabbit:topic-exchange name="future.trade.onErrRtnOrderInsert">
+    <rabbit:topic-exchange name="future.order.onErrRtnOrderInsert">
     </rabbit:topic-exchange>
     
     <rabbit:queue id="onRtnOrderQ" ></rabbit:queue>
