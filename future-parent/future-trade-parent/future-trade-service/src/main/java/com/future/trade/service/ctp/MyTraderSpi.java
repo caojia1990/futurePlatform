@@ -12,6 +12,7 @@ import org.hraink.futures.ctp.thostftdcuserapistruct.CThostFtdcInvestorPositionF
 import org.hraink.futures.ctp.thostftdcuserapistruct.CThostFtdcOrderField;
 import org.hraink.futures.ctp.thostftdcuserapistruct.CThostFtdcQryInstrumentField;
 import org.hraink.futures.ctp.thostftdcuserapistruct.CThostFtdcQryInvestorPositionDetailField;
+import org.hraink.futures.ctp.thostftdcuserapistruct.CThostFtdcQryOrderField;
 import org.hraink.futures.ctp.thostftdcuserapistruct.CThostFtdcReqUserLoginField;
 import org.hraink.futures.ctp.thostftdcuserapistruct.CThostFtdcRspInfoField;
 import org.hraink.futures.ctp.thostftdcuserapistruct.CThostFtdcRspUserLoginField;
@@ -116,11 +117,6 @@ public class MyTraderSpi extends JCTPTraderSpi {
 		CThostFtdcQryInstrumentField pQryInstrument = new CThostFtdcQryInstrumentField();
 		traderApi.reqQryInstrument(pQryInstrument, ++nRequestID);
 		
-		
-		//从redis中查询持仓信息
-		/*CommonRedisDao commonRedisDao = (CommonRedisDao) SpringContextUtil.getBean("commonRedisDao");
-		commonRedisDao.setValueByKey(TraderMain.BUY+"cu1803", "0");
-		commonRedisDao.setValueByKey(TraderMain.SELL+"cu1803", "0");*/
 	}
 	
 	//报单回报
@@ -319,6 +315,12 @@ public class MyTraderSpi extends JCTPTraderSpi {
 	    info.setPositionType(pInstrument.getPositionType());//持仓类型
 	    this.instrumentService.saveInstrument(info);
 	    
+	    if(bIsLast){
+	        CThostFtdcQryOrderField pQryOrder = new CThostFtdcQryOrderField();
+	        pQryOrder.setInvestorID(TradeMain.USER_ID);
+	        System.out.println("查询报单:"+traderApi.reqQryOrder(pQryOrder, ++nRequestID));
+	    }
+	    
 	    
 	  /*//查询合约手续费
         CThostFtdcQryInstrumentCommissionRateField pQryInstrumentCommissionRate = new CThostFtdcQryInstrumentCommissionRateField();
@@ -350,6 +352,10 @@ public class MyTraderSpi extends JCTPTraderSpi {
         info.setCloseTodayRatioByVolume(pInstrumentCommissionRate.getCloseTodayRatioByVolume());
         //instrumentInfoRedisDao.saveInstrumentCommision(info);
     }
-	
+    
+    @Override
+    public void onRspQryOrder(CThostFtdcOrderField pOrder, CThostFtdcRspInfoField pRspInfo, int nRequestID, boolean bIsLast){
+        System.out.println("查询报单返回："+JSON.toJSONString(pOrder));
+    }
 
 }

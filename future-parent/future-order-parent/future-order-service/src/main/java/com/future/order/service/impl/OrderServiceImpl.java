@@ -43,9 +43,6 @@ public class OrderServiceImpl implements OrderService {
     final static String ORDERREF_KEY = "orderRef";
     
     @Autowired
-    private InstrumentService instrumentService;
-    
-    @Autowired
     private CommissionService commissionService;
     
     @Autowired
@@ -97,7 +94,7 @@ public class OrderServiceImpl implements OrderService {
     public void reqOrderInsert(com.future.order.api.vo.ReqOrderInsertVO reqOrderInsertVO) throws CommonFutureException{
 
         
-        //调用合约中心查询应冻结手续费
+        //调用合约中心查询每手应冻结手续费
         InvestorTradeParamVO paramVO = new InvestorTradeParamVO();
         paramVO.setDirection(String.valueOf(reqOrderInsertVO.getDirection().getCode()));
         paramVO.setInstrumentID(reqOrderInsertVO.getInstrumentID());
@@ -105,11 +102,10 @@ public class OrderServiceImpl implements OrderService {
         paramVO.setLimitPrice(new BigDecimal(reqOrderInsertVO.getLimitPrice()));
         paramVO.setOffset(reqOrderInsertVO.getCombOffsetFlag().getText());
         paramVO.setPriceType(String.valueOf(reqOrderInsertVO.getOrderPriceType()));
-        paramVO.setVolume(reqOrderInsertVO.getVolumeTotalOriginal());
         
         BigDecimal commission = this.commissionService.calculateCommission(paramVO);
         
-        //调用合约中心计算应冻结保证金
+        //调用合约中心计算每手应冻结保证金
         BigDecimal margin = this.marginService.calculateMargin(paramVO);
         
         //调用账户中心冻结资金

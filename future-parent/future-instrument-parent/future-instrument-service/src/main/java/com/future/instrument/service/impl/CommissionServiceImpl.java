@@ -42,16 +42,14 @@ public class CommissionServiceImpl implements CommissionService {
         if("0".equals(paramVO.getOffset())){
             //开仓
             if(commissionRateVO.getOpenRatioByVolume() != 0){
-                //按手数  手续费=交易手数*每手手续费
-                byVolume = new BigDecimal(paramVO.getVolume())
-                        .multiply(new BigDecimal(commissionRateVO.getOpenRatioByVolume()))
+                //按手数  每手手续费=每手手续费
+                byVolume =new BigDecimal(commissionRateVO.getOpenRatioByVolume())
                         .setScale(2, RoundingMode.HALF_UP);
             }
             if(commissionRateVO.getOpenRatioByMoney() != 0){
                 InstrumentVO instrumentVO = this.instrumentService.queryInstrument(paramVO.getInstrumentID());
-                //按金额    手续费=合约乘数*交易手数*指定价格*手续费比例
+                //按金额    每手手续费=合约乘数*指定价格*手续费比例
                 byMoney = new BigDecimal(instrumentVO.getVolumeMultiple())
-                        .multiply(new BigDecimal(paramVO.getVolume()))
                         .multiply(paramVO.getLimitPrice())
                         .multiply(new BigDecimal(commissionRateVO.getOpenRatioByMoney()))
                         .setScale(2, RoundingMode.HALF_UP);
@@ -60,16 +58,14 @@ public class CommissionServiceImpl implements CommissionService {
         }else if("1".equals(paramVO.getOffset())){
             //平仓
             if(commissionRateVO.getCloseRatioByVolume() != 0){
-                //按手数  手续费=交易手数*每手手续费
-                byVolume = new BigDecimal(paramVO.getVolume())
-                        .multiply(new BigDecimal(commissionRateVO.getCloseRatioByVolume()))
+                //按手数  每手手续费=每手手续费
+                byVolume = new BigDecimal(commissionRateVO.getCloseRatioByVolume())
                         .setScale(2, RoundingMode.HALF_UP);
             }
             if(commissionRateVO.getCloseRatioByMoney() != 0){
                 InstrumentVO instrumentVO = this.instrumentService.queryInstrument(paramVO.getInstrumentID());
-                //按金额    手续费=合约乘数*交易手数*指定价格*手续费比例
+                //按金额    手续费=合约乘数*指定价格*手续费比例
                 byMoney = new BigDecimal(instrumentVO.getVolumeMultiple())
-                        .multiply(new BigDecimal(paramVO.getVolume()))
                         .multiply(paramVO.getLimitPrice())
                         .multiply(new BigDecimal(commissionRateVO.getCloseRatioByMoney()))
                         .setScale(2, RoundingMode.HALF_UP);

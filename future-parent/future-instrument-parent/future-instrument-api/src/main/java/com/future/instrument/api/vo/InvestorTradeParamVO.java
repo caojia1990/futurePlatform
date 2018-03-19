@@ -26,11 +26,6 @@ public class InvestorTradeParamVO implements Serializable{
     private String instrumentID;
     
     /**
-     * 手数
-     */
-    private int volume;
-    
-    /**
      * 开平仓标志 0：开仓 1：平仓
      */
     private String offset;
@@ -64,14 +59,6 @@ public class InvestorTradeParamVO implements Serializable{
 
     public void setInstrumentID(String instrumentID) {
         this.instrumentID = instrumentID;
-    }
-
-    public int getVolume() {
-        return volume;
-    }
-
-    public void setVolume(int volume) {
-        this.volume = volume;
     }
 
     public String getDirection() {
