@@ -8,6 +8,7 @@ import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSON;
+import com.future.account.api.exception.AccountErrorMsg;
 import com.future.account.api.exception.AccountException;
 import com.future.account.api.service.AccountService;
 import com.future.account.api.vo.AccountVO;
@@ -52,7 +53,7 @@ public class AccountServiceImpl implements AccountService {
                 AccountVO accountVO = JSON.parseObject(accountJsonStr, AccountVO.class);
                 BigDecimal available = accountVO.getAvailable();
                 if(available.subtract(commision).subtract(margin).compareTo(BigDecimal.ZERO) < 0){
-                    throw new AccountException(errorCode, errorMsg);
+                    throw new AccountException(AccountErrorMsg.NoMoreMoney);
                 }
             }
             

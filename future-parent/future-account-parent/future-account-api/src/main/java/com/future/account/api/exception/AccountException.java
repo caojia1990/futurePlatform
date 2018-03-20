@@ -18,7 +18,10 @@ public class AccountException extends CommonFutureException{
 
 	public AccountException(String errorCode, String errorMsg) {
 		super(SERVICE_NAME, errorCode, errorMsg);
-		// TODO Auto-generated constructor stub
+	}
+	
+	public AccountException(AccountErrorMsg accountErrorMsg) {
+	    super(SERVICE_NAME, accountErrorMsg.code, accountErrorMsg.msg);
 	}
 
 	
