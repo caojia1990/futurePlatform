@@ -2,6 +2,7 @@ package com.future.account.service.impl;
 
 import java.math.BigDecimal;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
@@ -16,6 +17,8 @@ import com.future.account.service.utils.RedisLock;
 
 @Service("accountService")
 public class AccountServiceImpl implements AccountService {
+	
+	static Logger logger = Logger.getLogger(AccountServiceImpl.class);
     
     @Autowired
     private StringRedisTemplate redisTemplate;
@@ -44,8 +47,8 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public void frozenCapital(String investorNo, String accountNo, BigDecimal commision, BigDecimal margin)
             throws AccountException {
-        // TODO Auto-generated method stub
-        RedisLock lock = new RedisLock(redisTemplate, accountNo);
+
+    	RedisLock lock = new RedisLock(redisTemplate, accountNo);
         try {
             if (lock.lock()) {
                 
@@ -58,8 +61,11 @@ public class AccountServiceImpl implements AccountService {
             }
             
         } catch (Exception e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            if(e instanceof AccountException) {
+                throw (AccountException)e;
+            }
+            logger.error("冻结资金异常", e);
+            throw new AccountException(AccountErrorMsg.UnexpectedError, e);
         } finally {
             lock.unlock();
         }
@@ -95,5 +101,19 @@ public class AccountServiceImpl implements AccountService {
         // TODO Auto-generated method stub
 
     }
+
+	@Override
+	public void thawCapital(String investorNo, String accountNo, BigDecimal commission, BigDecimal margin)
+			throws AccountException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void thawThenDeductAndOccupy(String investorNo, String accountNo, BigDecimal thrawCommission,
+			BigDecimal thrawMargin, BigDecimal DeductCommission, BigDecimal occupyMargin) throws AccountException {
+		// TODO Auto-generated method stub
+		
+	}
 
 }

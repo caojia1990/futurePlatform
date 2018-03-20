@@ -1,5 +1,7 @@
 package com.future.order.service.mq;
 
+import java.math.BigDecimal;
+
 import org.apache.log4j.Logger;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,12 +10,15 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.redis.core.StringRedisTemplate;
 
 import com.future.account.api.service.AccountService;
+import com.future.common.exception.CommonFutureException;
 import com.future.instrument.api.service.CommissionService;
 import com.future.instrument.api.service.MarginService;
+import com.future.instrument.api.vo.InvestorTradeParamVO;
 import com.future.order.api.vo.CombHedgeFlag;
 import com.future.order.api.vo.ContingentCondition;
 import com.future.order.api.vo.Direction;
 import com.future.order.api.vo.ForceCloseReason;
+import com.future.order.api.vo.HedgeFlag;
 import com.future.order.api.vo.OrderPriceType;
 import com.future.order.api.vo.OrderStatus;
 import com.future.order.api.vo.OrderSubmitStatus;
@@ -22,6 +27,7 @@ import com.future.order.service.dao.OrderInputDao;
 import com.future.order.service.entity.OrderInput;
 import com.future.trade.api.vo.OnRtnOrderVO;
 import com.future.trade.api.vo.OnRtnTradeVO;
+import com.sun.corba.se.spi.orbutil.fsm.Input;
 
 /**
  * 交易中心消息接收处理
@@ -110,29 +116,30 @@ public class TradeMessageHandle {
         }
         
         com.future.order.api.vo.OnRtnOrderVO message = 
-        		new com.future.order.api.vo.OnRtnOrderVO();
+                new com.future.order.api.vo.OnRtnOrderVO();
         OrderInput input = null;
-		try {
-			input = orderInputDao.selectByOrderRef(onRtnOrderVO.getOrderRef());
-		} catch (EmptyResultDataAccessException e) {
-			return;
-		}
+        try {
+            input = orderInputDao.selectByOrderRef(onRtnOrderVO.getOrderRef());
+        } catch (EmptyResultDataAccessException e) {
+            //找不到报单信息，说明是从其他客户端下单
+            return;
+        }
         message.setOrderRef(onRtnOrderVO.getOrderRef());
         message.setAccountNo(input.getAccountNo());
         message.setActiveTime(onRtnOrderVO.getActiveTime());
         message.setCancelTime(onRtnOrderVO.getCancelTime());
         message.setCombHedgeFlag(CombHedgeFlag.ofCode(
-        		onRtnOrderVO.getCombOffsetFlag().getCode()));
+                onRtnOrderVO.getCombOffsetFlag().getCode()));
         message.setCombHedgeFlag(CombHedgeFlag.ofCode(
-        		onRtnOrderVO.getCombHedgeFlag().getCode()));
+                onRtnOrderVO.getCombHedgeFlag().getCode()));
         message.setContingentCondition(ContingentCondition.ofCode(
-        		onRtnOrderVO.getContingentCondition().getCode()));
+                onRtnOrderVO.getContingentCondition().getCode()));
         message.setDirection(Direction.ofCode(
-        		onRtnOrderVO.getDirection().getCode()));
+                onRtnOrderVO.getDirection().getCode()));
         message.setExchangeID(onRtnOrderVO.getExchangeID());
         message.setExchangeInstID(onRtnOrderVO.getExchangeInstID());
         message.setForceCloseReason(ForceCloseReason.ofCode(
-        		onRtnOrderVO.getForceCloseReason().getCode()));
+                onRtnOrderVO.getForceCloseReason().getCode()));
         message.setFrontID(onRtnOrderVO.getFrontID());
         message.setgTDDate(onRtnOrderVO.getgTDDate());
         message.setInsertDate(onRtnOrderVO.getInsertDate());
@@ -142,12 +149,12 @@ public class TradeMessageHandle {
         message.setLimitPrice(onRtnOrderVO.getLimitPrice());
         message.setMinVolume(onRtnOrderVO.getMinVolume());
         message.setOrderPriceType(OrderPriceType.ofCode(
-        		onRtnOrderVO.getOrderPriceType().getCode()));
+                onRtnOrderVO.getOrderPriceType().getCode()));
         message.setOrderSource(onRtnOrderVO.getOrderSource());
         message.setOrderStatus(OrderStatus.ofCode(
-        		onRtnOrderVO.getOrderStatus().getCode()));
+                onRtnOrderVO.getOrderStatus().getCode()));
         message.setOrderSubmitStatus(OrderSubmitStatus.ofCode(
-        		onRtnOrderVO.getOrderSubmitStatus().getCode()));
+                onRtnOrderVO.getOrderSubmitStatus().getCode()));
         message.setOrderSysID(onRtnOrderVO.getOrderSysID());
         message.setOrderType(onRtnOrderVO.getOrderType());
         message.setRequestID(onRtnOrderVO.getRequestID());
@@ -155,7 +162,7 @@ public class TradeMessageHandle {
         message.setStatusMsg(onRtnOrderVO.getStatusMsg());
         message.setStopPrice(onRtnOrderVO.getStopPrice());
         message.setTimeCondition(TimeCondition.ofCode(
-        		onRtnOrderVO.getTimeCondition().getCode()));
+                onRtnOrderVO.getTimeCondition().getCode()));
         //TODO
         rabbitTemplate.convertAndSend(onRtnOrder, input.getInvestorID(), message);
         
@@ -165,7 +172,7 @@ public class TradeMessageHandle {
      * 成交回报
      * @param onRtnTrade
      */
-    public void onRtnTrade(OnRtnTradeVO onRtnTrade){
+    public void onRtnTrade(OnRtnTradeVO onRtnTrade) throws CommonFutureException{
         
         if(logger.isDebugEnabled()){
             
@@ -173,8 +180,39 @@ public class TradeMessageHandle {
         }
         
         String orderRef = onRtnTrade.getOrderRef();
+        OrderInput orderInput = null;
+        try {
+            orderInput = this.orderInputDao.selectByOrderRef(orderRef);
+        } catch (EmptyResultDataAccessException e) {
+            return;
+        }
         
+        BigDecimal thrawCommission = orderInput.getCommissionEachHand().multiply(new BigDecimal(onRtnTrade.getVolume()));
+        BigDecimal thrawMargin = orderInput.getMarginEachHand().multiply(new BigDecimal(onRtnTrade.getVolume()));
         
+        InvestorTradeParamVO paramVO = new InvestorTradeParamVO();
+        paramVO.setInvestorNo(orderInput.getInvestorID());
+        paramVO.setInstrumentID(onRtnTrade.getInstrumentID());
+        paramVO.setDirection(String.valueOf(onRtnTrade.getDirection().getCode()));
+        paramVO.setLimitPrice(new BigDecimal(onRtnTrade.getPrice()));
+        paramVO.setOffset(String.valueOf(onRtnTrade.getOffsetFlag().getCode()));
+        BigDecimal deductCommissionEachHand = this.commissionService.calculateCommission(paramVO);
+        BigDecimal deductCommission = deductCommissionEachHand.multiply(new BigDecimal(onRtnTrade.getVolume()));
+        BigDecimal occupyMarginEachHand = this.marginService.calculateMargin(paramVO);
+        BigDecimal occupyMargin = occupyMarginEachHand.multiply(new BigDecimal(onRtnTrade.getVolume()));
+        
+        // 解冻手续费和保证金然后扣除手续费并占用保证金（原子操作）
+        accountService.thawThenDeductAndOccupy(orderInput.getInvestorID(), orderInput.getAccountNo(), 
+            thrawCommission, thrawMargin, deductCommission, occupyMargin);
+        
+        com.future.order.api.vo.OnRtnTradeVO message = new com.future.order.api.vo.OnRtnTradeVO();
+        message.setAccountNo(orderInput.getAccountNo());
+        message.setDirection(Direction.ofCode(onRtnTrade.getDirection().getCode()));
+        message.setExchangeID(onRtnTrade.getExchangeID());
+        message.setExchangeInstID(onRtnTrade.getExchangeInstID());
+        message.setHedgeFlag(HedgeFlag.ofCode(onRtnTrade.getHedgeFlag().getCode()));
+        
+        //TODO
     }
     
     /**

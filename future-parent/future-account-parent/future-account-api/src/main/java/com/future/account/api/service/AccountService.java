@@ -39,8 +39,32 @@ public interface AccountService {
      * @param margin 应冻结保证金
      * @throws AccountException if there’s no more momey left or other reason 
      */
-    public void frozenCapital(String investorNo, String accountNo, BigDecimal commision,
+    public void frozenCapital(String investorNo, String accountNo, BigDecimal commission,
     				BigDecimal margin) throws AccountException;
+    
+    /**
+     * 解冻资金
+     * @param investorNo
+     * @param accountNo
+     * @param commision
+     * @param margin
+     * @throws AccountException
+     */
+    public void thawCapital(String investorNo, String accountNo, BigDecimal commission,
+    				BigDecimal margin) throws AccountException;
+    
+    /**
+     *  解冻手续费和保证金然后扣除手续费并占用保证金
+     * @param investorNo
+     * @param accountNo
+     * @param thrawCommission
+     * @param thrawMargin
+     * @param DeductCommission
+     * @param occupyMargin
+     * @throws AccountException
+     */
+    public void thawThenDeductAndOccupy(String investorNo, String accountNo, BigDecimal thrawCommission,
+    				BigDecimal thrawMargin, BigDecimal DeductCommission, BigDecimal occupyMargin) throws AccountException;
     
     /**
      * 扣除手续费

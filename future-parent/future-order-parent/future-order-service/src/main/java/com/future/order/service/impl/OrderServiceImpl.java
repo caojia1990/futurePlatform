@@ -10,13 +10,13 @@ import org.springframework.stereotype.Service;
 import com.future.account.api.service.AccountService;
 import com.future.common.exception.CommonFutureException;
 import com.future.instrument.api.service.CommissionService;
-import com.future.instrument.api.service.InstrumentService;
 import com.future.instrument.api.service.MarginService;
 import com.future.instrument.api.vo.InvestorTradeParamVO;
 import com.future.order.api.service.OrderService;
 import com.future.order.api.vo.ReqOrderActionVO;
 import com.future.order.service.dao.OrderInputDao;
 import com.future.order.service.entity.OrderInput;
+import com.future.trade.api.exception.TradeException;
 import com.future.trade.api.service.TradeService;
 import com.future.trade.api.vo.CombHedgeFlag;
 import com.future.trade.api.vo.CombOffsetFlag;
@@ -109,8 +109,6 @@ public class OrderServiceImpl implements OrderService {
         //调用合约中心计算每手应冻结保证金
         BigDecimal marginEachHand = this.marginService.calculateMargin(paramVO);
         BigDecimal margin = marginEachHand.multiply(new BigDecimal(reqOrderInsertVO.getVolumeTotalOriginal()));
-        //调用账户中心冻结资金
-        //TODO
         
         //生成委托编号
         Long orderRef = stringRedisTemplate.opsForValue().increment(ORDERREF_SEQUENCE_KEY, 1);
@@ -122,11 +120,13 @@ public class OrderServiceImpl implements OrderService {
         r.setFrozenMargin(margin);
         r.setCommissionEachHand(commissionEachHand);
         r.setMarginEachHand(marginEachHand);
-        
         orderInputDao.insert(r);
         
         //缓存orderRef与账户关系
         stringRedisTemplate.opsForHash().put(ORDERREF_KEY, String.valueOf(orderRef), reqOrderInsertVO.getAccountNo());
+        
+        //调用账户中心冻结资金
+        accountService.frozenCapital(reqOrderInsertVO.getInvestorID(), reqOrderInsertVO.getAccountNo(), commission, margin);
         //调用交易中心下单
         ReqOrderInsertVO orderInsertVO = new ReqOrderInsertVO();
         orderInsertVO.setOrderRef(String.valueOf(orderRef));//报单引用
@@ -152,7 +152,13 @@ public class OrderServiceImpl implements OrderService {
         orderInsertVO.setMinVolume(reqOrderInsertVO.getMinVolume());
         orderInsertVO.setRequestID(reqOrderInsertVO.getRequestID());//请求ID
         
-        tradeService.reqOrderInsert(orderInsertVO);
+        try {
+			tradeService.reqOrderInsert(orderInsertVO);
+		} catch (TradeException e) {
+			//下单失败先解冻手续费和保证金
+			accountService.thawCapital(reqOrderInsertVO.getInvestorID(), reqOrderInsertVO.getAccountNo(), commission, margin);
+			throw e;
+		}
     }
 
     @Override

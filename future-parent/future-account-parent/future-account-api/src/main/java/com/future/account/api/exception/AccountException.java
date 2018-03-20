@@ -20,8 +20,16 @@ public class AccountException extends CommonFutureException{
 		super(SERVICE_NAME, errorCode, errorMsg);
 	}
 	
+	public AccountException(String errorCode, String errorMsg, Throwable cause) {
+		super(SERVICE_NAME, errorCode, errorMsg, cause);
+	}
+	
 	public AccountException(AccountErrorMsg accountErrorMsg) {
 	    super(SERVICE_NAME, accountErrorMsg.code, accountErrorMsg.msg);
+	}
+	
+	public AccountException(AccountErrorMsg accountErrorMsg, Throwable cause) {
+	    super(SERVICE_NAME, accountErrorMsg.code, accountErrorMsg.msg, cause);
 	}
 
 	
