@@ -17,7 +17,7 @@ public class RedisLock {
     
     private StringRedisTemplate redisTemplate;
     
-    private final static int DEFAULT_ACQUIRY_RESOLUTION_MILLIS = 10;
+    private final static int DEFAULT_ACQUIRY_RESOLUTION_MILLIS = 5;
     
     private final static String REDIS_LOCK_KEY_SUFFIX = "-redis-lock-key";
     
@@ -26,12 +26,12 @@ public class RedisLock {
     /**
      * 锁超时时间，防止线程在入锁以后，无限的执行等待
      */
-    private long expireMsecs = 10 * 1000;
+    private long expireMsecs = 2 * 1000;
     
     /**
      * 锁等待时间，防止线程饥饿
      */
-    private long timeoutMsecs = 10 * 1000;
+    private long timeoutMsecs = 3 * 1000;
     
     private volatile boolean locked = false;
     

@@ -22,7 +22,7 @@ public interface MarginService {
     
     /**
      * 计算交易保证金
-     * @return 保证金金额
+     * @return 保证金金额 which Scale(2, RoundingMode.HALF_UP)
      * @throws InstrumentException
      */
     public BigDecimal calculateMargin(InvestorTradeParamVO paramVO) throws InstrumentException;

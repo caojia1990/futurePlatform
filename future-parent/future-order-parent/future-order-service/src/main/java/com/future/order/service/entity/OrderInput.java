@@ -1,5 +1,7 @@
 package com.future.order.service.entity;
 
+import java.math.BigDecimal;
+
 public class OrderInput {
     
     private String orderRef;
@@ -12,9 +14,13 @@ public class OrderInput {
     
     private int tradeVolume;
     
-    private double frozenCommission;
+    private BigDecimal frozenCommission;
     
-    private double frozenMargin;
+    private BigDecimal frozenMargin;
+    
+    private BigDecimal commissionEachHand;
+    
+    private BigDecimal marginEachHand;
 
     public String getOrderRef() {
         return orderRef;
@@ -56,22 +62,37 @@ public class OrderInput {
         this.tradeVolume = tradeVolume;
     }
 
-    public double getFrozenCommission() {
+    public BigDecimal getFrozenCommission() {
         return frozenCommission;
     }
 
-    public void setFrozenCommission(double frozenCommission) {
+    public void setFrozenCommission(BigDecimal frozenCommission) {
         this.frozenCommission = frozenCommission;
     }
 
-    public double getFrozenMargin() {
+    public BigDecimal getFrozenMargin() {
         return frozenMargin;
     }
 
-    public void setFrozenMargin(double frozenMargin) {
+    public void setFrozenMargin(BigDecimal frozenMargin) {
         this.frozenMargin = frozenMargin;
     }
-    
-    
+
+    public BigDecimal getCommissionEachHand() {
+        return commissionEachHand;
+    }
+
+    public void setCommissionEachHand(BigDecimal commissionEachHand) {
+        this.commissionEachHand = commissionEachHand;
+    }
+
+    public BigDecimal getMarginEachHand() {
+        return marginEachHand;
+    }
+
+    public void setMarginEachHand(BigDecimal marginEachHand) {
+        this.marginEachHand = marginEachHand;
+    }
+
 
 }

@@ -1,6 +1,7 @@
 package com.future.instrument.api.service;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 import com.future.instrument.api.exception.InstrumentException;
 import com.future.instrument.api.vo.InstrumentCommissionRateVO;
@@ -31,7 +32,7 @@ public interface CommissionService {
     
     /**
      * 计算交易手续费
-     * @return 手续费金额
+     * @return 手续费金额 which Scale(2, RoundingMode.HALF_UP)
      * @throws InstrumentException
      */
     public BigDecimal calculateCommission(InvestorTradeParamVO paramVO) throws InstrumentException;

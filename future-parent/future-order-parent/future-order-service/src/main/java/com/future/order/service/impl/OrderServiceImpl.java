@@ -103,11 +103,12 @@ public class OrderServiceImpl implements OrderService {
         paramVO.setOffset(reqOrderInsertVO.getCombOffsetFlag().getText());
         paramVO.setPriceType(String.valueOf(reqOrderInsertVO.getOrderPriceType()));
         
-        BigDecimal commission = this.commissionService.calculateCommission(paramVO);
+        BigDecimal commissionEachHand = this.commissionService.calculateCommission(paramVO);
+        BigDecimal commission = commissionEachHand.multiply(new BigDecimal(reqOrderInsertVO.getVolumeTotalOriginal()));
         
         //调用合约中心计算每手应冻结保证金
-        BigDecimal margin = this.marginService.calculateMargin(paramVO);
-        
+        BigDecimal marginEachHand = this.marginService.calculateMargin(paramVO);
+        BigDecimal margin = marginEachHand.multiply(new BigDecimal(reqOrderInsertVO.getVolumeTotalOriginal()));
         //调用账户中心冻结资金
         //TODO
         
@@ -117,6 +118,11 @@ public class OrderServiceImpl implements OrderService {
         r.setAccountNo(reqOrderInsertVO.getAccountNo());
         r.setOrderRef(String.valueOf(orderRef));
         r.setInvestorID(reqOrderInsertVO.getInvestorID());
+        r.setFrozenCommission(commission);
+        r.setFrozenMargin(margin);
+        r.setCommissionEachHand(commissionEachHand);
+        r.setMarginEachHand(marginEachHand);
+        
         orderInputDao.insert(r);
         
         //缓存orderRef与账户关系

@@ -1,6 +1,7 @@
 package com.future.account.api.vo;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 /**
  * 投资者账户信息
@@ -27,107 +28,107 @@ public class AccountVO implements Serializable{
     /**
      * 上次质押金额
      */
-    private double preMortgage;
+    private BigDecimal preMortgage;
     
     /**
      * 上次信用额度
      */
-    private double preCredit;
+    private BigDecimal preCredit;
     
     /**
      * 上次存款额
      */
-    private double preDeposit;
+    private BigDecimal preDeposit;
     
     /**
      * 上次结算准备金
      */
-    private double preBalance;
+    private BigDecimal preBalance;
     
     /**
      * 上次占用的保证金
      */
-    private double preMargin;
+    private BigDecimal preMargin;
     
     /**
      * 利息基数
      */
-    private double interestBase;
+    private BigDecimal interestBase;
     
     /**
      * 利息收入
      */
-    private double interest;
+    private BigDecimal interest;
     
     /**
      * 入金金额
      */
-    private double deposit;
+    private BigDecimal deposit;
     
     /**
      * 出金金额
      */
-    private double withdraw;
+    private BigDecimal withdraw;
     
     /**
      * 冻结的保证金
      */
-    private double frozenMargin;
+    private BigDecimal frozenMargin;
     
     /**
      * 冻结的资金
      */
-    private double frozenCash;
+    private BigDecimal frozenCash;
     
     /**
      * 冻结的手续费
      */
-    private double frozenCommission;
+    private BigDecimal frozenCommission;
     
     /**
      * 当前保证金总额
      */
-    private double currMargin;
+    private BigDecimal currMargin;
     
     /**
      * 资金差额
      */
-    private double cashIn;
+    private BigDecimal cashIn;
     
     /**
      * 手续费
      */
-    private double commission;
+    private BigDecimal commission;
     
     /**
      * 平仓盈亏
      */
-    private double closeProfit;
+    private BigDecimal closeProfit;
     
     /**
      * 持仓盈亏
      */
-    private double positionProfit;
+    private BigDecimal positionProfit;
     
     /**
      * 期货结算准备金
      */
-    private double balance;
+    private BigDecimal balance;
     
     /**
      * 可用资金
      */
-    private double available;
+    private BigDecimal available;
     
     /**
      * 可取资金
      */
-    private double withdrawQuota;
+    private BigDecimal withdrawQuota;
     
     /**
      * 基本准备金
      */
-    private double reserve;
+    private BigDecimal reserve;
     
     /**
      * 交易日
@@ -142,17 +143,17 @@ public class AccountVO implements Serializable{
     /**
      * 信用额度
      */
-    private double credit;
+    private BigDecimal credit;
     
     /**
      * 质押金额
      */
-    private double mortgage;
+    private BigDecimal mortgage;
     
     /**
      * 交易所保证金
      */
-    private double ExchangeMargin;
+    private BigDecimal ExchangeMargin;
     
     /**
      * 是否为默认账户 0：否 1：是
@@ -175,171 +176,171 @@ public class AccountVO implements Serializable{
         this.investorNo = investorNo;
     }
 
-    public double getPreMortgage() {
+    public BigDecimal getPreMortgage() {
         return preMortgage;
     }
 
-    public void setPreMortgage(double preMortgage) {
+    public void setPreMortgage(BigDecimal preMortgage) {
         this.preMortgage = preMortgage;
     }
 
-    public double getPreCredit() {
+    public BigDecimal getPreCredit() {
         return preCredit;
     }
 
-    public void setPreCredit(double preCredit) {
+    public void setPreCredit(BigDecimal preCredit) {
         this.preCredit = preCredit;
     }
 
-    public double getPreDeposit() {
+    public BigDecimal getPreDeposit() {
         return preDeposit;
     }
 
-    public void setPreDeposit(double preDeposit) {
+    public void setPreDeposit(BigDecimal preDeposit) {
         this.preDeposit = preDeposit;
     }
 
-    public double getPreBalance() {
+    public BigDecimal getPreBalance() {
         return preBalance;
     }
 
-    public void setPreBalance(double preBalance) {
+    public void setPreBalance(BigDecimal preBalance) {
         this.preBalance = preBalance;
     }
 
-    public double getPreMargin() {
+    public BigDecimal getPreMargin() {
         return preMargin;
     }
 
-    public void setPreMargin(double preMargin) {
+    public void setPreMargin(BigDecimal preMargin) {
         this.preMargin = preMargin;
     }
 
-    public double getInterestBase() {
+    public BigDecimal getInterestBase() {
         return interestBase;
     }
 
-    public void setInterestBase(double interestBase) {
+    public void setInterestBase(BigDecimal interestBase) {
         this.interestBase = interestBase;
     }
 
-    public double getInterest() {
+    public BigDecimal getInterest() {
         return interest;
     }
 
-    public void setInterest(double interest) {
+    public void setInterest(BigDecimal interest) {
         this.interest = interest;
     }
 
-    public double getDeposit() {
+    public BigDecimal getDeposit() {
         return deposit;
     }
 
-    public void setDeposit(double deposit) {
+    public void setDeposit(BigDecimal deposit) {
         this.deposit = deposit;
     }
 
-    public double getWithdraw() {
+    public BigDecimal getWithdraw() {
         return withdraw;
     }
 
-    public void setWithdraw(double withdraw) {
+    public void setWithdraw(BigDecimal withdraw) {
         this.withdraw = withdraw;
     }
 
-    public double getFrozenMargin() {
+    public BigDecimal getFrozenMargin() {
         return frozenMargin;
     }
 
-    public void setFrozenMargin(double frozenMargin) {
+    public void setFrozenMargin(BigDecimal frozenMargin) {
         this.frozenMargin = frozenMargin;
     }
 
-    public double getFrozenCash() {
+    public BigDecimal getFrozenCash() {
         return frozenCash;
     }
 
-    public void setFrozenCash(double frozenCash) {
+    public void setFrozenCash(BigDecimal frozenCash) {
         this.frozenCash = frozenCash;
     }
 
-    public double getFrozenCommission() {
+    public BigDecimal getFrozenCommission() {
         return frozenCommission;
     }
 
-    public void setFrozenCommission(double frozenCommission) {
+    public void setFrozenCommission(BigDecimal frozenCommission) {
         this.frozenCommission = frozenCommission;
     }
 
-    public double getCurrMargin() {
+    public BigDecimal getCurrMargin() {
         return currMargin;
     }
 
-    public void setCurrMargin(double currMargin) {
+    public void setCurrMargin(BigDecimal currMargin) {
         this.currMargin = currMargin;
     }
 
-    public double getCashIn() {
+    public BigDecimal getCashIn() {
         return cashIn;
     }
 
-    public void setCashIn(double cashIn) {
+    public void setCashIn(BigDecimal cashIn) {
         this.cashIn = cashIn;
     }
 
-    public double getCommission() {
+    public BigDecimal getCommission() {
         return commission;
     }
 
-    public void setCommission(double commission) {
+    public void setCommission(BigDecimal commission) {
         this.commission = commission;
     }
 
-    public double getCloseProfit() {
+    public BigDecimal getCloseProfit() {
         return closeProfit;
     }
 
-    public void setCloseProfit(double closeProfit) {
+    public void setCloseProfit(BigDecimal closeProfit) {
         this.closeProfit = closeProfit;
     }
 
-    public double getPositionProfit() {
+    public BigDecimal getPositionProfit() {
         return positionProfit;
     }
 
-    public void setPositionProfit(double positionProfit) {
+    public void setPositionProfit(BigDecimal positionProfit) {
         this.positionProfit = positionProfit;
     }
 
-    public double getBalance() {
+    public BigDecimal getBalance() {
         return balance;
     }
 
-    public void setBalance(double balance) {
+    public void setBalance(BigDecimal balance) {
         this.balance = balance;
     }
 
-    public double getAvailable() {
+    public BigDecimal getAvailable() {
         return available;
     }
 
-    public void setAvailable(double available) {
+    public void setAvailable(BigDecimal available) {
         this.available = available;
     }
 
-    public double getWithdrawQuota() {
+    public BigDecimal getWithdrawQuota() {
         return withdrawQuota;
     }
 
-    public void setWithdrawQuota(double withdrawQuota) {
+    public void setWithdrawQuota(BigDecimal withdrawQuota) {
         this.withdrawQuota = withdrawQuota;
     }
 
-    public double getReserve() {
+    public BigDecimal getReserve() {
         return reserve;
     }
 
-    public void setReserve(double reserve) {
+    public void setReserve(BigDecimal reserve) {
         this.reserve = reserve;
     }
 
@@ -359,27 +360,27 @@ public class AccountVO implements Serializable{
         this.settlementID = settlementID;
     }
 
-    public double getCredit() {
+    public BigDecimal getCredit() {
         return credit;
     }
 
-    public void setCredit(double credit) {
+    public void setCredit(BigDecimal credit) {
         this.credit = credit;
     }
 
-    public double getMortgage() {
+    public BigDecimal getMortgage() {
         return mortgage;
     }
 
-    public void setMortgage(double mortgage) {
+    public void setMortgage(BigDecimal mortgage) {
         this.mortgage = mortgage;
     }
 
-    public double getExchangeMargin() {
+    public BigDecimal getExchangeMargin() {
         return ExchangeMargin;
     }
 
-    public void setExchangeMargin(double exchangeMargin) {
+    public void setExchangeMargin(BigDecimal exchangeMargin) {
         ExchangeMargin = exchangeMargin;
     }
 

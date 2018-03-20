@@ -8,5 +8,7 @@ create table FUTURE_ORDER_INPUT(
     TRADE_VOLUME int,
     FROZEN_COMMISSION double,
     FROZEN_MARGIN double,
+    COMMISSION_EACH_HAND double,
+    MARGIN_EACH_HAND double,
     primary key (ORDER_REF)
 );
