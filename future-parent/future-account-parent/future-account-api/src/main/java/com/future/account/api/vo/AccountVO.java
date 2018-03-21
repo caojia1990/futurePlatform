@@ -21,6 +21,11 @@ public class AccountVO implements Serializable{
     private String accountNo;
     
     /**
+     * 账户别名
+     */
+    private String alias;
+    
+    /**
      * 投资者账号
      */
     private String investorNo;
@@ -408,6 +413,14 @@ public class AccountVO implements Serializable{
 
     public void setIsDefault(String isDefault) {
         this.isDefault = isDefault;
+    }
+
+    public String getAlias() {
+        return alias;
+    }
+
+    public void setAlias(String alias) {
+        this.alias = alias;
     }
 
 }
