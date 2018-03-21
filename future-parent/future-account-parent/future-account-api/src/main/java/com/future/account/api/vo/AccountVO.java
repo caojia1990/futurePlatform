@@ -28,107 +28,107 @@ public class AccountVO implements Serializable{
     /**
      * 上次质押金额
      */
-    private BigDecimal preMortgage;
+    private BigDecimal preMortgage = BigDecimal.ZERO;
     
     /**
      * 上次信用额度
      */
-    private BigDecimal preCredit;
+    private BigDecimal preCredit = BigDecimal.ZERO;
     
     /**
      * 上次存款额
      */
-    private BigDecimal preDeposit;
+    private BigDecimal preDeposit = BigDecimal.ZERO;
     
     /**
      * 上次结算准备金
      */
-    private BigDecimal preBalance;
+    private BigDecimal preBalance = BigDecimal.ZERO;
     
     /**
      * 上次占用的保证金
      */
-    private BigDecimal preMargin;
+    private BigDecimal preMargin = BigDecimal.ZERO;
     
     /**
      * 利息基数
      */
-    private BigDecimal interestBase;
+    private BigDecimal interestBase = BigDecimal.ZERO;
     
     /**
      * 利息收入
      */
-    private BigDecimal interest;
+    private BigDecimal interest = BigDecimal.ZERO;
     
     /**
      * 入金金额
      */
-    private BigDecimal deposit;
+    private BigDecimal deposit = BigDecimal.ZERO;
     
     /**
      * 出金金额
      */
-    private BigDecimal withdraw;
+    private BigDecimal withdraw = BigDecimal.ZERO;
     
     /**
      * 冻结的保证金
      */
-    private BigDecimal frozenMargin;
+    private BigDecimal frozenMargin = BigDecimal.ZERO;
     
     /**
      * 冻结的资金
      */
-    private BigDecimal frozenCash;
+    private BigDecimal frozenCash = BigDecimal.ZERO;
     
     /**
      * 冻结的手续费
      */
-    private BigDecimal frozenCommission;
+    private BigDecimal frozenCommission = BigDecimal.ZERO;
     
     /**
      * 当前保证金总额
      */
-    private BigDecimal currMargin;
+    private BigDecimal currMargin = BigDecimal.ZERO;
     
     /**
      * 资金差额
      */
-    private BigDecimal cashIn;
+    private BigDecimal cashIn = BigDecimal.ZERO;
     
     /**
      * 手续费
      */
-    private BigDecimal commission;
+    private BigDecimal commission = BigDecimal.ZERO;
     
     /**
      * 平仓盈亏
      */
-    private BigDecimal closeProfit;
+    private BigDecimal closeProfit = BigDecimal.ZERO;
     
     /**
      * 持仓盈亏
      */
-    private BigDecimal positionProfit;
+    private BigDecimal positionProfit = BigDecimal.ZERO;
     
     /**
      * 期货结算准备金
      */
-    private BigDecimal balance;
+    private BigDecimal balance = BigDecimal.ZERO;
     
     /**
      * 可用资金
      */
-    private BigDecimal available;
+    private BigDecimal available = BigDecimal.ZERO;
     
     /**
      * 可取资金
      */
-    private BigDecimal withdrawQuota;
+    private BigDecimal withdrawQuota = BigDecimal.ZERO;
     
     /**
      * 基本准备金
      */
-    private BigDecimal reserve;
+    private BigDecimal reserve = BigDecimal.ZERO;
     
     /**
      * 交易日
@@ -143,17 +143,17 @@ public class AccountVO implements Serializable{
     /**
      * 信用额度
      */
-    private BigDecimal credit;
+    private BigDecimal credit = BigDecimal.ZERO;
     
     /**
      * 质押金额
      */
-    private BigDecimal mortgage;
+    private BigDecimal mortgage = BigDecimal.ZERO;
     
     /**
      * 交易所保证金
      */
-    private BigDecimal ExchangeMargin;
+    private BigDecimal ExchangeMargin = BigDecimal.ZERO;
     
     /**
      * 是否为默认账户 0：否 1：是
@@ -256,7 +256,12 @@ public class AccountVO implements Serializable{
         this.frozenMargin = frozenMargin;
     }
 
+    /**
+     * 冻结资金 = 冻结保证金+冻结手续费+冻结权利金
+     * @return
+     */
     public BigDecimal getFrozenCash() {
+        //TODO
         return frozenCash;
     }
 
@@ -312,16 +317,29 @@ public class AccountVO implements Serializable{
         this.positionProfit = positionProfit;
     }
 
+    /**
+     * 静态权益 = 上次结算准备金+入金金额-出金金额
+     * @return
+     */
     public BigDecimal getBalance() {
-        return balance;
+        return this.preBalance.add(this.deposit).subtract(this.withdraw);
+    }
+    
+    /**
+     * 动态权益 = 静态权益+平仓盈亏+持仓盈亏-手续费
+     * @return
+     */
+    public BigDecimal getDynamicRights() {
+        return this.getBalance().add(this.closeProfit).add(this.positionProfit).subtract(this.commission);
     }
 
-    public void setBalance(BigDecimal balance) {
-        this.balance = balance;
-    }
 
+    /**
+     * 可用资金 = 动态权益 - 占用保证金 - 冻结保证金 - 冻结手续费
+     * @return
+     */
     public BigDecimal getAvailable() {
-        return available;
+        return this.getDynamicRights().subtract(this.currMargin).subtract(this.frozenMargin).subtract(this.frozenCommission);
     }
 
     public void setAvailable(BigDecimal available) {
@@ -392,5 +410,4 @@ public class AccountVO implements Serializable{
         this.isDefault = isDefault;
     }
 
-    
 }
