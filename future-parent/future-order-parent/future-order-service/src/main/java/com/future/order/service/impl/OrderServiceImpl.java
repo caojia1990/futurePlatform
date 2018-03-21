@@ -104,7 +104,11 @@ public class OrderServiceImpl implements OrderService {
         paramVO.setPriceType(String.valueOf(reqOrderInsertVO.getOrderPriceType()));
         
         BigDecimal commissionEachHand = this.commissionService.calculateCommission(paramVO);
-        BigDecimal commission = commissionEachHand.multiply(new BigDecimal(reqOrderInsertVO.getVolumeTotalOriginal()));
+        BigDecimal commission = BigDecimal.ZERO;
+        if(reqOrderInsertVO.getCombOffsetFlag() != com.future.order.api.vo.CombOffsetFlag.OPEN){
+            //平仓不需要冻结保证金
+            commission = commissionEachHand.multiply(new BigDecimal(reqOrderInsertVO.getVolumeTotalOriginal()));
+        }
         
         //调用合约中心计算每手应冻结保证金
         BigDecimal marginEachHand = this.marginService.calculateMargin(paramVO);

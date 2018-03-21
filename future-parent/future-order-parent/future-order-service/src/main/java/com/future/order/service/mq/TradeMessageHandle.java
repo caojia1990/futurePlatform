@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.redis.core.StringRedisTemplate;
 
+import com.future.account.api.exception.AccountException;
 import com.future.account.api.service.AccountService;
 import com.future.common.exception.CommonFutureException;
 import com.future.instrument.api.service.CommissionService;
@@ -19,6 +20,7 @@ import com.future.order.api.vo.ContingentCondition;
 import com.future.order.api.vo.Direction;
 import com.future.order.api.vo.ForceCloseReason;
 import com.future.order.api.vo.HedgeFlag;
+import com.future.order.api.vo.OffsetFlag;
 import com.future.order.api.vo.OrderPriceType;
 import com.future.order.api.vo.OrderStatus;
 import com.future.order.api.vo.OrderSubmitStatus;
@@ -27,7 +29,6 @@ import com.future.order.service.dao.OrderInputDao;
 import com.future.order.service.entity.OrderInput;
 import com.future.trade.api.vo.OnRtnOrderVO;
 import com.future.trade.api.vo.OnRtnTradeVO;
-import com.sun.corba.se.spi.orbutil.fsm.Input;
 
 /**
  * 交易中心消息接收处理
@@ -77,8 +78,9 @@ public class TradeMessageHandle {
     /**
      * 报单回报
      * @param onRtnOrderVO
+     * @throws AccountException 
      */
-    public void onRtnOrder(OnRtnOrderVO onRtnOrderVO){
+    public void onRtnOrder(OnRtnOrderVO onRtnOrderVO) throws AccountException{
         
         if(logger.isDebugEnabled()){
             
@@ -86,20 +88,42 @@ public class TradeMessageHandle {
         }
         
         //根据orderRef查询账户编号
+        OrderInput input = null;
+        try {
+            input = orderInputDao.selectByOrderRef(onRtnOrderVO.getOrderRef());
+        } catch (EmptyResultDataAccessException e) {
+            //找不到报单信息，说明是从其他客户端下单
+            return;
+        }
         
         switch (onRtnOrderVO.getOrderStatus()) {
         case Canceled:
             //撤单  --最终状态
             //解冻未成交部分的手续费和保证金
+            {
+                BigDecimal thrawCommission = input.getCommissionEachHand().multiply(new BigDecimal(onRtnOrderVO.getVolumeTotal()));
+                BigDecimal thrawMargin = input.getMarginEachHand().multiply(new BigDecimal(onRtnOrderVO.getVolumeTotal()));
+                this.accountService.thawCapital(input.getInvestorID(), input.getAccountNo(), thrawCommission, thrawMargin);
+            }
             break;
         case AllTraded:
             //全部成交 --最终状态
             break;
         case NoTradeNotQueueing:
             //未成交不在队列中 --最终状态
+            {
+                BigDecimal thrawCommission = input.getCommissionEachHand().multiply(new BigDecimal(onRtnOrderVO.getVolumeTotal()));
+                BigDecimal thrawMargin = input.getMarginEachHand().multiply(new BigDecimal(onRtnOrderVO.getVolumeTotal()));
+                this.accountService.thawCapital(input.getInvestorID(), input.getAccountNo(), thrawCommission, thrawMargin);
+            }
             break;
         case PartTradedNotQueueing:
             //部分成交不在队列中 --最终状态
+            {
+                BigDecimal thrawCommission = input.getCommissionEachHand().multiply(new BigDecimal(onRtnOrderVO.getVolumeTotal()));
+                BigDecimal thrawMargin = input.getMarginEachHand().multiply(new BigDecimal(onRtnOrderVO.getVolumeTotal()));
+                this.accountService.thawCapital(input.getInvestorID(), input.getAccountNo(), thrawCommission, thrawMargin);
+            }
             break;
         case PartTradedQueueing:
             //部分成交还在队列中
@@ -117,13 +141,7 @@ public class TradeMessageHandle {
         
         com.future.order.api.vo.OnRtnOrderVO message = 
                 new com.future.order.api.vo.OnRtnOrderVO();
-        OrderInput input = null;
-        try {
-            input = orderInputDao.selectByOrderRef(onRtnOrderVO.getOrderRef());
-        } catch (EmptyResultDataAccessException e) {
-            //找不到报单信息，说明是从其他客户端下单
-            return;
-        }
+        
         message.setOrderRef(onRtnOrderVO.getOrderRef());
         message.setAccountNo(input.getAccountNo());
         message.setActiveTime(onRtnOrderVO.getActiveTime());
@@ -164,7 +182,7 @@ public class TradeMessageHandle {
         message.setTimeCondition(TimeCondition.ofCode(
                 onRtnOrderVO.getTimeCondition().getCode()));
         //TODO
-        rabbitTemplate.convertAndSend(onRtnOrder, input.getInvestorID(), message);
+        rabbitTemplate.convertAndSend(this.onRtnOrder, input.getInvestorID(), message);
         
     }
     
@@ -211,8 +229,21 @@ public class TradeMessageHandle {
         message.setExchangeID(onRtnTrade.getExchangeID());
         message.setExchangeInstID(onRtnTrade.getExchangeInstID());
         message.setHedgeFlag(HedgeFlag.ofCode(onRtnTrade.getHedgeFlag().getCode()));
-        
-        //TODO
+        message.setInstrumentID(onRtnTrade.getInstrumentID());
+        message.setInvestorID(orderInput.getInvestorID());
+        message.setOffsetFlag(OffsetFlag.ofCode(onRtnTrade.getOffsetFlag().getCode()));
+        message.setOrderRef(onRtnTrade.getOrderRef());
+        message.setOrderSysID(onRtnTrade.getOrderSysID());
+        message.setPrice(onRtnTrade.getPrice());
+        message.setSequenceNo(onRtnTrade.getSequenceNo());
+        message.setTradeDate(onRtnTrade.getTradeDate());
+        message.setTradeID(onRtnTrade.getTradeID());
+        message.setTradeTime(onRtnTrade.getTradeTime());
+        message.setTradeType(onRtnTrade.getTradeType());
+        message.setTradingDay(onRtnTrade.getTradingDay());
+        message.setUserID(onRtnTrade.getUserID());
+        message.setVolume(onRtnTrade.getVolume());
+        rabbitTemplate.convertAndSend(this.onRtnTrade, orderInput.getInvestorID(), message);
     }
     
     /**

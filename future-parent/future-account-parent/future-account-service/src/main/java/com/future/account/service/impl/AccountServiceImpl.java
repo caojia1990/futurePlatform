@@ -115,8 +115,25 @@ public class AccountServiceImpl implements AccountService {
 	@Override
 	public void thawCapital(String investorNo, String accountNo, BigDecimal commission, BigDecimal margin)
 			throws AccountException {
-		// TODO Auto-generated method stub
-		
+
+	    RedisLock lock = new RedisLock(redisTemplate, accountNo);
+        try {
+            if (lock.lock()) {
+                AccountVO accountVO = this.valueOperations.get(accountNo);
+                //释放手续费
+                accountVO.setFrozenCommission(accountVO.getFrozenCommission().subtract(commission));
+                //释放保证金
+                accountVO.setFrozenMargin(accountVO.getFrozenMargin().subtract(margin));
+                this.valueOperations.set(accountNo, accountVO);
+            }
+            
+        } catch (Exception e) {
+            logger.error("冻结资金异常", e);
+            throw new AccountException(AccountErrorMsg.UnexpectedError, e);
+        } finally {
+            lock.unlock();
+        }
+        
 	}
 
 	@Override
