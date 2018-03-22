@@ -20,7 +20,6 @@ import com.future.order.api.vo.ContingentCondition;
 import com.future.order.api.vo.Direction;
 import com.future.order.api.vo.ForceCloseReason;
 import com.future.order.api.vo.HedgeFlag;
-import com.future.order.api.vo.InvestorPositionDetailVO;
 import com.future.order.api.vo.OffsetFlag;
 import com.future.order.api.vo.OrderPriceType;
 import com.future.order.api.vo.OrderStatus;
@@ -29,6 +28,7 @@ import com.future.order.api.vo.TimeCondition;
 import com.future.order.service.dao.InvestorPositionDetailDao;
 import com.future.order.service.dao.OrderInputDao;
 import com.future.order.service.entity.OrderInput;
+import com.future.order.service.impl.inner.PositionInnerService;
 import com.future.trade.api.vo.OnRtnOrderVO;
 import com.future.trade.api.vo.OnRtnTradeVO;
 
@@ -60,7 +60,7 @@ public class TradeMessageHandle {
     private OrderInputDao orderInputDao;
     
     @Autowired
-    private InvestorPositionDetailDao investorPositionDetailDao;
+    private PositionInnerService positionInnerService;
     
     @Value("${topicExchange.onRtnOrder}")
     private String onRtnOrder;
@@ -202,6 +202,7 @@ public class TradeMessageHandle {
             logger.debug("成交回报"+onRtnTrade);
         }
         
+        
         String orderRef = onRtnTrade.getOrderRef();
         OrderInput orderInput = null;
         try {
@@ -209,48 +210,6 @@ public class TradeMessageHandle {
         } catch (EmptyResultDataAccessException e) {
             return;
         }
-        
-        if(onRtnTrade.getOffsetFlag() == com.future.trade.api.vo.OffsetFlag.OPEN) {
-            //开仓
-            //保存投资者持仓明细
-            InvestorPositionDetailVO detailVO = new InvestorPositionDetailVO();
-            detailVO.setAccountNo(orderInput.getAccountNo());
-            detailVO.setCombInstrumentID(onRtnTrade.getInstrumentID());
-            detailVO.setDirection(Direction.ofCode(onRtnTrade.getDirection().getCode()));
-            detailVO.setHedgeFlag(HedgeFlag.ofCode(onRtnTrade.getHedgeFlag().getCode()));
-            detailVO.setInstrumentID(onRtnTrade.getInstrumentID());
-            detailVO.setInvestorID(orderInput.getInvestorID());
-            detailVO.setOpenDate(onRtnTrade.getTradeDate());
-            detailVO.setOpenPrice(new BigDecimal(onRtnTrade.getPrice()));
-            detailVO.setTradeID(onRtnTrade.getTradeID());
-            detailVO.setTradeType(onRtnTrade.getTradeType());
-            detailVO.setTradingDay(onRtnTrade.getTradingDay());
-            detailVO.setVolume(onRtnTrade.getVolume());
-            investorPositionDetailDao.insert(detailVO);
-        } else {
-            //平仓  通过orderRef查询平仓对应关系，找到要平的那笔持仓
-            //TODO
-            
-        }
-        
-        BigDecimal thrawCommission = orderInput.getCommissionEachHand().multiply(new BigDecimal(onRtnTrade.getVolume()));
-        BigDecimal thrawMargin = orderInput.getMarginEachHand().multiply(new BigDecimal(onRtnTrade.getVolume()));
-        
-        //计算需扣除的手续费和占用的保证金金额
-        InvestorTradeParamVO paramVO = new InvestorTradeParamVO();
-        paramVO.setInvestorNo(orderInput.getInvestorID());
-        paramVO.setInstrumentID(onRtnTrade.getInstrumentID());
-        paramVO.setDirection(String.valueOf(onRtnTrade.getDirection().getCode()));
-        paramVO.setLimitPrice(new BigDecimal(onRtnTrade.getPrice()));
-        paramVO.setOffset(String.valueOf(onRtnTrade.getOffsetFlag().getCode()));
-        BigDecimal deductCommissionEachHand = this.commissionService.calculateCommission(paramVO);
-        BigDecimal deductCommission = deductCommissionEachHand.multiply(new BigDecimal(onRtnTrade.getVolume()));
-        BigDecimal occupyMarginEachHand = this.marginService.calculateMargin(paramVO);
-        BigDecimal occupyMargin = occupyMarginEachHand.multiply(new BigDecimal(onRtnTrade.getVolume()));
-        
-        // 解冻手续费和保证金然后扣除手续费并占用保证金（原子操作）
-        accountService.thawThenDeductAndOccupy(orderInput.getInvestorID(), orderInput.getAccountNo(), 
-            thrawCommission, thrawMargin, deductCommission, occupyMargin);
         
         com.future.order.api.vo.OnRtnTradeVO message = new com.future.order.api.vo.OnRtnTradeVO();
         message.setAccountNo(orderInput.getAccountNo());
@@ -272,6 +231,35 @@ public class TradeMessageHandle {
         message.setTradingDay(onRtnTrade.getTradingDay());
         message.setUserID(onRtnTrade.getUserID());
         message.setVolume(onRtnTrade.getVolume());
+        
+			
+        if(message.getOffsetFlag() == OffsetFlag.OPEN) {
+        //开仓
+	        	positionInnerService.increasePosition(message);
+        } else {
+        //平仓
+			positionInnerService.reducePosition(message);
+		}
+        
+        BigDecimal thrawCommission = orderInput.getCommissionEachHand().multiply(new BigDecimal(onRtnTrade.getVolume()));
+        BigDecimal thrawMargin = orderInput.getMarginEachHand().multiply(new BigDecimal(onRtnTrade.getVolume()));
+        
+        //计算需扣除的手续费和占用的保证金金额
+        InvestorTradeParamVO paramVO = new InvestorTradeParamVO();
+        paramVO.setInvestorNo(orderInput.getInvestorID());
+        paramVO.setInstrumentID(onRtnTrade.getInstrumentID());
+        paramVO.setDirection(String.valueOf(onRtnTrade.getDirection().getCode()));
+        paramVO.setLimitPrice(new BigDecimal(onRtnTrade.getPrice()));
+        paramVO.setOffset(String.valueOf(onRtnTrade.getOffsetFlag().getCode()));
+        BigDecimal deductCommissionEachHand = this.commissionService.calculateCommission(paramVO);
+        BigDecimal deductCommission = deductCommissionEachHand.multiply(new BigDecimal(onRtnTrade.getVolume()));
+        BigDecimal occupyMarginEachHand = this.marginService.calculateMargin(paramVO);
+        BigDecimal occupyMargin = occupyMarginEachHand.multiply(new BigDecimal(onRtnTrade.getVolume()));
+        
+        // 解冻手续费和保证金然后扣除手续费并占用保证金（原子操作）
+        accountService.thawThenDeductAndOccupy(orderInput.getInvestorID(), orderInput.getAccountNo(), 
+            thrawCommission, thrawMargin, deductCommission, occupyMargin);
+        
         rabbitTemplate.convertAndSend(this.onRtnTrade, orderInput.getInvestorID(), message);
     }
     

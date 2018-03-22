@@ -104,18 +104,32 @@ public class OrderServiceImpl implements OrderService {
         paramVO.setPriceType(String.valueOf(reqOrderInsertVO.getOrderPriceType()));
         
         BigDecimal commissionEachHand = this.commissionService.calculateCommission(paramVO);
-        BigDecimal commission = BigDecimal.ZERO;
-        if(reqOrderInsertVO.getCombOffsetFlag() != com.future.order.api.vo.CombOffsetFlag.OPEN){
-            //平仓不需要冻结保证金
-            commission = commissionEachHand.multiply(new BigDecimal(reqOrderInsertVO.getVolumeTotalOriginal()));
-            //TODO  按照先开先平原则对应冻结持仓
-            
-            
-        }
+        BigDecimal commission = commissionEachHand.multiply(new BigDecimal(reqOrderInsertVO.getVolumeTotalOriginal()));
         
         //调用合约中心计算每手应冻结保证金
-        BigDecimal marginEachHand = this.marginService.calculateMargin(paramVO);
-        BigDecimal margin = marginEachHand.multiply(new BigDecimal(reqOrderInsertVO.getVolumeTotalOriginal()));
+        BigDecimal margin = BigDecimal.ZERO;
+        BigDecimal marginEachHand = BigDecimal.ZERO;
+        
+        //如果不是上期所，平今仓可用close或closeToday，平昨仓可用close或closeYesterday。
+        //如果是上期所，   平今仓只可用closeToday，平昨仓可用close或closeYesterday。
+        switch (reqOrderInsertVO.getCombOffsetFlag()) {
+        case OPEN:
+            marginEachHand = this.marginService.calculateMargin(paramVO);
+            margin = marginEachHand.multiply(new BigDecimal(reqOrderInsertVO.getVolumeTotalOriginal()));
+            break;
+        case CLOSE:
+            //平仓
+            break;
+        case CloseToday:
+            //平今
+            break;
+        case CloseYesterday:
+            //平昨
+            break;
+        default:
+            break;
+        }
+        
         
         //生成委托编号
         Long orderRef = stringRedisTemplate.opsForValue().increment(ORDERREF_SEQUENCE_KEY, 1);
@@ -160,12 +174,12 @@ public class OrderServiceImpl implements OrderService {
         orderInsertVO.setRequestID(reqOrderInsertVO.getRequestID());//请求ID
         
         try {
-			tradeService.reqOrderInsert(orderInsertVO);
-		} catch (TradeException e) {
-			//下单失败先解冻手续费和保证金
-			accountService.thawCapital(reqOrderInsertVO.getInvestorID(), reqOrderInsertVO.getAccountNo(), commission, margin);
-			throw e;
-		}
+            tradeService.reqOrderInsert(orderInsertVO);
+        } catch (TradeException e) {
+            //下单失败先解冻手续费和保证金
+            accountService.thawCapital(reqOrderInsertVO.getInvestorID(), reqOrderInsertVO.getAccountNo(), commission, margin);
+            throw e;
+        }
     }
 
     @Override
