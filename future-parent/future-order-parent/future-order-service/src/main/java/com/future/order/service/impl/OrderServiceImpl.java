@@ -108,6 +108,9 @@ public class OrderServiceImpl implements OrderService {
         if(reqOrderInsertVO.getCombOffsetFlag() != com.future.order.api.vo.CombOffsetFlag.OPEN){
             //平仓不需要冻结保证金
             commission = commissionEachHand.multiply(new BigDecimal(reqOrderInsertVO.getVolumeTotalOriginal()));
+            //TODO  按照先开先平原则对应冻结持仓
+            
+            
         }
         
         //调用合约中心计算每手应冻结保证金
