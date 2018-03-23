@@ -28,7 +28,7 @@ import com.future.order.api.vo.TimeCondition;
 import com.future.order.service.dao.InvestorPositionDetailDao;
 import com.future.order.service.dao.OrderInputDao;
 import com.future.order.service.entity.OrderInput;
-import com.future.order.service.impl.inner.PositionInnerService;
+import com.future.order.service.inner.PositionInnerService;
 import com.future.trade.api.vo.OnRtnOrderVO;
 import com.future.trade.api.vo.OnRtnTradeVO;
 

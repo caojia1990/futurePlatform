@@ -26,6 +26,11 @@ public class InvestorPositionVO implements Serializable{
     private String investorID;
     
     /**
+     * 账户编号
+     */
+    private String accountNo;
+    
+    /**
      * 持仓多空方向
      */
     private Direction posiDirection;
@@ -34,11 +39,6 @@ public class InvestorPositionVO implements Serializable{
      * 投机套保标志
      */
     private HedgeFlag hedgeFlag;
-    
-    /**
-     * 持仓日期
-     */
-    private String positionDate;
     
     /**
      * 上日持仓
@@ -51,32 +51,22 @@ public class InvestorPositionVO implements Serializable{
     private int position;
     
     /**
-     * 多头冻结
+     * 冻结上日持仓
      */
-    private int longFrozen;
+    private int ydPositionFrozen;
     
     /**
-     * 空头冻结
+     * 冻结今日持仓
      */
-    private int shortFrozen;
+    private int positionFrozen;
     
     /**
-     * 开仓冻结金额
-     */
-    private BigDecimal longFrozenAmount;
-    
-    /**
-     * 开仓冻结金额
-     */
-    private BigDecimal shortFrozenAmount;
-    
-    /**
-     * 开仓量
+     * 今开仓量
      */
     private int openVolume;
     
     /**
-     * 平仓量
+     * 今平仓量
      */
     private int closeVolume;
     
@@ -84,11 +74,6 @@ public class InvestorPositionVO implements Serializable{
      * 开仓金额
      */
     private BigDecimal openAmount;
-    
-    /**
-     * 平仓金额
-     */
-    private BigDecimal closeAmount;
     
     /**
      * 持仓成本
@@ -106,24 +91,9 @@ public class InvestorPositionVO implements Serializable{
     private BigDecimal useMargin;
     
     /**
-     * 冻结的保证金
-     */
-    private BigDecimal frozenMargin;
-    
-    /**
-     * 冻结的资金
-     */
-    private BigDecimal frozenCash;
-    
-    /**
      * 冻结的手续费
      */
     private BigDecimal frozenCommission;
-    
-    /**
-     * 资金差额
-     */
-    private BigDecimal cashIn;
     
     /**
      * 手续费
@@ -192,14 +162,6 @@ public class InvestorPositionVO implements Serializable{
         this.hedgeFlag = hedgeFlag;
     }
 
-    public String getPositionDate() {
-        return positionDate;
-    }
-
-    public void setPositionDate(String positionDate) {
-        this.positionDate = positionDate;
-    }
-
     public int getYdPosition() {
         return ydPosition;
     }
@@ -216,38 +178,6 @@ public class InvestorPositionVO implements Serializable{
         this.position = position;
     }
 
-    public int getLongFrozen() {
-        return longFrozen;
-    }
-
-    public void setLongFrozen(int longFrozen) {
-        this.longFrozen = longFrozen;
-    }
-
-    public int getShortFrozen() {
-        return shortFrozen;
-    }
-
-    public void setShortFrozen(int shortFrozen) {
-        this.shortFrozen = shortFrozen;
-    }
-
-    public BigDecimal getLongFrozenAmount() {
-        return longFrozenAmount;
-    }
-
-    public void setLongFrozenAmount(BigDecimal longFrozenAmount) {
-        this.longFrozenAmount = longFrozenAmount;
-    }
-
-    public BigDecimal getShortFrozenAmount() {
-        return shortFrozenAmount;
-    }
-
-    public void setShortFrozenAmount(BigDecimal shortFrozenAmount) {
-        this.shortFrozenAmount = shortFrozenAmount;
-    }
-
     public int getOpenVolume() {
         return openVolume;
     }
@@ -262,22 +192,6 @@ public class InvestorPositionVO implements Serializable{
 
     public void setCloseVolume(int closeVolume) {
         this.closeVolume = closeVolume;
-    }
-
-    public BigDecimal getOpenAmount() {
-        return openAmount;
-    }
-
-    public void setOpenAmount(BigDecimal openAmount) {
-        this.openAmount = openAmount;
-    }
-
-    public BigDecimal getCloseAmount() {
-        return closeAmount;
-    }
-
-    public void setCloseAmount(BigDecimal closeAmount) {
-        this.closeAmount = closeAmount;
     }
 
     public BigDecimal getPositionCost() {
@@ -304,36 +218,12 @@ public class InvestorPositionVO implements Serializable{
         this.useMargin = useMargin;
     }
 
-    public BigDecimal getFrozenMargin() {
-        return frozenMargin;
-    }
-
-    public void setFrozenMargin(BigDecimal frozenMargin) {
-        this.frozenMargin = frozenMargin;
-    }
-
-    public BigDecimal getFrozenCash() {
-        return frozenCash;
-    }
-
-    public void setFrozenCash(BigDecimal frozenCash) {
-        this.frozenCash = frozenCash;
-    }
-
     public BigDecimal getFrozenCommission() {
         return frozenCommission;
     }
 
     public void setFrozenCommission(BigDecimal frozenCommission) {
         this.frozenCommission = frozenCommission;
-    }
-
-    public BigDecimal getCashIn() {
-        return cashIn;
-    }
-
-    public void setCashIn(BigDecimal cashIn) {
-        this.cashIn = cashIn;
     }
 
     public BigDecimal getCommission() {
@@ -391,7 +281,38 @@ public class InvestorPositionVO implements Serializable{
     public void setSettlementID(String settlementID) {
         this.settlementID = settlementID;
     }
-    
+
+    public String getAccountNo() {
+        return accountNo;
+    }
+
+    public void setAccountNo(String accountNo) {
+        this.accountNo = accountNo;
+    }
+
+    public int getYdPositionFrozen() {
+        return ydPositionFrozen;
+    }
+
+    public void setYdPositionFrozen(int ydPositionFrozen) {
+        this.ydPositionFrozen = ydPositionFrozen;
+    }
+
+    public int getPositionFrozen() {
+        return positionFrozen;
+    }
+
+    public void setPositionFrozen(int positionFrozen) {
+        this.positionFrozen = positionFrozen;
+    }
+
+    public BigDecimal getOpenAmount() {
+        return openAmount;
+    }
+
+    public void setOpenAmount(BigDecimal openAmount) {
+        this.openAmount = openAmount;
+    }
     
 
 }
