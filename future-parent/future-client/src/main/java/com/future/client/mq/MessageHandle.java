@@ -10,6 +10,8 @@ public class MessageHandle implements MessageReceive{
         
         System.out.println(marketData);
         
+        
+        
     }
 
     
