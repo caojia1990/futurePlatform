@@ -17,7 +17,6 @@
 		
 	<!-- 报单服务接口 -->
 	<dubbo:service interface="com.future.order.api.service.OrderService" ref="orderService" retries="0"/>
-	<bean id="orderService" class="com.future.order.service.impl.OrderServiceImpl"/>
-
+	<bean id="orderService" class="com.future.order.service.impl.FasterOrderServiceImpl"/>
 	
 </beans>

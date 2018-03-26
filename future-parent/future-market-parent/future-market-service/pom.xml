@@ -10,11 +10,11 @@
   
   <dependencies>
   
-  	<dependency>
+  	<!-- <dependency>
   		<groupId>org.hraink.futures</groupId>
 		<artifactId>JCTP</artifactId>
 	    <version>0.0.3-SNAPSHOT</version>
-  	</dependency>
+  	</dependency> -->
   	
     <dependency>
         <groupId>com.future.caojia</groupId>

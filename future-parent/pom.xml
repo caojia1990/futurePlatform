@@ -48,5 +48,6 @@
   	<module>future-trade-parent</module>
   	<module>future-order-parent</module>
   	<module>future-common</module>
+  	<module>future-client</module>
   </modules>
 </project>
