@@ -3,9 +3,12 @@ package com.future.client.mq;
 import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.HashOperations;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 
+import com.future.order.api.vo.Direction;
 import com.future.order.api.vo.OnRtnOrderVO;
 import com.future.order.api.vo.OnRtnTradeVO;
 
@@ -42,7 +45,12 @@ public class OrderMessageHandle {
             
             logger.debug("成交回报"+onRtnTrade);
         }
-        hashOperations.put(onRtnTrade.getAccountNo(), onRtnTrade.getInstrumentID(), onRtnTrade);
+        
+        if(onRtnTrade.getDirection() == Direction.BUY) {
+            hashOperations.put(onRtnTrade.getAccountNo(), onRtnTrade.getInstrumentID(), onRtnTrade);
+        }else {
+            hashOperations.delete(onRtnTrade.getAccountNo(), onRtnTrade.getInstrumentID());
+        }
         
         
     }

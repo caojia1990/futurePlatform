@@ -59,7 +59,8 @@ public class MessageHandle implements MessageReceive{
             
             if(map.get(marketData.getInstrumentID()) == null){
                 
-                //if(time.isAfter(LocalTime.parse("09:06:06")) && time.isBefore(LocalTime.parse("09:00:06"))){
+                if((time.isAfter(LocalTime.parse("21:00:05")) && time.isBefore(LocalTime.parse("23:59:59"))) || 
+                        (time.isAfter(LocalTime.parse("09:00:05")) && time.isBefore(LocalTime.parse("14:59:59")))){
                     
                     if(marketData.getAskPrice1().doubleValue() == marketData.getHighestPrice().doubleValue()){
                         ReqOrderInsertVO reqOrderInsertVO = new ReqOrderInsertVO();
@@ -106,7 +107,7 @@ public class MessageHandle implements MessageReceive{
                         orderService.reqOrderInsert(reqOrderInsertVO);
                         map.put(marketData.getInstrumentID(), reqOrderInsertVO);
                     }
-                //}
+                }
             
                 
             }else {
