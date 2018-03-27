@@ -9,6 +9,7 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 
 import com.future.order.api.vo.Direction;
+import com.future.order.api.vo.OffsetFlag;
 import com.future.order.api.vo.OnRtnOrderVO;
 import com.future.order.api.vo.OnRtnTradeVO;
 
@@ -46,7 +47,7 @@ public class OrderMessageHandle {
             logger.debug("成交回报"+onRtnTrade);
         }
         
-        if(onRtnTrade.getDirection() == Direction.BUY) {
+        if(onRtnTrade.getOffsetFlag() == OffsetFlag.OPEN) {
             hashOperations.put(onRtnTrade.getAccountNo(), onRtnTrade.getInstrumentID(), onRtnTrade);
         }else {
             hashOperations.delete(onRtnTrade.getAccountNo(), onRtnTrade.getInstrumentID());
