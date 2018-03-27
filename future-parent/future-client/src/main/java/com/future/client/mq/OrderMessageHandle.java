@@ -1,6 +1,10 @@
 package com.future.client.mq;
 
+import javax.annotation.Resource;
+
 import org.apache.log4j.Logger;
+import org.springframework.data.redis.core.HashOperations;
+import org.springframework.data.redis.core.ValueOperations;
 
 import com.future.order.api.vo.OnRtnOrderVO;
 import com.future.order.api.vo.OnRtnTradeVO;
@@ -8,6 +12,12 @@ import com.future.order.api.vo.OnRtnTradeVO;
 public class OrderMessageHandle {
 	
 	static Logger logger = Logger.getLogger(OrderMessageHandle.class);
+	
+	@Resource(name="redisTemplate")
+	private ValueOperations<String , OnRtnTradeVO> valueOperations;
+	
+	@Resource(name="redisTemplate")
+	private HashOperations<String, String, OnRtnTradeVO> hashOperations;
 	
 	/**
      * 报单回报
@@ -32,7 +42,7 @@ public class OrderMessageHandle {
             
             logger.debug("成交回报"+onRtnTrade);
         }
-        
+        hashOperations.put(onRtnTrade.getAccountNo(), onRtnTrade.getInstrumentID(), onRtnTrade);
         
         
     }
