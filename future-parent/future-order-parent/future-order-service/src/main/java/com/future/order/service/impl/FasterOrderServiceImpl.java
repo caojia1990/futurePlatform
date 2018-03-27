@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 import com.future.common.exception.CommonFutureException;
 import com.future.order.api.service.OrderService;
 import com.future.order.api.vo.ReqOrderActionVO;
+import com.future.order.service.dao.OrderInputDao;
+import com.future.order.service.entity.OrderInput;
 import com.future.trade.api.service.TradeService;
 import com.future.trade.api.vo.CombHedgeFlag;
 import com.future.trade.api.vo.CombOffsetFlag;
@@ -38,6 +40,9 @@ public class FasterOrderServiceImpl implements OrderService {
     
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
+    
+    @Autowired
+    private OrderInputDao orderInputDao;
 
     @Override
     public void openOrder() {
@@ -74,6 +79,11 @@ public class FasterOrderServiceImpl implements OrderService {
 
         //生成委托编号
         Long orderRef = stringRedisTemplate.opsForValue().increment(ORDERREF_SEQUENCE_KEY, 1);
+        OrderInput r = new OrderInput();
+        r.setAccountNo(reqOrderInsertVO.getAccountNo());
+        r.setOrderRef(String.valueOf(orderRef));
+        r.setInvestorID(reqOrderInsertVO.getInvestorID());
+        orderInputDao.insert(r);
         
         //缓存orderRef与账户关系
         stringRedisTemplate.opsForHash().put(ORDERREF_KEY, String.valueOf(orderRef), reqOrderInsertVO.getAccountNo());

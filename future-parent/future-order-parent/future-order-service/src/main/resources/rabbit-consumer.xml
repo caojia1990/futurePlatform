@@ -26,6 +26,6 @@
     </rabbit:listener-container>
     
     <!-- 消息处理 -->
-    <bean id="messageHandle" class="com.future.order.service.mq.TradeMessageHandle" />
+    <bean id="messageHandle" class="com.future.order.service.mq.FasterTradeMessageHandle" />
        
 </beans>       

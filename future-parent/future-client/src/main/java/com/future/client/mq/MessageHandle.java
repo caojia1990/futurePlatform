@@ -146,7 +146,7 @@ public class MessageHandle implements MessageReceive{
                             reqOrderInsertVO.setAccountNo("00001");
                             reqOrderInsertVO.setInvestorID(ClientStarter.INVESTOR_ID);
                             reqOrderInsertVO.setInstrumentID(marketData.getInstrumentID());
-                            reqOrderInsertVO.setLimitPrice(marketData.getLowerLimitPrice());
+                            reqOrderInsertVO.setLimitPrice(marketData.getUpperLimitPrice());
                             reqOrderInsertVO.setCombHedgeFlag(CombHedgeFlag.Speculation);
                             reqOrderInsertVO.setCombOffsetFlag(CombOffsetFlag.CloseToday);
                             reqOrderInsertVO.setTimeCondition(TimeCondition.IOC);
