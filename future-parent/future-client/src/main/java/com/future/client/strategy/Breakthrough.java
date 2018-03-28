@@ -60,8 +60,8 @@ public class Breakthrough implements Runnable{
             OnRtnTradeVO tradeVO = this.hashOperations.get(ACCOUNT_NO, marketData.getInstrumentID());
             if(tradeVO == null){
                 
-                if((time.isAfter(LocalTime.parse("21:20:00")) && time.isBefore(LocalTime.parse("23:59:59"))) || 
-                        (time.isAfter(LocalTime.parse("09:20:00")) && time.isBefore(LocalTime.parse("14:59:59")))){
+                if((time.isAfter(LocalTime.parse("21:30:00")) && time.isBefore(LocalTime.parse("23:59:59"))) || 
+                        (time.isAfter(LocalTime.parse("09:30:00")) && time.isBefore(LocalTime.parse("14:59:59")))){
                     
                     if(marketData.getAskPrice1().doubleValue() == marketData.getHighestPrice().doubleValue()){
                         ReqOrderInsertVO reqOrderInsertVO = new ReqOrderInsertVO();
