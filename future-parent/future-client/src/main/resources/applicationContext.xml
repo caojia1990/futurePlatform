@@ -23,6 +23,16 @@
     <!-- proxy-target-class默认"false",更改为"ture"使用CGLib动态代理 -->
     <!-- <aop:aspectj-autoproxy proxy-target-class="true" /> -->
     
+    <bean id="taskExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+        <property name="corePoolSize" value="5" />
+        <property name="keepAliveSeconds" value="200" />
+        <property name="maxPoolSize" value="10" />
+        <property name="queueCapacity" value="20" />
+        <property name="rejectedExecutionHandler">
+           <bean class="java.util.concurrent.ThreadPoolExecutor$CallerRunsPolicy" />
+        </property>
+    </bean>
+    
     <!-- <import resource="spring-jdbc.xml" /> -->
     <import resource="spring-redis.xml" />
     <import resource="dubbo-consumer.xml" />
