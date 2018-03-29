@@ -4,7 +4,7 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
 import org.apache.log4j.Logger;
-import org.springframework.data.redis.core.HashOperations;
+import org.springframework.data.redis.core.StringRedisTemplate;
 
 import com.future.client.ClientStarter;
 import com.future.client.utils.CacheMap;
@@ -29,20 +29,22 @@ public class Breakthrough implements Runnable{
     
     static Logger logger = Logger.getLogger(Breakthrough.class);
     
+    private final static String STRATEGY_NAME = "突破前值";
+    
     private static final String ACCOUNT_NO = "00002";
     
     private final DepthMarketData marketData;
     
     private final OrderService orderService;
     
-    private final HashOperations<String, String, OnRtnTradeVO> hashOperations;
+    private StringRedisTemplate redisTemplate;
     
     private final CacheMap cacheMap;
     
     public Breakthrough(DepthMarketData marketData, OrderService orderService, 
-            HashOperations<String, String, OnRtnTradeVO> hashOperations, CacheMap cacheMap) {
+            StringRedisTemplate redisTemplate, CacheMap cacheMap) {
         this.cacheMap = cacheMap;
-        this.hashOperations = hashOperations;
+        this.redisTemplate = redisTemplate;
         this.orderService = orderService;
         this.marketData = marketData;
     }
@@ -50,15 +52,16 @@ public class Breakthrough implements Runnable{
     @Override
     public void run() {
         try {
-            if(logger.isDebugEnabled()){
-                //logger.debug(marketData);
+            if(logger.isInfoEnabled()){
+                //logger.info(marketData);
             }
             String updateTime = marketData.getUpdateTime();
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
             LocalTime time = LocalTime.parse(updateTime, formatter);
             
-            OnRtnTradeVO tradeVO = this.hashOperations.get(ACCOUNT_NO, marketData.getInstrumentID());
-            if(tradeVO == null){
+            OnRtnTradeVO tradeVO = (OnRtnTradeVO) this.redisTemplate.opsForHash().get(ACCOUNT_NO, marketData.getInstrumentID());
+            String flag = (String) this.redisTemplate.opsForHash().get(STRATEGY_NAME, marketData.getInstrumentID());
+            if(tradeVO == null && flag == null){
                 
                 if((time.isAfter(LocalTime.parse("21:30:00")) && time.isBefore(LocalTime.parse("23:59:59"))) || 
                         (time.isAfter(LocalTime.parse("09:30:00")) && time.isBefore(LocalTime.parse("14:59:59")))){
@@ -79,13 +82,16 @@ public class Breakthrough implements Runnable{
                         reqOrderInsertVO.setOrderPriceType(OrderPriceType.LimitPrice);
                         reqOrderInsertVO.setContingentCondition(ContingentCondition.Immediately);
                         reqOrderInsertVO.setForceCloseReason(ForceCloseReason.NotForceClose);
-                        if(logger.isDebugEnabled()){
-                            logger.debug(marketData);
-                            logger.debug("触发下单");
+                        if(logger.isInfoEnabled()){
+                            logger.info(marketData);
+                            logger.info("触发下单");
                         }
                         tradeVO = new OnRtnTradeVO();
                         tradeVO.setInstrumentID(marketData.getInstrumentID());
-                        this.hashOperations.put(ACCOUNT_NO, marketData.getInstrumentID(), tradeVO);
+                        this.redisTemplate.opsForHash().put(ACCOUNT_NO, marketData.getInstrumentID(), tradeVO);
+                        
+                        //策略标记  只开仓一次
+                        this.redisTemplate.opsForHash().put(STRATEGY_NAME, marketData.getInstrumentID(), "1");
                         orderService.reqOrderInsert(reqOrderInsertVO);
                     }else if (marketData.getBidPrice1().doubleValue() == marketData.getLowestPrice().doubleValue()) {
                         ReqOrderInsertVO reqOrderInsertVO = new ReqOrderInsertVO();
@@ -103,18 +109,19 @@ public class Breakthrough implements Runnable{
                         reqOrderInsertVO.setOrderPriceType(OrderPriceType.LimitPrice);
                         reqOrderInsertVO.setContingentCondition(ContingentCondition.Immediately);
                         reqOrderInsertVO.setForceCloseReason(ForceCloseReason.NotForceClose);
-                        if(logger.isDebugEnabled()){
-                            logger.debug(marketData);
-                            logger.debug("触发下单");
+                        if(logger.isInfoEnabled()){
+                            logger.info(marketData);
+                            logger.info("触发下单");
                         }
                         tradeVO = new OnRtnTradeVO();
                         tradeVO.setInstrumentID(marketData.getInstrumentID());
-                        this.hashOperations.put(ACCOUNT_NO, marketData.getInstrumentID(), tradeVO);
+                        this.redisTemplate.opsForHash().put(ACCOUNT_NO, marketData.getInstrumentID(), tradeVO);
+                        this.redisTemplate.opsForHash().put(STRATEGY_NAME, marketData.getInstrumentID(), "1");
                         orderService.reqOrderInsert(reqOrderInsertVO);
                     }
                 }
                 
-            }else if(tradeVO.getTradeID() != null){
+            }else if(tradeVO != null && tradeVO.getTradeID() != null){
                 
                 if(tradeVO.getDirection() == Direction.BUY){
                     if(marketData.getBidPrice1().doubleValue() >= (tradeVO.getPrice()+ 2*this.cacheMap.getTickPrice(marketData.getInstrumentID()))) {
@@ -134,9 +141,9 @@ public class Breakthrough implements Runnable{
                         reqOrderInsertVO.setOrderPriceType(OrderPriceType.LimitPrice);
                         reqOrderInsertVO.setContingentCondition(ContingentCondition.Immediately);
                         reqOrderInsertVO.setForceCloseReason(ForceCloseReason.NotForceClose);
-                        if(logger.isDebugEnabled()){
-                            logger.debug(marketData);
-                            logger.debug("触发止盈");
+                        if(logger.isInfoEnabled()){
+                            logger.info(marketData);
+                            logger.info("触发止盈");
                         }
                         orderService.reqOrderInsert(reqOrderInsertVO);
                     }
@@ -158,9 +165,9 @@ public class Breakthrough implements Runnable{
                         reqOrderInsertVO.setOrderPriceType(OrderPriceType.LimitPrice);
                         reqOrderInsertVO.setContingentCondition(ContingentCondition.Immediately);
                         reqOrderInsertVO.setForceCloseReason(ForceCloseReason.NotForceClose);
-                        if(logger.isDebugEnabled()){
-                            logger.debug(marketData);
-                            logger.debug("触发止盈");
+                        if(logger.isInfoEnabled()){
+                            logger.info(marketData);
+                            logger.info("触发止盈");
                         }
                         orderService.reqOrderInsert(reqOrderInsertVO);
                     }

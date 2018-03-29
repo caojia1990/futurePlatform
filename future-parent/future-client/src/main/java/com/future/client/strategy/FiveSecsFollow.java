@@ -7,6 +7,7 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.springframework.data.redis.core.HashOperations;
+import org.springframework.data.redis.core.StringRedisTemplate;
 
 import com.future.client.ClientStarter;
 import com.future.client.utils.CacheMap;
@@ -32,22 +33,22 @@ public class FiveSecsFollow implements Runnable{
     
     static Logger logger = Logger.getLogger(FiveSecsFollow.class);
     
-    private static final String ACCOUNT_NO = "00001"; 
+    private final static String STRATEGY_NAME = "5秒跟随";
     
-    private Map<String, ReqOrderInsertVO> map = new HashMap<>();
+    private static final String ACCOUNT_NO = "00001";
     
     private final DepthMarketData marketData;
     
     private final OrderService orderService;
     
-    private final HashOperations<String, String, OnRtnTradeVO> hashOperations;
+    private StringRedisTemplate redisTemplate;
     
     private final CacheMap cacheMap;
     
     public FiveSecsFollow(DepthMarketData marketData, OrderService orderService, 
-            HashOperations<String, String, OnRtnTradeVO> hashOperations, CacheMap cacheMap) {
+            StringRedisTemplate redisTemplate, CacheMap cacheMap) {
         this.cacheMap = cacheMap;
-        this.hashOperations = hashOperations;
+        this.redisTemplate = redisTemplate;
         this.orderService = orderService;
         this.marketData = marketData;
     }
@@ -63,7 +64,9 @@ public class FiveSecsFollow implements Runnable{
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
             LocalTime time = LocalTime.parse(updateTime, formatter);
             
-            if(map.get(marketData.getInstrumentID()) == null){
+            String flag = (String) this.redisTemplate.opsForHash().get(STRATEGY_NAME, marketData.getInstrumentID());
+            
+            if(flag == null){
                 
                 if((time.isAfter(LocalTime.parse("21:00:05")) && time.isBefore(LocalTime.parse("23:59:59"))) || 
                         (time.isAfter(LocalTime.parse("09:00:05")) && time.isBefore(LocalTime.parse("14:59:59")))){
@@ -84,12 +87,14 @@ public class FiveSecsFollow implements Runnable{
                         reqOrderInsertVO.setOrderPriceType(OrderPriceType.LimitPrice);
                         reqOrderInsertVO.setContingentCondition(ContingentCondition.Immediately);
                         reqOrderInsertVO.setForceCloseReason(ForceCloseReason.NotForceClose);
-                        if(logger.isDebugEnabled()){
-                            logger.debug(marketData);
-                            logger.debug("触发下单");
+                        if(logger.isInfoEnabled()){
+                            logger.info(marketData);
+                            logger.info("触发下单");
                         }
+                        
+                        //策略标记  只开仓一次
+                        this.redisTemplate.opsForHash().put(STRATEGY_NAME, marketData.getInstrumentID(), "1");
                         orderService.reqOrderInsert(reqOrderInsertVO);
-                        map.put(marketData.getInstrumentID(), reqOrderInsertVO);
                     }else if (marketData.getBidPrice1().doubleValue() == marketData.getLowestPrice().doubleValue()) {
                         ReqOrderInsertVO reqOrderInsertVO = new ReqOrderInsertVO();
                         reqOrderInsertVO.setAccountNo(ACCOUNT_NO);
@@ -106,19 +111,20 @@ public class FiveSecsFollow implements Runnable{
                         reqOrderInsertVO.setOrderPriceType(OrderPriceType.LimitPrice);
                         reqOrderInsertVO.setContingentCondition(ContingentCondition.Immediately);
                         reqOrderInsertVO.setForceCloseReason(ForceCloseReason.NotForceClose);
-                        if(logger.isDebugEnabled()){
-                            logger.debug(marketData);
-                            logger.debug("触发下单");
+                        if(logger.isInfoEnabled()){
+                            logger.info(marketData);
+                            logger.info("触发下单");
                         }
                         orderService.reqOrderInsert(reqOrderInsertVO);
-                        map.put(marketData.getInstrumentID(), reqOrderInsertVO);
+                        //策略标记  只开仓一次
+                        this.redisTemplate.opsForHash().put(STRATEGY_NAME, marketData.getInstrumentID(), "1");
                     }
                 }
             
                 
             }else {
                 
-                OnRtnTradeVO tradeVO = this.hashOperations.get(ACCOUNT_NO, marketData.getInstrumentID());
+                OnRtnTradeVO tradeVO = (OnRtnTradeVO) this.redisTemplate.opsForHash().get(ACCOUNT_NO, marketData.getInstrumentID());
                 
                 if(tradeVO != null){
                     if(tradeVO.getDirection() == Direction.BUY){
@@ -139,9 +145,9 @@ public class FiveSecsFollow implements Runnable{
                             reqOrderInsertVO.setOrderPriceType(OrderPriceType.LimitPrice);
                             reqOrderInsertVO.setContingentCondition(ContingentCondition.Immediately);
                             reqOrderInsertVO.setForceCloseReason(ForceCloseReason.NotForceClose);
-                            if(logger.isDebugEnabled()){
-                                logger.debug(marketData);
-                                logger.debug("触发止盈");
+                            if(logger.isInfoEnabled()){
+                                logger.info(marketData);
+                                logger.info("触发止盈");
                             }
                             orderService.reqOrderInsert(reqOrderInsertVO);
                             //map.remove(marketData.getInstrumentID());
@@ -164,9 +170,9 @@ public class FiveSecsFollow implements Runnable{
                             reqOrderInsertVO.setOrderPriceType(OrderPriceType.LimitPrice);
                             reqOrderInsertVO.setContingentCondition(ContingentCondition.Immediately);
                             reqOrderInsertVO.setForceCloseReason(ForceCloseReason.NotForceClose);
-                            if(logger.isDebugEnabled()){
-                                logger.debug(marketData);
-                                logger.debug("触发止盈");
+                            if(logger.isInfoEnabled()){
+                                logger.info(marketData);
+                                logger.info("触发止盈");
                             }
                             orderService.reqOrderInsert(reqOrderInsertVO);
                             //map.remove(marketData.getInstrumentID());
