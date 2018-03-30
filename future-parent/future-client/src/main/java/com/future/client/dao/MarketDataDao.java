@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import com.future.market.api.vo.DepthMarketData;
 
-@Repository("marketDataDao")
+//@Repository("marketDataDao")
 public class MarketDataDao {
     
     @Autowired
