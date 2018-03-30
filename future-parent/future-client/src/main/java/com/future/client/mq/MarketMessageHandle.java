@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
+import com.future.client.dao.QuotaDao;
 import com.future.client.strategy.Breakthrough;
 import com.future.client.strategy.FiveSecsFollow;
 import com.future.client.utils.CacheMap;
@@ -27,12 +28,15 @@ public class MarketMessageHandle implements MessageReceive{
     
     @Autowired
     private ThreadPoolTaskExecutor taskExecutor;
+    
+    @Autowired
+    private QuotaDao quotaDao;
 
     @Override
     public void handleMessage(DepthMarketData marketData) {
         
-        taskExecutor.execute(new Breakthrough(marketData, orderService, redisTemplate, cacheMap));
-        taskExecutor.execute(new FiveSecsFollow(marketData, orderService, redisTemplate, cacheMap));
+        taskExecutor.execute(new Breakthrough(marketData, orderService, redisTemplate, cacheMap,quotaDao));
+        taskExecutor.execute(new FiveSecsFollow(marketData, orderService, redisTemplate, cacheMap,quotaDao));
         
     }
 
