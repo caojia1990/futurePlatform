@@ -2,11 +2,14 @@ package com.future.client.strategy;
 
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.redis.core.StringRedisTemplate;
 
 import com.future.client.ClientStarter;
+import com.future.client.dao.QuotaDao;
 import com.future.client.utils.CacheMap;
 import com.future.market.api.vo.DepthMarketData;
 import com.future.order.api.service.OrderService;
@@ -41,12 +44,15 @@ public class Breakthrough implements Runnable{
     
     private final CacheMap cacheMap;
     
+    private final QuotaDao quotaDao;
+    
     public Breakthrough(DepthMarketData marketData, OrderService orderService, 
-            StringRedisTemplate redisTemplate, CacheMap cacheMap) {
+            StringRedisTemplate redisTemplate, CacheMap cacheMap, QuotaDao quotaDao) {
         this.cacheMap = cacheMap;
         this.redisTemplate = redisTemplate;
         this.orderService = orderService;
         this.marketData = marketData;
+        this.quotaDao = quotaDao;
     }
 
     @Override
@@ -59,6 +65,23 @@ public class Breakthrough implements Runnable{
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
             LocalTime time = LocalTime.parse(updateTime, formatter);
             
+           /* Map<String, Object> map = null;
+            if(time.isAfter(LocalTime.parse("09:00:00")) && time.isBefore(LocalTime.parse("14:59:59"))){
+                try {
+                     map = this.quotaDao.selectByInstrumentID(marketData.getInstrumentID());
+                    if(map != null){
+                        if((double)map.get("HIGHEST_PRICE") < marketData.getLastPrice()){
+                            this.quotaDao.updateHighestPrice(marketData.getInstrumentID(), marketData.getLastPrice());
+                        }else if ((double)map.get("LOWEST_PRICE") > marketData.getLastPrice()) {
+                            this.quotaDao.updateLowestPrice(marketData.getInstrumentID(), marketData.getLastPrice());
+                        }
+                    }
+                } catch (EmptyResultDataAccessException e) {
+                    this.quotaDao.insert(marketData.getInstrumentID(), marketData.getLastPrice(), marketData.getLastPrice());
+                }
+                
+            }*/
+            
             OnRtnTradeVO tradeVO = (OnRtnTradeVO) this.redisTemplate.opsForHash().get(ACCOUNT_NO, marketData.getInstrumentID());
             String flag = (String) this.redisTemplate.opsForHash().get(STRATEGY_NAME, marketData.getInstrumentID());
             if(tradeVO == null && flag == null){
@@ -66,6 +89,7 @@ public class Breakthrough implements Runnable{
                 if((time.isAfter(LocalTime.parse("21:30:00")) && time.isBefore(LocalTime.parse("23:59:59"))) || 
                         (time.isAfter(LocalTime.parse("09:30:00")) && time.isBefore(LocalTime.parse("14:59:59")))){
                     
+                    //if(marketData.getAskPrice1().doubleValue() == (double)map.get("HIGHEST_PRICE")){
                     if(marketData.getAskPrice1().doubleValue() == marketData.getHighestPrice().doubleValue()){
                         ReqOrderInsertVO reqOrderInsertVO = new ReqOrderInsertVO();
                         reqOrderInsertVO.setAccountNo(ACCOUNT_NO);
@@ -94,6 +118,7 @@ public class Breakthrough implements Runnable{
                         this.redisTemplate.opsForHash().put(STRATEGY_NAME, marketData.getInstrumentID(), "1");
                         orderService.reqOrderInsert(reqOrderInsertVO);
                     }else if (marketData.getBidPrice1().doubleValue() == marketData.getLowestPrice().doubleValue()) {
+                    //}else if (marketData.getBidPrice1().doubleValue() == (double)map.get("LOWEST_PRICE")) {
                         ReqOrderInsertVO reqOrderInsertVO = new ReqOrderInsertVO();
                         reqOrderInsertVO.setAccountNo(ACCOUNT_NO);
                         reqOrderInsertVO.setInvestorID(ClientStarter.INVESTOR_ID);
