@@ -24,3 +24,17 @@ CREATE TABLE FUTURE_QUOTA(
     primary key (INSTRUMENT_ID)
 );
 
+CREATE TABLE FUTURE_TICK(
+    TRADING_DAY varchar(8),
+    UPDATE_TIME varchar(8),
+    UPDATE_MILLISECS int,
+    LAST_PRICE double,
+    BID_PRICE double,
+    BID_VOLUME int,
+    ASK_PRICE double,
+    ASK_VOLUME int,
+    VOLUME int,
+    OPEN_INTEREST int,
+    TURNOVER double
+)
+

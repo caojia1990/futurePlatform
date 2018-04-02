@@ -139,9 +139,10 @@ public class FiveSecsFollow implements Runnable{
                             logger.info(marketData);
                             logger.info("触发下单");
                         }
-                        orderService.reqOrderInsert(reqOrderInsertVO);
                         //策略标记  只开仓一次
                         this.redisTemplate.opsForHash().put(STRATEGY_NAME, marketData.getInstrumentID(), "1");
+                        orderService.reqOrderInsert(reqOrderInsertVO);
+                        
                     }
                 }
             
@@ -174,8 +175,12 @@ public class FiveSecsFollow implements Runnable{
                                 logger.info("触发止盈");
                             }
                             orderService.reqOrderInsert(reqOrderInsertVO);
-                            //map.remove(marketData.getInstrumentID());
+                        }else if (tradeVO.getPrice() >= (marketData.getBidPrice1().doubleValue() + 10*this.cacheMap.getTickPrice(marketData.getInstrumentID()))) {
+                          //TODO 十跳止损
+                            logger.info("十跳止损");
                         }
+                        
+                        
                     }else {
                         if(tradeVO.getPrice() >= (marketData.getAskPrice1().doubleValue() + 2*this.cacheMap.getTickPrice(marketData.getInstrumentID()))) {
                             //两跳止盈
@@ -199,14 +204,16 @@ public class FiveSecsFollow implements Runnable{
                                 logger.info("触发止盈");
                             }
                             orderService.reqOrderInsert(reqOrderInsertVO);
-                            //map.remove(marketData.getInstrumentID());
+                        }else if (tradeVO.getPrice() <= (marketData.getAskPrice1().doubleValue() - 10*this.cacheMap.getTickPrice(marketData.getInstrumentID()))) {
+                            //持仓价格小于等于当前卖一价减10跳
+                            //十跳止损
+                            logger.info("十跳止损");
                         }
                     }
                 }
             }
         } catch (Exception e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            logger.error("线程异常", e);
         }
         
     }
