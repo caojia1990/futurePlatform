@@ -37,7 +37,7 @@ public class FiveSecsFollow implements Runnable{
     
     private final static String STRATEGY_NAME = "5秒跟随";
     
-    private static final String ACCOUNT_NO = "00001";
+    static final String ACCOUNT_NO = "00001";
     
     private final DepthMarketData marketData;
     
