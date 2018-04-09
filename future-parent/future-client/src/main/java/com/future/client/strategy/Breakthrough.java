@@ -86,8 +86,8 @@ public class Breakthrough implements Runnable{
             String flag = (String) this.redisTemplate.opsForHash().get(STRATEGY_NAME, marketData.getInstrumentID());
             if(tradeVO == null && flag == null){
                 
-                if((time.isAfter(LocalTime.parse("21:30:00")) && time.isBefore(LocalTime.parse("23:59:59"))) || 
-                        (time.isAfter(LocalTime.parse("09:30:00")) && time.isBefore(LocalTime.parse("14:59:59")))){
+                if((time.isAfter(LocalTime.parse("21:15:00")) && time.isBefore(LocalTime.parse("23:59:59"))) || 
+                        (time.isAfter(LocalTime.parse("09:15:00")) && time.isBefore(LocalTime.parse("14:59:59")))){
                     
                     //if(marketData.getAskPrice1().doubleValue() == (double)map.get("HIGHEST_PRICE")){
                     if(marketData.getAskPrice1().doubleValue() == marketData.getHighestPrice().doubleValue()){

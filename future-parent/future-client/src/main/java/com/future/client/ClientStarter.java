@@ -25,7 +25,7 @@ public class ClientStarter {
         admin.declareBinding(BindingBuilder.bind(marketQ).to(topicExchange).with("instrument.rb1810"));
         admin.declareBinding(BindingBuilder.bind(marketQ).to(topicExchange).with("instrument.al1805"));
         admin.declareBinding(BindingBuilder.bind(marketQ).to(topicExchange).with("instrument.ru1809"));
-        admin.declareBinding(BindingBuilder.bind(marketQ).to(topicExchange).with("instrument.zn1805"));
+        admin.declareBinding(BindingBuilder.bind(marketQ).to(topicExchange).with("instrument.zn1806"));
         //admin.declareBinding(BindingBuilder.bind(marketQ).to(topicExchange).with("instrument.au1806"));
         admin.declareBinding(BindingBuilder.bind(marketQ).to(topicExchange).with("instrument.ag1806"));
         //admin.declareBinding(BindingBuilder.bind(marketQ).to(topicExchange).with("instrument.pb1805"));
@@ -34,7 +34,7 @@ public class ClientStarter {
         admin.declareBinding(BindingBuilder.bind(marketQ).to(topicExchange).with("instrument.j1805"));
         admin.declareBinding(BindingBuilder.bind(marketQ).to(topicExchange).with("instrument.jm1805"));
         admin.declareBinding(BindingBuilder.bind(marketQ).to(topicExchange).with("instrument.ZC805"));
-        admin.declareBinding(BindingBuilder.bind(marketQ).to(topicExchange).with("instrument.hc1805"));
+        admin.declareBinding(BindingBuilder.bind(marketQ).to(topicExchange).with("instrument.hc1810"));
         admin.declareBinding(BindingBuilder.bind(marketQ).to(topicExchange).with("instrument.i1809"));
         admin.declareBinding(BindingBuilder.bind(marketQ).to(topicExchange).with("instrument.SF805"));
         admin.declareBinding(BindingBuilder.bind(marketQ).to(topicExchange).with("instrument.SM805"));
@@ -44,7 +44,7 @@ public class ClientStarter {
         admin.declareBinding(BindingBuilder.bind(marketQ).to(topicExchange).with("instrument.TA809"));
         admin.declareBinding(BindingBuilder.bind(marketQ).to(topicExchange).with("instrument.MA805"));
         admin.declareBinding(BindingBuilder.bind(marketQ).to(topicExchange).with("instrument.bu1806"));
-        admin.declareBinding(BindingBuilder.bind(marketQ).to(topicExchange).with("instrument.a1805"));
+        admin.declareBinding(BindingBuilder.bind(marketQ).to(topicExchange).with("instrument.a1809"));
         admin.declareBinding(BindingBuilder.bind(marketQ).to(topicExchange).with("instrument.c1809"));
         //admin.declareBinding(BindingBuilder.bind(marketQ).to(topicExchange).with("instrument.WH805"));
         admin.declareBinding(BindingBuilder.bind(marketQ).to(topicExchange).with("instrument.m1809"));

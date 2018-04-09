@@ -47,5 +47,5 @@ public class CacheMap {
         
         return instrumentMap.get(instrumentID).getPriceTick();
     }
-
+    
 }
