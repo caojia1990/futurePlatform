@@ -3,7 +3,6 @@ package com.future.order.service.impl;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.stereotype.Service;
 
 import com.future.common.exception.CommonFutureException;
 import com.future.order.api.service.OrderService;
@@ -100,16 +99,42 @@ public class FasterOrderServiceImpl implements OrderService {
                 reqOrderInsertVO.getOrderPriceType().getCode()));//报单价格类型
         orderInsertVO.setCombOffsetFlag(CombOffsetFlag.ofCode(
                 reqOrderInsertVO.getCombOffsetFlag().getCode()));//组合开平标志
-        orderInsertVO.setCombHedgeFlag(CombHedgeFlag.ofCode(
-                reqOrderInsertVO.getCombHedgeFlag().getCode()));//投保标志
+        
+        //投保标志
+        if(reqOrderInsertVO.getCombHedgeFlag() == null){
+            orderInsertVO.setCombHedgeFlag(CombHedgeFlag.Speculation);
+        }else {
+            orderInsertVO.setCombHedgeFlag(CombHedgeFlag.ofCode(
+                    reqOrderInsertVO.getCombHedgeFlag().getCode()));
+        }
+        //有效期类型
         orderInsertVO.setTimeCondition(TimeCondition.ofCode(
-                reqOrderInsertVO.getTimeCondition().getCode()));//有效期类型
-        orderInsertVO.setVolumeCondition(VolumeCondition.ofCode(
-                reqOrderInsertVO.getVolumeCondition().getCode()));//成交量类型
-        orderInsertVO.setContingentCondition(ContingentCondition.ofCode(
-                reqOrderInsertVO.getContingentCondition().getCode()));//触发条件
-        orderInsertVO.setForceCloseReason(ForceCloseReason.ofCode(
-                reqOrderInsertVO.getForceCloseReason().getCode()));//强平原因
+                reqOrderInsertVO.getTimeCondition().getCode()));
+        
+        //成交量类型
+        if(reqOrderInsertVO.getVolumeCondition() == null){
+            orderInsertVO.setVolumeCondition(VolumeCondition.AV);
+        }else {
+            orderInsertVO.setVolumeCondition(VolumeCondition.ofCode(
+                    reqOrderInsertVO.getVolumeCondition().getCode()));
+        }
+        
+        //触发条件
+        if(reqOrderInsertVO.getContingentCondition() == null){
+            //立即触发
+            orderInsertVO.setContingentCondition(ContingentCondition.Immediately);
+        }else {
+            orderInsertVO.setContingentCondition(ContingentCondition.ofCode(
+                    reqOrderInsertVO.getContingentCondition().getCode()));
+        }
+        
+        //强平原因
+        if(reqOrderInsertVO.getForceCloseReason() == null){
+            orderInsertVO.setForceCloseReason(ForceCloseReason.NotForceClose);
+        }else {
+            orderInsertVO.setForceCloseReason(ForceCloseReason.ofCode(
+                    reqOrderInsertVO.getForceCloseReason().getCode()));
+        }
         orderInsertVO.setMinVolume(reqOrderInsertVO.getMinVolume());
         orderInsertVO.setRequestID(reqOrderInsertVO.getRequestID());//请求ID
         

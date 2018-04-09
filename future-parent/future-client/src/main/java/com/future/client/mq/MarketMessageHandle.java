@@ -8,6 +8,7 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import com.future.client.dao.QuotaDao;
 import com.future.client.strategy.Breakthrough;
 import com.future.client.strategy.FiveSecsFollow;
+import com.future.client.strategy.Hedging;
 import com.future.client.utils.CacheMap;
 import com.future.market.api.mq.MessageReceive;
 import com.future.market.api.vo.DepthMarketData;
@@ -35,11 +36,10 @@ public class MarketMessageHandle implements MessageReceive{
     @Override
     public void handleMessage(DepthMarketData marketData) {
         
-        taskExecutor.execute(new Breakthrough(marketData, orderService, redisTemplate, cacheMap,quotaDao));
         taskExecutor.execute(new FiveSecsFollow(marketData, orderService, redisTemplate, cacheMap,quotaDao));
-        
+        taskExecutor.execute(new Breakthrough(marketData, orderService, redisTemplate, cacheMap,quotaDao));
+        //对冲保护策略
+        taskExecutor.execute(new Hedging(marketData, orderService, redisTemplate, cacheMap));
     }
-
-    
 
 }
