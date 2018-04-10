@@ -57,8 +57,8 @@ public class Hedging implements Runnable {
                     if(tradeVO.getDirection() == Direction.BUY){
                         
                         //500止损
-                        if((tradeVO.getPrice() - marketData.getBidPrice1()) * instrumentVO.getVolumeMultiple() * tradeVO.getVolume() >= 500) {
-                            //if(tradeVO.getPrice() >= (marketData.getBidPrice1().doubleValue() + 10*this.cacheMap.getTickPrice(marketData.getInstrumentID()))){
+                        //if((tradeVO.getPrice() - marketData.getBidPrice1()) * instrumentVO.getVolumeMultiple() * tradeVO.getVolume() >= 500) {
+                            if(tradeVO.getPrice() >= (marketData.getBidPrice1().doubleValue() + 20 * instrumentVO.getPriceTick())){
                             //对冲反向开仓
                             ReqOrderInsertVO reqOrderInsertVO = new ReqOrderInsertVO();
                             reqOrderInsertVO.setAccountNo(ACCOUNT_NO);
@@ -81,8 +81,8 @@ public class Hedging implements Runnable {
                         }
                     }else {
                         //卖开
-                        if((marketData.getAskPrice1() - tradeVO.getPrice()) * instrumentVO.getVolumeMultiple() * tradeVO.getVolume() >= 500) {
-                            //if(tradeVO.getPrice() <= (marketData.getAskPrice1().doubleValue() - 10*this.cacheMap.getTickPrice(marketData.getInstrumentID()))){
+                        //if((marketData.getAskPrice1() - tradeVO.getPrice()) * instrumentVO.getVolumeMultiple() * tradeVO.getVolume() >= 500) {
+                            if(tradeVO.getPrice() <= (marketData.getAskPrice1().doubleValue() - 20 * instrumentVO.getPriceTick())){
                             
                             ReqOrderInsertVO reqOrderInsertVO = new ReqOrderInsertVO();
                             reqOrderInsertVO.setAccountNo(ACCOUNT_NO);
