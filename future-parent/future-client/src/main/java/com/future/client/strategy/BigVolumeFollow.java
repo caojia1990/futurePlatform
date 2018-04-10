@@ -26,7 +26,8 @@ public class BigVolumeFollow implements Runnable {
         //成交量
         int volume = this.marketData.getVolume();
         //上次成交量
-        //int 
+        //int
+        
     }
 
 }

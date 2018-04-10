@@ -13,6 +13,7 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import com.future.client.ClientStarter;
 import com.future.client.dao.QuotaDao;
 import com.future.client.utils.CacheMap;
+import com.future.instrument.api.vo.InstrumentVO;
 import com.future.market.api.vo.DepthMarketData;
 import com.future.order.api.service.OrderService;
 import com.future.order.api.vo.CombHedgeFlag;
@@ -65,9 +66,11 @@ public class FiveSecsFollow implements Runnable{
             if(logger.isDebugEnabled()){
                 //logger.debug(marketData);
             }
+            String instrumentID = marketData.getInstrumentID();
             String updateTime = marketData.getUpdateTime();
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
             LocalTime time = LocalTime.parse(updateTime, formatter);
+            InstrumentVO instrumentVO = this.cacheMap.getInstrument(instrumentID);
             
             String flag = (String) this.redisTemplate.opsForHash().get(STRATEGY_NAME, marketData.getInstrumentID());
             
@@ -106,7 +109,11 @@ public class FiveSecsFollow implements Runnable{
                         reqOrderInsertVO.setDirection(Direction.BUY);
                         reqOrderInsertVO.setVolumeCondition(VolumeCondition.AV);
                         reqOrderInsertVO.setMinVolume(1);
-                        reqOrderInsertVO.setVolumeTotalOriginal(1);
+                        //手数
+                        double priceTick = instrumentVO.getPriceTick()*instrumentVO.getVolumeMultiple();
+                        int volume = 50/Double.valueOf(priceTick).intValue();
+                        
+                        reqOrderInsertVO.setVolumeTotalOriginal(volume);
                         reqOrderInsertVO.setOrderPriceType(OrderPriceType.LimitPrice);
                         reqOrderInsertVO.setContingentCondition(ContingentCondition.Immediately);
                         reqOrderInsertVO.setForceCloseReason(ForceCloseReason.NotForceClose);
@@ -131,7 +138,10 @@ public class FiveSecsFollow implements Runnable{
                         reqOrderInsertVO.setDirection(Direction.SELL);
                         reqOrderInsertVO.setVolumeCondition(VolumeCondition.AV);
                         reqOrderInsertVO.setMinVolume(1);
-                        reqOrderInsertVO.setVolumeTotalOriginal(1);
+                        //手数
+                        double priceTick = instrumentVO.getPriceTick()*instrumentVO.getVolumeMultiple();
+                        int volume = 50/Double.valueOf(priceTick).intValue();
+                        reqOrderInsertVO.setVolumeTotalOriginal(volume);
                         reqOrderInsertVO.setOrderPriceType(OrderPriceType.LimitPrice);
                         reqOrderInsertVO.setContingentCondition(ContingentCondition.Immediately);
                         reqOrderInsertVO.setForceCloseReason(ForceCloseReason.NotForceClose);
@@ -166,7 +176,7 @@ public class FiveSecsFollow implements Runnable{
                             reqOrderInsertVO.setDirection(Direction.SELL);
                             reqOrderInsertVO.setVolumeCondition(VolumeCondition.AV);
                             reqOrderInsertVO.setMinVolume(1);
-                            reqOrderInsertVO.setVolumeTotalOriginal(1);
+                            reqOrderInsertVO.setVolumeTotalOriginal(tradeVO.getVolume());
                             reqOrderInsertVO.setOrderPriceType(OrderPriceType.LimitPrice);
                             reqOrderInsertVO.setContingentCondition(ContingentCondition.Immediately);
                             reqOrderInsertVO.setForceCloseReason(ForceCloseReason.NotForceClose);
@@ -195,7 +205,7 @@ public class FiveSecsFollow implements Runnable{
                             reqOrderInsertVO.setDirection(Direction.BUY);
                             reqOrderInsertVO.setVolumeCondition(VolumeCondition.AV);
                             reqOrderInsertVO.setMinVolume(1);
-                            reqOrderInsertVO.setVolumeTotalOriginal(1);
+                            reqOrderInsertVO.setVolumeTotalOriginal(tradeVO.getVolume());
                             reqOrderInsertVO.setOrderPriceType(OrderPriceType.LimitPrice);
                             reqOrderInsertVO.setContingentCondition(ContingentCondition.Immediately);
                             reqOrderInsertVO.setForceCloseReason(ForceCloseReason.NotForceClose);

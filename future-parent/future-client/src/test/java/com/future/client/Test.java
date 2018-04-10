@@ -7,6 +7,10 @@ public class Test {
 
     public static void main(String[] args) {
         
+        double d = 1.9;
+        System.out.println(Double.valueOf(d).intValue());
+        
+        
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
         LocalTime time = LocalTime.parse("20:50:06", formatter);
         

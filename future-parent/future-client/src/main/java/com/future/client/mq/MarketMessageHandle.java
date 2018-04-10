@@ -37,7 +37,7 @@ public class MarketMessageHandle implements MessageReceive{
     public void handleMessage(DepthMarketData marketData) {
         
         taskExecutor.execute(new FiveSecsFollow(marketData, orderService, redisTemplate, cacheMap,quotaDao));
-        taskExecutor.execute(new Breakthrough(marketData, orderService, redisTemplate, cacheMap,quotaDao));
+        //taskExecutor.execute(new Breakthrough(marketData, orderService, redisTemplate, cacheMap,quotaDao));
         //对冲保护策略
         taskExecutor.execute(new Hedging(marketData, orderService, redisTemplate, cacheMap));
     }

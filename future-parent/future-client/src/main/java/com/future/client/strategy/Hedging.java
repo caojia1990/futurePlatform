@@ -5,6 +5,7 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 
 import com.future.client.ClientStarter;
 import com.future.client.utils.CacheMap;
+import com.future.instrument.api.vo.InstrumentVO;
 import com.future.market.api.vo.DepthMarketData;
 import com.future.order.api.service.OrderService;
 import com.future.order.api.vo.CombOffsetFlag;
@@ -43,6 +44,8 @@ public class Hedging implements Runnable {
         try {
             String instrumentID = this.marketData.getInstrumentID();
             
+            InstrumentVO instrumentVO = this.cacheMap.getInstrument(instrumentID);
+            
             OnRtnTradeVO tradeVO = (OnRtnTradeVO) this.redisTemplate.opsForHash().get(FiveSecsFollow.ACCOUNT_NO, instrumentID);
             
             if(tradeVO != null ){
@@ -54,7 +57,7 @@ public class Hedging implements Runnable {
                     if(tradeVO.getDirection() == Direction.BUY){
                         
                         //500止损
-                        if((tradeVO.getPrice() - marketData.getBidPrice1())*this.cacheMap.getInstrument(instrumentID).getVolumeMultiple() >= 500) {
+                        if((tradeVO.getPrice() - marketData.getBidPrice1()) * instrumentVO.getVolumeMultiple() * tradeVO.getVolume() >= 500) {
                             //if(tradeVO.getPrice() >= (marketData.getBidPrice1().doubleValue() + 10*this.cacheMap.getTickPrice(marketData.getInstrumentID()))){
                             //对冲反向开仓
                             ReqOrderInsertVO reqOrderInsertVO = new ReqOrderInsertVO();
@@ -66,7 +69,7 @@ public class Hedging implements Runnable {
                             reqOrderInsertVO.setTimeCondition(TimeCondition.IOC);
                             reqOrderInsertVO.setDirection(Direction.SELL);
                             reqOrderInsertVO.setMinVolume(1);
-                            reqOrderInsertVO.setVolumeTotalOriginal(1);
+                            reqOrderInsertVO.setVolumeTotalOriginal(tradeVO.getVolume());
                             reqOrderInsertVO.setOrderPriceType(OrderPriceType.LimitPrice);
                             if(logger.isInfoEnabled()){
                                 logger.info("触发对冲保护");
@@ -78,7 +81,7 @@ public class Hedging implements Runnable {
                         }
                     }else {
                         //卖开
-                        if((marketData.getAskPrice1() - tradeVO.getPrice()) * this.cacheMap.getInstrument(instrumentID).getVolumeMultiple() >= 500) {
+                        if((marketData.getAskPrice1() - tradeVO.getPrice()) * instrumentVO.getVolumeMultiple() * tradeVO.getVolume() >= 500) {
                             //if(tradeVO.getPrice() <= (marketData.getAskPrice1().doubleValue() - 10*this.cacheMap.getTickPrice(marketData.getInstrumentID()))){
                             
                             ReqOrderInsertVO reqOrderInsertVO = new ReqOrderInsertVO();
@@ -90,7 +93,7 @@ public class Hedging implements Runnable {
                             reqOrderInsertVO.setTimeCondition(TimeCondition.IOC);
                             reqOrderInsertVO.setDirection(Direction.BUY);
                             reqOrderInsertVO.setMinVolume(1);
-                            reqOrderInsertVO.setVolumeTotalOriginal(1);
+                            reqOrderInsertVO.setVolumeTotalOriginal(tradeVO.getVolume());
                             reqOrderInsertVO.setOrderPriceType(OrderPriceType.LimitPrice);
                             if(logger.isInfoEnabled()){
                                 logger.info("触发对冲保护");
