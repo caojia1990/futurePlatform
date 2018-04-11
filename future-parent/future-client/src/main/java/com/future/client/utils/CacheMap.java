@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.future.client.entity.Tick;
 import com.future.instrument.api.exception.InstrumentException;
 import com.future.instrument.api.service.InstrumentService;
 import com.future.instrument.api.vo.InstrumentVO;
@@ -17,6 +18,11 @@ public class CacheMap {
     private InstrumentService instrumentService;
     
     private Map<String,InstrumentVO> instrumentMap = new HashMap<>();
+    
+    /**
+     * 缓存上一条行情
+     */
+    public Map<String, Tick> tickMap = new HashMap<>();
     
     /**
      * 查询合约属性
@@ -47,5 +53,6 @@ public class CacheMap {
         
         return instrumentMap.get(instrumentID).getPriceTick();
     }
+    
     
 }

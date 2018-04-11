@@ -27,9 +27,6 @@ CREATE TABLE FUTURE_QUOTA(
 DROP TABLE IF EXISTS FUTURE_TICK;
 CREATE TABLE FUTURE_TICK(
     INSTRUMENT_ID varchar(10),
-    TRADING_DAY varchar(8),
-    UPDATE_TIME varchar(8),
-    UPDATE_MILLISECS int,
     LAST_PRICE double,
     BID_PRICE double,
     BID_VOLUME int,
@@ -38,6 +35,7 @@ CREATE TABLE FUTURE_TICK(
     VOLUME int,
     AVERAGE_VOLUME int,
     OPEN_INTEREST int,
-    TURNOVER double
+    TURNOVER double,
+    primary key (INSTRUMENT_ID)
 )
 
