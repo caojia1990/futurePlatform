@@ -74,7 +74,7 @@ public class FiveSecsFollow implements Runnable{
             
             String flag = (String) this.redisTemplate.opsForHash().get(STRATEGY_NAME, marketData.getInstrumentID());
             
-            Map<String, Object> map = null;
+            /*Map<String, Object> map = null;
             if(time.isAfter(LocalTime.parse("09:00:00")) && time.isBefore(LocalTime.parse("14:59:59"))){
                 try {
                      map = this.quotaDao.selectByInstrumentID(marketData.getInstrumentID());
@@ -89,15 +89,15 @@ public class FiveSecsFollow implements Runnable{
                     this.quotaDao.insert(marketData.getInstrumentID(), marketData.getLastPrice(), marketData.getLastPrice());
                 }
                 
-            }
+            }*/
             
             if(flag == null){
                 
                 if((time.isAfter(LocalTime.parse("21:00:05")) && time.isBefore(LocalTime.parse("23:59:59"))) || 
                         (time.isAfter(LocalTime.parse("09:00:05")) && time.isBefore(LocalTime.parse("14:59:59")))){
                     
-                   if(marketData.getAskPrice1().doubleValue() == (double)map.get("HIGHEST_PRICE")){
-                       //if(marketData.getAskPrice1().doubleValue() == marketData.getHighestPrice().doubleValue()){
+                    //if(marketData.getAskPrice1().doubleValue() == (double)map.get("HIGHEST_PRICE")){
+                       if(marketData.getAskPrice1().doubleValue() == marketData.getHighestPrice().doubleValue()){
                         ReqOrderInsertVO reqOrderInsertVO = new ReqOrderInsertVO();
                         reqOrderInsertVO.setAccountNo(ACCOUNT_NO);
                         reqOrderInsertVO.setInvestorID(ClientStarter.INVESTOR_ID);
@@ -125,8 +125,8 @@ public class FiveSecsFollow implements Runnable{
                         //策略标记  只开仓一次
                         this.redisTemplate.opsForHash().put(STRATEGY_NAME, marketData.getInstrumentID(), "1");
                         orderService.reqOrderInsert(reqOrderInsertVO);
-                        //}else if (marketData.getBidPrice1().doubleValue() == marketData.getLowestPrice().doubleValue()) {
-                        }else if (marketData.getBidPrice1().doubleValue() == (double)map.get("LOWEST_PRICE")) {
+                        }else if (marketData.getBidPrice1().doubleValue() == marketData.getLowestPrice().doubleValue()) {
+                            //}else if (marketData.getBidPrice1().doubleValue() == (double)map.get("LOWEST_PRICE")) {
                         ReqOrderInsertVO reqOrderInsertVO = new ReqOrderInsertVO();
                         reqOrderInsertVO.setAccountNo(ACCOUNT_NO);
                         reqOrderInsertVO.setInvestorID(ClientStarter.INVESTOR_ID);
