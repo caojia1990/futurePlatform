@@ -3,6 +3,7 @@ package com.future.client.strategy;
 import org.apache.log4j.Logger;
 import org.springframework.data.redis.core.StringRedisTemplate;
 
+import com.alibaba.fastjson.JSON;
 import com.future.client.ClientStarter;
 import com.future.client.utils.CacheMap;
 import com.future.instrument.api.vo.InstrumentVO;
@@ -78,6 +79,9 @@ public class Hedging implements Runnable {
                             this.redisTemplate.opsForHash().put(STRATEGY_NAME, marketData.getInstrumentID(), "1");
                             
                             orderService.reqOrderInsert(reqOrderInsertVO);
+                            reqOrderInsertVO.setAccountNo(FiveSecsFollow.ACCOUNT_NO);
+                            reqOrderInsertVO.setCombOffsetFlag(CombOffsetFlag.CloseToday);
+                            orderService.reqOrderInsert(reqOrderInsertVO);
                         }
                     }else {
                         //卖开
@@ -100,13 +104,15 @@ public class Hedging implements Runnable {
                             }
                             this.redisTemplate.opsForHash().put(STRATEGY_NAME, marketData.getInstrumentID(), "1");
                             orderService.reqOrderInsert(reqOrderInsertVO);
-                            
+                            reqOrderInsertVO.setAccountNo(FiveSecsFollow.ACCOUNT_NO);
+                            reqOrderInsertVO.setCombOffsetFlag(CombOffsetFlag.CloseToday);
+                            orderService.reqOrderInsert(reqOrderInsertVO);
                         }
                     }
                 }
             }
         } catch (Exception e) {
-            logger.error("线程异常",e);
+            logger.error("线程异常:"+JSON.toJSONString(this.marketData),e);
         }
         
     }
