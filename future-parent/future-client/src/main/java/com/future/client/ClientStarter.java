@@ -21,7 +21,7 @@ public class ClientStarter {
         TopicExchange topicExchange = (TopicExchange) context.getBean("com.future.market");
         Queue marketQ = (Queue) context.getBean("marketQ");
         RabbitAdmin admin = context.getBean(RabbitAdmin.class);
-        admin.declareBinding(BindingBuilder.bind(marketQ).to(topicExchange).with("instrument.cu1806"));
+        //admin.declareBinding(BindingBuilder.bind(marketQ).to(topicExchange).with("instrument.cu1806"));
         admin.declareBinding(BindingBuilder.bind(marketQ).to(topicExchange).with("instrument.rb1810"));
         admin.declareBinding(BindingBuilder.bind(marketQ).to(topicExchange).with("instrument.al1806"));
         admin.declareBinding(BindingBuilder.bind(marketQ).to(topicExchange).with("instrument.ru1809"));
@@ -31,7 +31,7 @@ public class ClientStarter {
         //admin.declareBinding(BindingBuilder.bind(marketQ).to(topicExchange).with("instrument.pb1805"));
         admin.declareBinding(BindingBuilder.bind(marketQ).to(topicExchange).with("instrument.ni1807"));
         //admin.declareBinding(BindingBuilder.bind(marketQ).to(topicExchange).with("instrument.sn1805"));
-        admin.declareBinding(BindingBuilder.bind(marketQ).to(topicExchange).with("instrument.j1809"));
+        //admin.declareBinding(BindingBuilder.bind(marketQ).to(topicExchange).with("instrument.j1809"));
         admin.declareBinding(BindingBuilder.bind(marketQ).to(topicExchange).with("instrument.jm1809"));
         admin.declareBinding(BindingBuilder.bind(marketQ).to(topicExchange).with("instrument.ZC809"));
         admin.declareBinding(BindingBuilder.bind(marketQ).to(topicExchange).with("instrument.hc1810"));

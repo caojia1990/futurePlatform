@@ -10,6 +10,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.StringRedisTemplate;
 
+import com.alibaba.fastjson.JSON;
 import com.future.client.ClientStarter;
 import com.future.client.dao.QuotaDao;
 import com.future.client.utils.CacheMap;
@@ -74,7 +75,7 @@ public class FiveSecsFollow implements Runnable{
             
             String flag = (String) this.redisTemplate.opsForHash().get(STRATEGY_NAME, marketData.getInstrumentID());
             
-            /*Map<String, Object> map = null;
+            Map<String, Object> map = null;
             if(time.isAfter(LocalTime.parse("09:00:00")) && time.isBefore(LocalTime.parse("14:59:59"))){
                 try {
                      map = this.quotaDao.selectByInstrumentID(marketData.getInstrumentID());
@@ -89,15 +90,15 @@ public class FiveSecsFollow implements Runnable{
                     this.quotaDao.insert(marketData.getInstrumentID(), marketData.getLastPrice(), marketData.getLastPrice());
                 }
                 
-            }*/
+            }
             
             if(flag == null){
                 
                 if((time.isAfter(LocalTime.parse("21:00:05")) && time.isBefore(LocalTime.parse("23:59:59"))) || 
-                        (time.isAfter(LocalTime.parse("09:00:05")) && time.isBefore(LocalTime.parse("14:59:59")))){
+                        (time.isAfter(LocalTime.parse("09:00:10")) && time.isBefore(LocalTime.parse("14:59:59")))){
                     
-                    //if(marketData.getAskPrice1().doubleValue() == (double)map.get("HIGHEST_PRICE")){
-                       if(marketData.getAskPrice1().doubleValue() == marketData.getHighestPrice().doubleValue()){
+                    if(marketData.getAskPrice1().doubleValue() == (double)map.get("HIGHEST_PRICE")){
+                        //if(marketData.getAskPrice1().doubleValue() == marketData.getHighestPrice().doubleValue()){
                         ReqOrderInsertVO reqOrderInsertVO = new ReqOrderInsertVO();
                         reqOrderInsertVO.setAccountNo(ACCOUNT_NO);
                         reqOrderInsertVO.setInvestorID(ClientStarter.INVESTOR_ID);
@@ -125,8 +126,8 @@ public class FiveSecsFollow implements Runnable{
                         //策略标记  只开仓一次
                         this.redisTemplate.opsForHash().put(STRATEGY_NAME, marketData.getInstrumentID(), "1");
                         orderService.reqOrderInsert(reqOrderInsertVO);
-                        }else if (marketData.getBidPrice1().doubleValue() == marketData.getLowestPrice().doubleValue()) {
-                            //}else if (marketData.getBidPrice1().doubleValue() == (double)map.get("LOWEST_PRICE")) {
+                        //}else if (marketData.getBidPrice1().doubleValue() == marketData.getLowestPrice().doubleValue()) {
+                            }else if (marketData.getBidPrice1().doubleValue() == (double)map.get("LOWEST_PRICE")) {
                         ReqOrderInsertVO reqOrderInsertVO = new ReqOrderInsertVO();
                         reqOrderInsertVO.setAccountNo(ACCOUNT_NO);
                         reqOrderInsertVO.setInvestorID(ClientStarter.INVESTOR_ID);
@@ -169,7 +170,7 @@ public class FiveSecsFollow implements Runnable{
                             reqOrderInsertVO.setAccountNo(ACCOUNT_NO);
                             reqOrderInsertVO.setInvestorID(ClientStarter.INVESTOR_ID);
                             reqOrderInsertVO.setInstrumentID(marketData.getInstrumentID());
-                            reqOrderInsertVO.setLimitPrice(marketData.getLowerLimitPrice());
+                            reqOrderInsertVO.setLimitPrice(marketData.getBidPrice1());
                             reqOrderInsertVO.setCombHedgeFlag(CombHedgeFlag.Speculation);
                             reqOrderInsertVO.setCombOffsetFlag(CombOffsetFlag.CloseToday);
                             reqOrderInsertVO.setTimeCondition(TimeCondition.IOC);
@@ -187,7 +188,7 @@ public class FiveSecsFollow implements Runnable{
                             orderService.reqOrderInsert(reqOrderInsertVO);
                         }else if (tradeVO.getPrice() >= (marketData.getBidPrice1().doubleValue() + 10*this.cacheMap.getTickPrice(marketData.getInstrumentID()))) {
                           //TODO 十跳止损
-                            logger.info("十跳止损");
+                            //logger.info("十跳止损");
                         }
                         
                         
@@ -198,7 +199,7 @@ public class FiveSecsFollow implements Runnable{
                             reqOrderInsertVO.setAccountNo(ACCOUNT_NO);
                             reqOrderInsertVO.setInvestorID(ClientStarter.INVESTOR_ID);
                             reqOrderInsertVO.setInstrumentID(marketData.getInstrumentID());
-                            reqOrderInsertVO.setLimitPrice(marketData.getUpperLimitPrice());
+                            reqOrderInsertVO.setLimitPrice(marketData.getAskPrice1());
                             reqOrderInsertVO.setCombHedgeFlag(CombHedgeFlag.Speculation);
                             reqOrderInsertVO.setCombOffsetFlag(CombOffsetFlag.CloseToday);
                             reqOrderInsertVO.setTimeCondition(TimeCondition.IOC);
@@ -223,7 +224,7 @@ public class FiveSecsFollow implements Runnable{
                 }
             }
         } catch (Exception e) {
-            logger.error("线程异常", e);
+            logger.error("线程异常:"+JSON.toJSONString(this.marketData), e);
         }
         
     }

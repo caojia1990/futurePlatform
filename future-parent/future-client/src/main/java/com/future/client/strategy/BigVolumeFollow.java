@@ -46,11 +46,27 @@ public class BigVolumeFollow implements Runnable {
             lastTick.setTurnover(marketData.getTurnover());
             lastTick.setVolume(marketData.getVolume());
             this.cacheMap.tickMap.put(instrumentID, lastTick);
-        }else {
-            //获取上一次成交量
-            int lastVolume = lastTick.getVolume();
             
+            return;
         }
+        
+        //获取上一次成交量
+        int lastVolume = lastTick.getVolume();
+        //本次成交量
+        int newVolume = marketData.getVolume();
+        //一跳成交量
+        int volumeChange = newVolume - lastVolume;
+        //上一次持仓量
+        double position = lastTick.getOpenInterest();
+        //本次持仓量
+        double newPosition = marketData.getOpenInterest();
+        //增仓量
+        double positionChange = newPosition - position;
+        //平均成交量
+        int averageVolume = lastTick.getAverageVolume();
+        
+        
+        
         
     }
 
