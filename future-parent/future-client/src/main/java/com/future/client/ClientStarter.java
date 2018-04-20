@@ -36,8 +36,8 @@ public class ClientStarter {
         admin.declareBinding(BindingBuilder.bind(marketQ).to(topicExchange).with("instrument.ZC809"));
         admin.declareBinding(BindingBuilder.bind(marketQ).to(topicExchange).with("instrument.hc1810"));
         admin.declareBinding(BindingBuilder.bind(marketQ).to(topicExchange).with("instrument.i1809"));
-        admin.declareBinding(BindingBuilder.bind(marketQ).to(topicExchange).with("instrument.SF805"));
-        admin.declareBinding(BindingBuilder.bind(marketQ).to(topicExchange).with("instrument.SM805"));
+        //admin.declareBinding(BindingBuilder.bind(marketQ).to(topicExchange).with("instrument.SF805"));
+        //admin.declareBinding(BindingBuilder.bind(marketQ).to(topicExchange).with("instrument.SM805"));
         //admin.declareBinding(BindingBuilder.bind(marketQ).to(topicExchange).with("instrument.FG805"));
         admin.declareBinding(BindingBuilder.bind(marketQ).to(topicExchange).with("instrument.sc1809"));
         admin.declareBinding(BindingBuilder.bind(marketQ).to(topicExchange).with("instrument.l1809"));

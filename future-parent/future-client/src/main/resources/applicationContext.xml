@@ -27,7 +27,7 @@
         <property name="corePoolSize" value="50" />
         <property name="keepAliveSeconds" value="200" />
         <property name="maxPoolSize" value="150" />
-        <property name="queueCapacity" value="200" />
+        <property name="queueCapacity" value="500" />
         <property name="rejectedExecutionHandler">
            <bean class="java.util.concurrent.ThreadPoolExecutor$CallerRunsPolicy" />
         </property>

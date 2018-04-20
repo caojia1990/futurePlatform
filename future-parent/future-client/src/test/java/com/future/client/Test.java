@@ -1,11 +1,20 @@
 package com.future.client;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 
 public class Test {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws ParseException {
+        
+        {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+            LocalTime time = LocalTime.parse("14:59:00", formatter);
+            System.out.println(time);
+        }
         
         double d = 1.9;
         System.out.println(Double.valueOf(d).intValue());
