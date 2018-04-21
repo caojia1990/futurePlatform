@@ -79,9 +79,9 @@ public class Hedging implements Runnable {
                             this.redisTemplate.opsForHash().put(STRATEGY_NAME, marketData.getInstrumentID(), "1");
                             
                             orderService.reqOrderInsert(reqOrderInsertVO);
-                            reqOrderInsertVO.setAccountNo(FiveSecsFollow.ACCOUNT_NO);
+                            /*reqOrderInsertVO.setAccountNo(FiveSecsFollow.ACCOUNT_NO);
                             reqOrderInsertVO.setCombOffsetFlag(CombOffsetFlag.CloseToday);
-                            orderService.reqOrderInsert(reqOrderInsertVO);
+                            orderService.reqOrderInsert(reqOrderInsertVO);*/
                         }
                     }else {
                         //卖开
@@ -104,9 +104,9 @@ public class Hedging implements Runnable {
                             }
                             this.redisTemplate.opsForHash().put(STRATEGY_NAME, marketData.getInstrumentID(), "1");
                             orderService.reqOrderInsert(reqOrderInsertVO);
-                            reqOrderInsertVO.setAccountNo(FiveSecsFollow.ACCOUNT_NO);
+                            /*reqOrderInsertVO.setAccountNo(FiveSecsFollow.ACCOUNT_NO);
                             reqOrderInsertVO.setCombOffsetFlag(CombOffsetFlag.CloseToday);
-                            orderService.reqOrderInsert(reqOrderInsertVO);
+                            orderService.reqOrderInsert(reqOrderInsertVO);*/
                         }
                     }
                 }

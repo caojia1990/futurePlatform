@@ -44,8 +44,9 @@ public class TableCreateBean implements InitializingBean {
                         + "SETTLEMENT_PRICE double,"
                         + "PRE_SETTLEMENT_PRICE double,"
                         + "VOLUME int,"
+                        + "AVERAGE_PRICE double,"
                         + "AVERAGE_VOLUME int,"
-                        + "OPEN_INTEREST int,"
+                        + "OPEN_INTEREST double,"
                         + "TURNOVER double)");
             }
         }

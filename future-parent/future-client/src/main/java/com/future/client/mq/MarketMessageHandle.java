@@ -37,6 +37,9 @@ public class MarketMessageHandle implements MessageReceive{
     public void handleMessage(DepthMarketData marketData) {
         
         taskExecutor.execute(new FiveSecsFollow(marketData, orderService, redisTemplate, cacheMap,quotaDao));
+        if(taskExecutor.getActiveCount() > 50) {
+            logger.info("当前活跃线程数："+taskExecutor.getActiveCount());
+        }
         //taskExecutor.execute(new Breakthrough(marketData, orderService, redisTemplate, cacheMap,quotaDao));
         //对冲保护策略
         //taskExecutor.execute(new Hedging(marketData, orderService, redisTemplate, cacheMap));
