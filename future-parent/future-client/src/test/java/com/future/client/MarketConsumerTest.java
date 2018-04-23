@@ -39,10 +39,12 @@ public class MarketConsumerTest extends AbstractJUnit4SpringContextTests{
     @Test
     public void consumer() throws IOException{
         
-        List<String> instrumentIDs = instrumentService.queryInstrumentName();
+        
+        admin.declareBinding(BindingBuilder.bind(marketQ).to(topicExchange).with("instrument.*"));
+        /*List<String> instrumentIDs = instrumentService.queryInstrumentName();
         for (String string : instrumentIDs) {
             admin.declareBinding(BindingBuilder.bind(marketQ).to(topicExchange).with("instrument."+string));
-        }
+        }*/
         
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
         while (true) {

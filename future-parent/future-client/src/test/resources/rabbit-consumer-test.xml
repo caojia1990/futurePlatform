@@ -42,7 +42,7 @@
     <rabbit:queue id="marketQ"></rabbit:queue>
     
     <!-- 设置监听 -->
-    <rabbit:listener-container connection-factory="connectionFactory" message-converter="messageConverter">
+    <rabbit:listener-container connection-factory="connectionFactory" message-converter="messageConverter" concurrency="5">
         <!-- <rabbit:listener ref="messageHandle" queues="onRtnOrderQ" method="onRtnOrder"/>
         <rabbit:listener ref="messageHandle" queues="onRtnTradeQ" method="onRtnTrade"/>
         <rabbit:listener ref="messageHandle" queues="onRspOrderInsertQ" method="onRspOrderInsert"/>
