@@ -37,12 +37,12 @@ public class MarketHandleTest implements MessageReceive{
         list.add(marketData);
         
         if(list.size() >= 120){
-            StopWatch stopWatch = StopWatch.createStarted();
+            //StopWatch stopWatch = StopWatch.createStarted();
             
             int r = this.futureTickDao.batchInsert(instrumentId, list);
             
-            stopWatch.stop();
-            logger.info("插入数据"+r+"条，执行时间：" + stopWatch.getTime());
+            //stopWatch.stop();
+            //logger.info("插入数据"+r+"条，执行时间：" + stopWatch.getTime());
             
             list.clear();
         }

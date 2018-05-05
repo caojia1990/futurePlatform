@@ -10,6 +10,8 @@ public class Test {
 
     public static void main(String[] args) throws ParseException {
         
+        System.out.println("rb1810".replaceAll("[^a-z^A-Z]", ""));
+        
         {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
             LocalTime time = LocalTime.parse("14:59:00", formatter);
