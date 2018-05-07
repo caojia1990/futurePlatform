@@ -1,5 +1,6 @@
 package com.future.client.mq;
 
+import java.math.BigDecimal;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -10,8 +11,13 @@ import java.util.Map;
 import org.apache.commons.lang3.time.StopWatch;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 
+import com.alibaba.fastjson.JSON;
 import com.future.client.dao.FutureTickDao;
+import com.future.client.dao.KlineRangeDao;
+import com.future.client.entity.Kline;
+import com.future.client.entity.KlineRange;
 import com.future.market.api.mq.MessageReceive;
 import com.future.market.api.vo.DepthMarketData;
 
@@ -21,6 +27,13 @@ public class MarketHandleTest implements MessageReceive{
     
     @Autowired
     private FutureTickDao futureTickDao;
+    
+    @Autowired
+    private KlineRangeDao klineRangeDao;
+    
+    private Map<String, KlineRange> kMap;
+    
+    private Map<String, Kline> fiveMinMap;
     
     private Map<String, List<DepthMarketData>> marketDataMap = new HashMap<>();
     
@@ -65,6 +78,7 @@ public class MarketHandleTest implements MessageReceive{
             logger.info("夜盘收盘插入数据"+r+"条，执行时间：" + stopWatch.getTime());
             list.clear();
         }
+        
         
     }
     

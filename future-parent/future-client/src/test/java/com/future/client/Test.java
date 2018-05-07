@@ -10,6 +10,12 @@ public class Test {
 
     public static void main(String[] args) throws ParseException {
         
+        if("09:04:59".compareTo("09:00:00") > -1 && "08:59:00".compareTo("09:04:59") < 1){
+            System.out.println("在区间内");
+        }else {
+            System.out.println("不在区间内");
+        }
+        
         System.out.println("rb1810".replaceAll("[^a-z^A-Z]", ""));
         
         {
