@@ -15,9 +15,9 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import com.alibaba.fastjson.JSON;
 import com.future.market.api.mq.MessageReceive;
 import com.future.market.api.vo.DepthMarketData;
-import com.future.quota.api.EMA;
-import com.future.quota.api.Kline;
-import com.future.quota.api.KlineRange;
+import com.future.quota.api.vo.EMA;
+import com.future.quota.api.vo.Kline;
+import com.future.quota.api.vo.KlineRange;
 import com.future.quota.service.dao.KlineRangeDao;
 
 public class QuotaHandle implements MessageReceive{
@@ -81,12 +81,12 @@ public class QuotaHandle implements MessageReceive{
                     System.out.println(JSON.toJSONString(fiveMinMap.get(instrumentId)));
                     //路由key   quota.合约名.指标.周期
                     String routingKey = "quota."+instrumentId+".k.5m";
-                    rabbitTemplate.convertAndSend("future.quota", routingKey, fiveMinMap.get(instrumentId));
+                    rabbitTemplate.convertAndSend("com.future.quota", routingKey, fiveMinMap.get(instrumentId));
                     //计算EMA
                     EMA ema = this.calcEMA(instrumentId, fiveMinMap.get(instrumentId).getClosePrice());
                     if(ema != null){
                         ema.setTitle(fiveMinMap.get(instrumentId).getTitle());
-                        rabbitTemplate.convertAndSend("future.quota", "quota."+instrumentId+".EMA.5m", ema);
+                        rabbitTemplate.convertAndSend("com.future.quota", "quota."+instrumentId+".EMA.5m", ema);
                         emaMap.put(instrumentId, ema);
                     }
                     fiveMinMap.remove(instrumentId);
@@ -129,12 +129,12 @@ public class QuotaHandle implements MessageReceive{
                     System.out.println(JSON.toJSONString(kline));
                     //路由key   quota.合约名.指标.周期
                     String routingKey = "quota."+instrumentId+".k.5m";
-                    rabbitTemplate.convertAndSend("future.quota", routingKey, fiveMinMap.get(instrumentId));
+                    rabbitTemplate.convertAndSend("com.future.quota", routingKey, fiveMinMap.get(instrumentId));
                     //计算EMA
                     EMA ema = this.calcEMA(instrumentId, fiveMinMap.get(instrumentId).getClosePrice());
                     if(ema != null){
                         ema.setTitle(fiveMinMap.get(instrumentId).getTitle());
-                        rabbitTemplate.convertAndSend("future.quota", "quota."+instrumentId+".EMA.5m", ema);
+                        rabbitTemplate.convertAndSend("com.future.quota", "quota."+instrumentId+".EMA.5m", ema);
                         emaMap.put(instrumentId, ema);
                     }
                     fiveMinMap.remove(instrumentId);
@@ -147,12 +147,12 @@ public class QuotaHandle implements MessageReceive{
                     System.out.println(JSON.toJSONString(fiveMinMap.get(instrumentId)));
                     //路由key   quota.合约名.指标.周期
                     String routingKey = "quota."+instrumentId+".k.5m";
-                    rabbitTemplate.convertAndSend("future.quota", routingKey, fiveMinMap.get(instrumentId));
+                    rabbitTemplate.convertAndSend("com.future.quota", routingKey, fiveMinMap.get(instrumentId));
                     //计算EMA
                     EMA ema = this.calcEMA(instrumentId, fiveMinMap.get(instrumentId).getClosePrice());
                     if(ema != null){
                         ema.setTitle(fiveMinMap.get(instrumentId).getTitle());
-                        rabbitTemplate.convertAndSend("future.quota", "quota."+instrumentId+".EMA.5m", ema);
+                        rabbitTemplate.convertAndSend("com.future.quota", "quota."+instrumentId+".EMA.5m", ema);
                         emaMap.put(instrumentId, ema);
                     }
                     fiveMinMap.remove(instrumentId);

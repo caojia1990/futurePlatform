@@ -5,7 +5,7 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import com.future.quota.api.KlineRange;
+import com.future.quota.api.vo.KlineRange;
 
 /**
  * K线坐标数据库操作

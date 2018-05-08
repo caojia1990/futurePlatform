@@ -1,4 +1,4 @@
-package com.future.quota.api;
+package com.future.quota.api.vo;
 
 /**
  * K线时间轴

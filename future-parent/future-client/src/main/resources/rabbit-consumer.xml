@@ -41,6 +41,11 @@
     </rabbit:topic-exchange>
     <rabbit:queue id="marketQ"></rabbit:queue>
     
+    <!-- 指标队列 -->
+    <rabbit:topic-exchange name="com.future.quota">
+    </rabbit:topic-exchange>
+    <rabbit:queue id="quotaQ"></rabbit:queue>
+    
     <!-- 设置监听 -->
     <rabbit:listener-container connection-factory="connectionFactory" message-converter="messageConverter">
         <rabbit:listener ref="messageHandle" queues="onRtnOrderQ" method="onRtnOrder"/>
@@ -51,12 +56,16 @@
         <rabbit:listener ref="messageHandle" queues="onErrRtnOrderInsertQ" method="onErrRtnOrderInsert"/>
         <rabbit:listener ref="messageHandle" queues="onErrRtnOrderInsertQ" method="onErrRtnOrderInsert"/>
         <rabbit:listener ref="marketMessageHandle" queues="marketQ" method="handleMessage"/>
+        <rabbit:listener ref="quotaMessageHandle" queues="quotaQ" method="handleMessage"/>
     </rabbit:listener-container>
     
     <!-- 交易消息处理 -->
     <bean id="messageHandle" class="com.future.client.mq.OrderMessageHandle" />
     <!-- 行情消息处理 -->
     <bean id="marketMessageHandle" class="com.future.client.mq.MarketMessageHandle" />
+    
+    <!-- 指标处理 -->
+    <bean id="quotaMessageHandle"></bean>
        
     <!-- json转换器，消息可以自动根据转换器转换格式，不配置时默认为java序列化，可以自行配置 -->
     <bean id="messageConverter" class="org.springframework.amqp.support.converter.Jackson2JsonMessageConverter" />

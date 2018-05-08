@@ -1,4 +1,4 @@
-package com.future.quota.api;
+package com.future.quota.api.vo;
 
 import java.math.BigDecimal;
 
@@ -10,6 +10,8 @@ import java.math.BigDecimal;
 public class EMA {
 
     private String instrumentId;
+    
+    private String tradingDay;
     
     private String title;
     
@@ -33,6 +35,14 @@ public class EMA {
 
     public void setInstrumentId(String instrumentId) {
         this.instrumentId = instrumentId;
+    }
+
+    public String getTradingDay() {
+        return tradingDay;
+    }
+
+    public void setTradingDay(String tradingDay) {
+        this.tradingDay = tradingDay;
     }
 
     public String getTitle() {

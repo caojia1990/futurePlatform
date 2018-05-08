@@ -16,7 +16,7 @@
     <rabbit:template id="rabbitTemplate" connection-factory="connectionFactory"
         message-converter="messageConverter"/>
     
-    <rabbit:topic-exchange name="future.quota">
+    <rabbit:topic-exchange name="com.future.quota">
     </rabbit:topic-exchange>
     
     <!-- json转换器，消息可以自动根据转换器转换格式，不配置时默认为java序列化，可以自行配置 -->
