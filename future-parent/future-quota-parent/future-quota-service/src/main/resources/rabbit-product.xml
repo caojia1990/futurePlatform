@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:rabbit="http://www.springframework.org/schema/rabbit"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/rabbit
+       http://www.springframework.org/schema/rabbit/spring-rabbit.xsd">
+       
+    <rabbit:annotation-driven/>
+    
+    <rabbit:connection-factory id="connectionFactory" host="${rabbit.host}" username="${rabbit.username}" password="${rabbit.password}"/>
+    <rabbit:admin connection-factory="connectionFactory" />
+    
+    <rabbit:template id="rabbitTemplate" connection-factory="connectionFactory"
+        message-converter="messageConverter"/>
+    
+    <rabbit:topic-exchange name="future.quota">
+    </rabbit:topic-exchange>
+    
+    <!-- json转换器，消息可以自动根据转换器转换格式，不配置时默认为java序列化，可以自行配置 -->
+    <bean id="messageConverter" class="org.springframework.amqp.support.converter.Jackson2JsonMessageConverter" />
+</beans>

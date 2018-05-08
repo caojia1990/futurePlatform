@@ -1,0 +1,32 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>com.future.caojia</groupId>
+    <artifactId>future-parent</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+  </parent>
+  <artifactId>future-quota-parent</artifactId>
+  <packaging>pom</packaging>
+  <description>行情指标服务</description>
+  
+  <properties>
+    <future-quota-api.version>0.0.1-SNAPSHOT</future-quota-api.version>
+    <log4j.version>1.2.16</log4j.version>
+    <slf4j-log4j12.version>1.7.25</slf4j-log4j12.version>
+    <fastjson.version>1.2.16</fastjson.version>
+    <dubbo.version>2.6.0</dubbo.version>
+  </properties>
+  
+  <dependencies>
+    <dependency>
+        <artifactId>future-common</artifactId>
+        <groupId>com.future.caojia</groupId>
+        <version>${future-common.version}</version>
+    </dependency>
+  </dependencies>
+  
+  <modules>
+  	<module>future-quota-api</module>
+  	<module>future-quota-service</module>
+  </modules>
+</project>

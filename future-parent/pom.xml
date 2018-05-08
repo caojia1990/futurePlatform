@@ -49,5 +49,7 @@
   	<module>future-order-parent</module>
   	<module>future-common</module>
   	<module>future-client</module>
+  	<module>future-quota</module>
+  	<module>future-quota-parent</module>
   </modules>
 </project>
