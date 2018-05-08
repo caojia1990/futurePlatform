@@ -37,5 +37,17 @@ CREATE TABLE FUTURE_TICK(
     OPEN_INTEREST int,
     TURNOVER double,
     primary key (INSTRUMENT_ID)
-)
+);
 
+CREATE TABLE FUTURE_TRADE(
+    INVESTOR_ID varchar(10),
+    ACCOUNT_NO varchar(10),
+    INSTRUMENT_ID VARCHAR(10),
+    ORDER_REF varchar(10),
+    TRADE_ID varchar(16),
+    DIRECTION varchar(1),
+    ORDER_SYS_ID varchar(16),
+    PRICE double,
+    VOLUME int,
+    TRADING_DAY varchar(8)
+);

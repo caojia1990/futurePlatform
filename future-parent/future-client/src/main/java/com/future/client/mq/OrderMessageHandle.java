@@ -48,9 +48,9 @@ public class OrderMessageHandle {
         }
         
         if(onRtnTrade.getOffsetFlag() == OffsetFlag.OPEN) {
-            hashOperations.put(onRtnTrade.getAccountNo(), onRtnTrade.getInstrumentID(), onRtnTrade);
+            hashOperations.put(onRtnTrade.getAccountNo(), onRtnTrade.getInstrumentId(), onRtnTrade);
         }else {
-            hashOperations.delete(onRtnTrade.getAccountNo(), onRtnTrade.getInstrumentID());
+            hashOperations.delete(onRtnTrade.getAccountNo(), onRtnTrade.getInstrumentId());
         }
         
         

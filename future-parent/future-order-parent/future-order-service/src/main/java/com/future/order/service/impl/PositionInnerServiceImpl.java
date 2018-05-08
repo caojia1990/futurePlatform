@@ -33,19 +33,19 @@ public class PositionInnerServiceImpl implements PositionInnerService {
 	@Override
 	public void increasePosition(OnRtnTradeVO onRtnTradeVO) throws CommonFutureException {
 		
-	    InstrumentVO instrumentVO = this.instrumentService.queryInstrument(onRtnTradeVO.getInstrumentID());
+	    InstrumentVO instrumentVO = this.instrumentService.queryInstrument(onRtnTradeVO.getInstrumentId());
 	    
 		//保存持仓明细
 		InvestorPositionDetailVO detailVO = new InvestorPositionDetailVO();
         detailVO.setAccountNo(onRtnTradeVO.getAccountNo());
-        detailVO.setCombInstrumentID(onRtnTradeVO.getInstrumentID());
+        detailVO.setCombInstrumentID(onRtnTradeVO.getInstrumentId());
         detailVO.setDirection(onRtnTradeVO.getDirection());
         detailVO.setHedgeFlag(onRtnTradeVO.getHedgeFlag());
-        detailVO.setInstrumentID(onRtnTradeVO.getInstrumentID());
-        detailVO.setInvestorID(onRtnTradeVO.getInvestorID());
+        detailVO.setInstrumentID(onRtnTradeVO.getInstrumentId());
+        detailVO.setInvestorID(onRtnTradeVO.getInvestorId());
         detailVO.setOpenDate(onRtnTradeVO.getTradeDate());
         detailVO.setOpenPrice(new BigDecimal(onRtnTradeVO.getPrice()));
-        detailVO.setTradeID(onRtnTradeVO.getTradeID());
+        detailVO.setTradeID(onRtnTradeVO.getTradeId());
         detailVO.setTradeType(onRtnTradeVO.getTradeType());
         detailVO.setTradingDay(onRtnTradeVO.getTradingDay());
         detailVO.setVolume(onRtnTradeVO.getVolume());
@@ -54,7 +54,7 @@ public class PositionInnerServiceImpl implements PositionInnerService {
         InvestorPositionVO investorPositionVO = null;
         try {
             investorPositionVO = this.investorPositionDao.selectByCondition(onRtnTradeVO.getAccountNo(), 
-                    onRtnTradeVO.getInstrumentID(), onRtnTradeVO.getDirection());
+                    onRtnTradeVO.getInstrumentId(), onRtnTradeVO.getDirection());
             //累计今日持仓
             investorPositionVO.setPosition(investorPositionVO.getPosition()+onRtnTradeVO.getVolume());
             //开仓金额
@@ -76,8 +76,8 @@ public class PositionInnerServiceImpl implements PositionInnerService {
         } catch (EmptyResultDataAccessException e) {
             investorPositionVO = new InvestorPositionVO();
             investorPositionVO.setAccountNo(onRtnTradeVO.getAccountNo());
-            investorPositionVO.setInstrumentID(onRtnTradeVO.getInstrumentID());
-            investorPositionVO.setInvestorID(onRtnTradeVO.getInvestorID());
+            investorPositionVO.setInstrumentID(onRtnTradeVO.getInstrumentId());
+            investorPositionVO.setInvestorID(onRtnTradeVO.getInvestorId());
             investorPositionVO.setHedgeFlag(onRtnTradeVO.getHedgeFlag());
             investorPositionVO.setOpenAmount(new BigDecimal(onRtnTradeVO.getPrice())
                     .multiply(new BigDecimal(instrumentVO.getVolumeMultiple()))
@@ -107,7 +107,7 @@ public class PositionInnerServiceImpl implements PositionInnerService {
 		case CloseToday:
 		    //查询持仓明细
 		    List<InvestorPositionDetailVO> list = this.investorPositionDetailDao.selectByCondition(onRtnTradeVO.getAccountNo(), 
-                    onRtnTradeVO.getInstrumentID(), onRtnTradeVO.getDirection(), onRtnTradeVO.getTradeDate());
+                    onRtnTradeVO.getInstrumentId(), onRtnTradeVO.getDirection(), onRtnTradeVO.getTradeDate());
 		    //平仓手数
 		    int closeVolume = onRtnTradeVO.getVolume();
 		    for (InvestorPositionDetailVO detail : list) {

@@ -111,7 +111,7 @@ public class Breakthrough implements Runnable{
                             logger.info("触发下单");
                         }
                         tradeVO = new OnRtnTradeVO();
-                        tradeVO.setInstrumentID(marketData.getInstrumentID());
+                        tradeVO.setInstrumentId(marketData.getInstrumentID());
                         this.redisTemplate.opsForHash().put(ACCOUNT_NO, marketData.getInstrumentID(), tradeVO);
                         
                         //策略标记  只开仓一次
@@ -139,14 +139,14 @@ public class Breakthrough implements Runnable{
                             logger.info("触发下单");
                         }
                         tradeVO = new OnRtnTradeVO();
-                        tradeVO.setInstrumentID(marketData.getInstrumentID());
+                        tradeVO.setInstrumentId(marketData.getInstrumentID());
                         this.redisTemplate.opsForHash().put(ACCOUNT_NO, marketData.getInstrumentID(), tradeVO);
                         this.redisTemplate.opsForHash().put(STRATEGY_NAME, marketData.getInstrumentID(), "1");
                         orderService.reqOrderInsert(reqOrderInsertVO);
                     }
                 }
                 
-            }else if(tradeVO != null && tradeVO.getTradeID() != null){
+            }else if(tradeVO != null && tradeVO.getTradeId() != null){
                 
                 if(tradeVO.getDirection() == Direction.BUY){
                     if(marketData.getBidPrice1().doubleValue() >= (tradeVO.getPrice()+ 2*this.cacheMap.getTickPrice(marketData.getInstrumentID()))) {

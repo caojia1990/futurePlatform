@@ -9,6 +9,7 @@
   
   <properties>
     <future-order-api.version>0.0.1-SNAPSHOT</future-order-api.version>
+    <future-quota-api.version>0.0.1-SNAPSHOT</future-quota-api.version>
     <future-account-api.version>0.0.1-SNAPSHOT</future-account-api.version>
     <future-member-api.version>0.0.1-SNAPSHOT</future-member-api.version>
     <future-instrument-api.version>0.0.1-SNAPSHOT</future-instrument-api.version>
@@ -21,6 +22,12 @@
         <artifactId>future-order-api</artifactId>
         <groupId>com.future.caojia</groupId>
         <version>${future-order-api.version}</version>
+    </dependency>
+    
+    <dependency>
+        <artifactId>future-quota-api</artifactId>
+        <groupId>com.future.caojia</groupId>
+        <version>${future-quota-api.version}</version>
     </dependency>
     
     <dependency>

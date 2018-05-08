@@ -214,22 +214,22 @@ public class TradeMessageHandle {
         com.future.order.api.vo.OnRtnTradeVO message = new com.future.order.api.vo.OnRtnTradeVO();
         message.setAccountNo(orderInput.getAccountNo());
         message.setDirection(Direction.ofCode(onRtnTrade.getDirection().getCode()));
-        message.setExchangeID(onRtnTrade.getExchangeID());
-        message.setExchangeInstID(onRtnTrade.getExchangeInstID());
+        message.setExchangeId(onRtnTrade.getExchangeID());
+        message.setExchangeInstId(onRtnTrade.getExchangeInstID());
         message.setHedgeFlag(HedgeFlag.ofCode(onRtnTrade.getHedgeFlag().getCode()));
-        message.setInstrumentID(onRtnTrade.getInstrumentID());
-        message.setInvestorID(orderInput.getInvestorID());
+        message.setInstrumentId(onRtnTrade.getInstrumentID());
+        message.setInvestorId(orderInput.getInvestorID());
         message.setOffsetFlag(OffsetFlag.ofCode(onRtnTrade.getOffsetFlag().getCode()));
         message.setOrderRef(onRtnTrade.getOrderRef());
-        message.setOrderSysID(onRtnTrade.getOrderSysID());
+        message.setOrderSysId(onRtnTrade.getOrderSysID());
         message.setPrice(onRtnTrade.getPrice());
         message.setSequenceNo(onRtnTrade.getSequenceNo());
         message.setTradeDate(onRtnTrade.getTradeDate());
-        message.setTradeID(onRtnTrade.getTradeID());
+        message.setTradeId(onRtnTrade.getTradeID());
         message.setTradeTime(onRtnTrade.getTradeTime());
         message.setTradeType(onRtnTrade.getTradeType());
         message.setTradingDay(onRtnTrade.getTradingDay());
-        message.setUserID(onRtnTrade.getUserID());
+        message.setUserId(onRtnTrade.getUserID());
         message.setVolume(onRtnTrade.getVolume());
         
 			

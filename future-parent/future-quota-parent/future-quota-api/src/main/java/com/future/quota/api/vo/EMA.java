@@ -28,6 +28,16 @@ public class EMA {
     private BigDecimal ema60;
     
     private BigDecimal ema619;
+    
+    private BigDecimal highestPrice;
+    
+    private BigDecimal lowestPrice;
+    
+    private BigDecimal upperPrice;
+    
+    private BigDecimal lowerPrice;
+    
+    private BigDecimal closePrice;
 
     public String getInstrumentId() {
         return instrumentId;
@@ -108,6 +118,45 @@ public class EMA {
     public void setEma619(BigDecimal ema619) {
         this.ema619 = ema619;
     }
-    
+
+    public BigDecimal getUpperPrice() {
+        return upperPrice;
+    }
+
+    public void setUpperPrice(BigDecimal upperPrice) {
+        this.upperPrice = upperPrice;
+    }
+
+    public BigDecimal getLowerPrice() {
+        return lowerPrice;
+    }
+
+    public void setLowerPrice(BigDecimal lowerPrice) {
+        this.lowerPrice = lowerPrice;
+    }
+
+    public BigDecimal getHighestPrice() {
+        return highestPrice;
+    }
+
+    public void setHighestPrice(BigDecimal highestPrice) {
+        this.highestPrice = highestPrice;
+    }
+
+    public BigDecimal getLowestPrice() {
+        return lowestPrice;
+    }
+
+    public void setLowestPrice(BigDecimal lowestPrice) {
+        this.lowestPrice = lowestPrice;
+    }
+
+    public BigDecimal getClosePrice() {
+        return closePrice;
+    }
+
+    public void setClosePrice(BigDecimal closePrice) {
+        this.closePrice = closePrice;
+    }
     
 }

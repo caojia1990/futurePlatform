@@ -86,6 +86,11 @@ public class QuotaHandle implements MessageReceive{
                     EMA ema = this.calcEMA(instrumentId, fiveMinMap.get(instrumentId).getClosePrice());
                     if(ema != null){
                         ema.setTitle(fiveMinMap.get(instrumentId).getTitle());
+                        ema.setUpperPrice(new BigDecimal(marketData.getUpperLimitPrice()));
+                        ema.setLowerPrice(new BigDecimal(marketData.getLowerLimitPrice()));
+                        ema.setHighestPrice(fiveMinMap.get(instrumentId).getHighestPrice());
+                        ema.setLowestPrice(fiveMinMap.get(instrumentId).getLowestPrice());
+                        ema.setClosePrice(fiveMinMap.get(instrumentId).getClosePrice());
                         rabbitTemplate.convertAndSend("com.future.quota", "quota."+instrumentId+".EMA.5m", ema);
                         emaMap.put(instrumentId, ema);
                     }
@@ -134,6 +139,11 @@ public class QuotaHandle implements MessageReceive{
                     EMA ema = this.calcEMA(instrumentId, fiveMinMap.get(instrumentId).getClosePrice());
                     if(ema != null){
                         ema.setTitle(fiveMinMap.get(instrumentId).getTitle());
+                        ema.setUpperPrice(new BigDecimal(marketData.getUpperLimitPrice()));
+                        ema.setLowerPrice(new BigDecimal(marketData.getLowerLimitPrice()));
+                        ema.setHighestPrice(fiveMinMap.get(instrumentId).getHighestPrice());
+                        ema.setLowestPrice(fiveMinMap.get(instrumentId).getLowestPrice());
+                        ema.setClosePrice(fiveMinMap.get(instrumentId).getClosePrice());
                         rabbitTemplate.convertAndSend("com.future.quota", "quota."+instrumentId+".EMA.5m", ema);
                         emaMap.put(instrumentId, ema);
                     }
@@ -152,6 +162,11 @@ public class QuotaHandle implements MessageReceive{
                     EMA ema = this.calcEMA(instrumentId, fiveMinMap.get(instrumentId).getClosePrice());
                     if(ema != null){
                         ema.setTitle(fiveMinMap.get(instrumentId).getTitle());
+                        ema.setUpperPrice(new BigDecimal(marketData.getUpperLimitPrice()));
+                        ema.setLowerPrice(new BigDecimal(marketData.getLowerLimitPrice()));
+                        ema.setHighestPrice(fiveMinMap.get(instrumentId).getHighestPrice());
+                        ema.setLowestPrice(fiveMinMap.get(instrumentId).getLowestPrice());
+                        ema.setClosePrice(fiveMinMap.get(instrumentId).getClosePrice());
                         rabbitTemplate.convertAndSend("com.future.quota", "quota."+instrumentId+".EMA.5m", ema);
                         emaMap.put(instrumentId, ema);
                     }

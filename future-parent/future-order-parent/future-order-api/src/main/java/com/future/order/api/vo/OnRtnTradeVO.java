@@ -17,7 +17,7 @@ public class OnRtnTradeVO implements Serializable{
     /**
      * 投资者代码
      */
-    private String investorID;
+    private String investorId;
     
     /**
      * 账户编号
@@ -27,7 +27,7 @@ public class OnRtnTradeVO implements Serializable{
     /**
      * 合约代码
      */
-    private String instrumentID;
+    private String instrumentId;
     
     /**
      * 报单引用
@@ -37,17 +37,17 @@ public class OnRtnTradeVO implements Serializable{
     /**
      * 用户代码
      */
-    private String userID;
+    private String userId;
     
     /**
      * 交易所代码
      */
-    private String exchangeID;
+    private String exchangeId;
     
     /**
      * 成交编号
      */
-    private String tradeID;
+    private String tradeId;
     
     /**
      * 买卖方向
@@ -57,12 +57,12 @@ public class OnRtnTradeVO implements Serializable{
     /**
      * 报单编号
      */
-    private String orderSysID;
+    private String orderSysId;
     
     /**
      * 合约在交易所的代码
      */
-    private String exchangeInstID;
+    private String exchangeInstId;
     
     /**
      * 开平标志
@@ -110,20 +110,20 @@ public class OnRtnTradeVO implements Serializable{
      */
     private String tradingDay;
 
-    public String getInvestorID() {
-        return investorID;
+    public String getInvestorId() {
+        return investorId;
     }
 
-    public void setInvestorID(String investorID) {
-        this.investorID = investorID;
+    public void setInvestorId(String investorId) {
+        this.investorId = investorId;
     }
 
-    public String getInstrumentID() {
-        return instrumentID;
+    public String getInstrumentId() {
+        return instrumentId;
     }
 
-    public void setInstrumentID(String instrumentID) {
-        this.instrumentID = instrumentID;
+    public void setInstrumentId(String instrumentId) {
+        this.instrumentId = instrumentId;
     }
 
     public String getOrderRef() {
@@ -134,28 +134,28 @@ public class OnRtnTradeVO implements Serializable{
         this.orderRef = orderRef;
     }
 
-    public String getUserID() {
-        return userID;
+    public String getUserId() {
+        return userId;
     }
 
-    public void setUserID(String userID) {
-        this.userID = userID;
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
-    public String getExchangeID() {
-        return exchangeID;
+    public String getExchangeId() {
+        return exchangeId;
     }
 
-    public void setExchangeID(String exchangeID) {
-        this.exchangeID = exchangeID;
+    public void setExchangeId(String exchangeId) {
+        this.exchangeId = exchangeId;
     }
 
-    public String getTradeID() {
-        return tradeID;
+    public String getTradeId() {
+        return tradeId;
     }
 
-    public void setTradeID(String tradeID) {
-        this.tradeID = tradeID;
+    public void setTradeId(String tradeId) {
+        this.tradeId = tradeId;
     }
 
     public Direction getDirection() {
@@ -166,20 +166,20 @@ public class OnRtnTradeVO implements Serializable{
         this.direction = direction;
     }
 
-    public String getOrderSysID() {
-        return orderSysID;
+    public String getOrderSysId() {
+        return orderSysId;
     }
 
-    public void setOrderSysID(String orderSysID) {
-        this.orderSysID = orderSysID;
+    public void setOrderSysId(String orderSysId) {
+        this.orderSysId = orderSysId;
     }
 
-    public String getExchangeInstID() {
-        return exchangeInstID;
+    public String getExchangeInstId() {
+        return exchangeInstId;
     }
 
-    public void setExchangeInstID(String exchangeInstID) {
-        this.exchangeInstID = exchangeInstID;
+    public void setExchangeInstId(String exchangeInstId) {
+        this.exchangeInstId = exchangeInstId;
     }
 
     public OffsetFlag getOffsetFlag() {
@@ -264,10 +264,10 @@ public class OnRtnTradeVO implements Serializable{
 
     @Override
     public String toString() {
-        return "OnRtnTradeVO [investorID=" + investorID + ", accountNo=" + accountNo + ", instrumentID=" + instrumentID
-                + ", orderRef=" + orderRef + ", userID=" + userID + ", exchangeID=" + exchangeID + ", tradeID="
-                + tradeID + ", direction=" + direction + ", orderSysID=" + orderSysID + ", exchangeInstID="
-                + exchangeInstID + ", offsetFlag=" + offsetFlag + ", hedgeFlag=" + hedgeFlag + ", price=" + price
+        return "OnRtnTradeVO [investorId=" + investorId + ", accountNo=" + accountNo + ", instrumentId=" + instrumentId
+                + ", orderRef=" + orderRef + ", userId=" + userId + ", exchangeId=" + exchangeId + ", tradeId="
+                + tradeId + ", direction=" + direction + ", orderSysId=" + orderSysId + ", exchangeInstId="
+                + exchangeInstId + ", offsetFlag=" + offsetFlag + ", hedgeFlag=" + hedgeFlag + ", price=" + price
                 + ", volume=" + volume + ", tradeDate=" + tradeDate + ", tradeTime=" + tradeTime + ", tradeType="
                 + tradeType + ", sequenceNo=" + sequenceNo + ", tradingDay=" + tradingDay + "]";
     }
