@@ -1,13 +1,35 @@
 package com.future.client.mq;
 
-import com.future.market.api.mq.MessageReceive;
-import com.future.market.api.vo.DepthMarketData;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
-public class QuotaMessageHandle implements MessageReceive{
+import com.future.client.dao.TradeDao;
+import com.future.client.strategy.FiveMinutesEMA;
+import com.future.client.utils.CacheMap;
+import com.future.order.api.service.OrderService;
+import com.future.quota.api.vo.EMA;
 
-    @Override
-    public void handleMessage(DepthMarketData marketData) {
-        // TODO Auto-generated method stub
+public class QuotaMessageHandle{
+    
+    @Autowired
+    private OrderService orderService;
+    
+    @Autowired
+    private StringRedisTemplate redisTemplate;
+    
+    @Autowired
+    private CacheMap cacheMap;
+    
+    @Autowired
+    private ThreadPoolTaskExecutor taskExecutor;
+    
+    @Autowired
+    private TradeDao tradeDao;
+
+    public void handleMessage(EMA ema) {
+        
+        taskExecutor.execute(new FiveMinutesEMA(orderService,ema,redisTemplate,cacheMap,tradeDao));
         
     }
 

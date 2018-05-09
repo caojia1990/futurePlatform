@@ -39,17 +39,17 @@ public class QuotaHandle implements MessageReceive{
             EMA ema = new EMA();
             ema.setInstrumentId("rb1810");
             ema.setPersiod("5m");
-            ema.setTitle("14:55:00");
-            ema.setEma5(new BigDecimal("3642.88"));
-            ema.setEma619(new BigDecimal("3613.78"));
+            ema.setTitle("14:00:00");
+            ema.setEma5(new BigDecimal("3585.97"));
+            ema.setEma619(new BigDecimal("3611.82"));
             put("rb1810", ema);
             
         }
         {
             EMA ema = new EMA();
-            ema.setInstrumentId("j1809");
+            ema.setInstrumentId("cu1806");
             ema.setPersiod("5m");
-            ema.setTitle("14:55:00");
+            ema.setTitle("14:00:00");
             ema.setEma5(new BigDecimal("2023.53"));
             ema.setEma619(new BigDecimal("1977.56"));
             put("j1809", ema);

@@ -5,10 +5,9 @@ import javax.annotation.Resource;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.HashOperations;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 
-import com.future.order.api.vo.Direction;
+import com.future.client.dao.TradeDao;
 import com.future.order.api.vo.OffsetFlag;
 import com.future.order.api.vo.OnRtnOrderVO;
 import com.future.order.api.vo.OnRtnTradeVO;
@@ -22,6 +21,9 @@ public class OrderMessageHandle {
 	
 	@Resource(name="redisTemplate")
 	private HashOperations<String, String, OnRtnTradeVO> hashOperations;
+	
+	@Autowired
+	private TradeDao tradeDao;
 	
 	/**
      * 报单回报
@@ -49,8 +51,13 @@ public class OrderMessageHandle {
         
         if(onRtnTrade.getOffsetFlag() == OffsetFlag.OPEN) {
             hashOperations.put(onRtnTrade.getAccountNo(), onRtnTrade.getInstrumentId(), onRtnTrade);
+            //保存数据
+            tradeDao.insert(onRtnTrade);
         }else {
             hashOperations.delete(onRtnTrade.getAccountNo(), onRtnTrade.getInstrumentId());
+            //删除持仓
+            tradeDao.deleteByCondition(onRtnTrade.getInvestorId(), onRtnTrade.getAccountNo(), 
+                    onRtnTrade.getInstrumentId(), String.valueOf(onRtnTrade.getDirection().getCode()));
         }
         
         
