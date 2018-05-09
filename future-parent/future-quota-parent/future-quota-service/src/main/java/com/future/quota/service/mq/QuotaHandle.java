@@ -39,9 +39,9 @@ public class QuotaHandle implements MessageReceive{
             EMA ema = new EMA();
             ema.setInstrumentId("rb1810");
             ema.setPersiod("5m");
-            ema.setTitle("14:00:00");
-            ema.setEma5(new BigDecimal("3585.97"));
-            ema.setEma619(new BigDecimal("3611.82"));
+            ema.setTitle("14:15:00");
+            ema.setEma5(new BigDecimal("3578.07"));
+            ema.setEma619(new BigDecimal("3611.47"));
             put("rb1810", ema);
             
         }
@@ -208,6 +208,7 @@ public class QuotaHandle implements MessageReceive{
         EMA ema = null;
         if(lastEMA != null){
             ema = new EMA();
+            ema.setInstrumentId(instrument);
             ema.setPersiod("5m");
             double ema5 = 2.0/(5+1)*price.doubleValue() + (5-1.0)/(5+1)*lastEMA.getEma5().doubleValue();
             ema.setEma5(new BigDecimal(ema5).setScale(2, RoundingMode.HALF_UP));
