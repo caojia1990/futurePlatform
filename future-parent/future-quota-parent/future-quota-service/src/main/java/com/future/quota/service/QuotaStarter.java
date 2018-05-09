@@ -21,7 +21,7 @@ public class QuotaStarter {
         Queue marketQ = (Queue) context.getBean("marketQ");
         RabbitAdmin admin = context.getBean(RabbitAdmin.class);
         //admin.declareBinding(BindingBuilder.bind(marketQ).to(topicExchange).with("instrument.cu1806"));
-        admin.declareBinding(BindingBuilder.bind(marketQ).to(topicExchange).with("instrument.rb1810"));
+        admin.declareBinding(BindingBuilder.bind(marketQ).to(topicExchange).with("instrument.*"));
         
     }
 

@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 
 import com.future.instrument.api.service.InstrumentService;
 
-@Component
+//@Component
 public class TableCreateBean implements InitializingBean {
     
     @Autowired

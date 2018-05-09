@@ -39,20 +39,173 @@ public class QuotaHandle implements MessageReceive{
             EMA ema = new EMA();
             ema.setInstrumentId("rb1810");
             ema.setPersiod("5m");
-            ema.setTitle("14:15:00");
-            ema.setEma5(new BigDecimal("3578.07"));
-            ema.setEma619(new BigDecimal("3611.47"));
-            put("rb1810", ema);
+            ema.setTitle("14:55:00");
+            ema.setEma5(new BigDecimal("3569.21"));
+            ema.setEma619(new BigDecimal("3610.37"));
+            put(ema.getInstrumentId(), ema);
             
         }
         {
             EMA ema = new EMA();
-            ema.setInstrumentId("cu1806");
+            ema.setInstrumentId("cu1807");
             ema.setPersiod("5m");
-            ema.setTitle("14:00:00");
-            ema.setEma5(new BigDecimal("2023.53"));
-            ema.setEma619(new BigDecimal("1977.56"));
-            put("j1809", ema);
+            ema.setTitle("14:55:00");
+            ema.setEma5(new BigDecimal("50945.93"));
+            ema.setEma619(new BigDecimal("51313.04"));
+            put(ema.getInstrumentId(), ema);
+        }
+        {
+            EMA ema = new EMA();
+            ema.setInstrumentId("m1809");
+            ema.setPersiod("5m");
+            ema.setTitle("14:55:00");
+            ema.setEma5(new BigDecimal("3105.67"));
+            ema.setEma619(new BigDecimal("3166.54"));
+            put(ema.getInstrumentId(), ema);
+        }
+        {
+            EMA ema = new EMA();
+            ema.setInstrumentId("RM809");
+            ema.setPersiod("5m");
+            ema.setTitle("14:55:00");
+            ema.setEma5(new BigDecimal("2560.62"));
+            ema.setEma619(new BigDecimal("2624.97"));
+            put(ema.getInstrumentId(), ema);
+        }
+        {
+            EMA ema = new EMA();
+            ema.setInstrumentId("y1809");
+            ema.setPersiod("5m");
+            ema.setTitle("14:55:00");
+            ema.setEma5(new BigDecimal("5821.43"));
+            ema.setEma619(new BigDecimal("5786.46"));
+            put(ema.getInstrumentId(), ema);
+        }
+        {
+            EMA ema = new EMA();
+            ema.setInstrumentId("p1809");
+            ema.setPersiod("5m");
+            ema.setTitle("14:55:00");
+            ema.setEma5(new BigDecimal("5034.31"));
+            ema.setEma619(new BigDecimal("4991.35"));
+            put(ema.getInstrumentId(), ema);
+        }
+        {
+            EMA ema = new EMA();
+            ema.setInstrumentId("OI809");
+            ema.setPersiod("5m");
+            ema.setTitle("14:55:00");
+            ema.setEma5(new BigDecimal("6608.11"));
+            ema.setEma619(new BigDecimal("6521.33"));
+            put(ema.getInstrumentId(), ema);
+        }
+        {
+            EMA ema = new EMA();
+            ema.setInstrumentId("hc1810");
+            ema.setPersiod("5m");
+            ema.setTitle("14:55:00");
+            ema.setEma5(new BigDecimal("3672.74"));
+            ema.setEma619(new BigDecimal("3704.47"));
+            put(ema.getInstrumentId(), ema);
+        }
+        {
+            EMA ema = new EMA();
+            ema.setInstrumentId("i1809");
+            ema.setPersiod("5m");
+            ema.setTitle("14:55:00");
+            ema.setEma5(new BigDecimal("470.02"));
+            ema.setEma619(new BigDecimal("470.12"));
+            put(ema.getInstrumentId(), ema);
+        }
+        {
+            EMA ema = new EMA();
+            ema.setInstrumentId("j1809");
+            ema.setPersiod("5m");
+            ema.setTitle("14:55:00");
+            ema.setEma5(new BigDecimal("1982.73"));
+            ema.setEma619(new BigDecimal("1970.80"));
+            put(ema.getInstrumentId(), ema);
+        }
+        {
+            EMA ema = new EMA();
+            ema.setInstrumentId("jm1809");
+            ema.setPersiod("5m");
+            ema.setTitle("14:55:00");
+            ema.setEma5(new BigDecimal("1225.37"));
+            ema.setEma619(new BigDecimal("1210.18"));
+            put(ema.getInstrumentId(), ema);
+        }
+        {
+            EMA ema = new EMA();
+            ema.setInstrumentId("ZC809");
+            ema.setPersiod("5m");
+            ema.setTitle("14:55:00");
+            ema.setEma5(new BigDecimal("600.20"));
+            ema.setEma619(new BigDecimal("600.82"));
+            put(ema.getInstrumentId(), ema);
+        }
+        {
+            EMA ema = new EMA();
+            ema.setInstrumentId("ni1807");
+            ema.setPersiod("5m");
+            ema.setTitle("14:55:00");
+            ema.setEma5(new BigDecimal("103907.49"));
+            ema.setEma619(new BigDecimal("104292.47"));
+            put(ema.getInstrumentId(), ema);
+        }
+        {
+            EMA ema = new EMA();
+            ema.setInstrumentId("zn1807");
+            ema.setPersiod("5m");
+            ema.setTitle("14:55:00");
+            ema.setEma5(new BigDecimal("23718.85"));
+            ema.setEma619(new BigDecimal("23691.25"));
+            put(ema.getInstrumentId(), ema);
+        }
+        {
+            EMA ema = new EMA();
+            ema.setInstrumentId("MA809");
+            ema.setPersiod("5m");
+            ema.setTitle("14:55:00");
+            ema.setEma5(new BigDecimal("2771.07"));
+            ema.setEma619(new BigDecimal("2731.63"));
+            put(ema.getInstrumentId(), ema);
+        }
+        {
+            EMA ema = new EMA();
+            ema.setInstrumentId("pp1809");
+            ema.setPersiod("5m");
+            ema.setTitle("14:55:00");
+            ema.setEma5(new BigDecimal("9221.74"));
+            ema.setEma619(new BigDecimal("9105.83"));
+            put(ema.getInstrumentId(), ema);
+        }
+        {
+            EMA ema = new EMA();
+            ema.setInstrumentId("bu1812");
+            ema.setPersiod("5m");
+            ema.setTitle("14:55:00");
+            ema.setEma5(new BigDecimal("3011.33"));
+            ema.setEma619(new BigDecimal("2985.54"));
+            put(ema.getInstrumentId(), ema);
+        }
+        {
+            EMA ema = new EMA();
+            ema.setInstrumentId("ru1809");
+            ema.setPersiod("5m");
+            ema.setTitle("14:55:00");
+            ema.setEma5(new BigDecimal("11600.83"));
+            ema.setEma619(new BigDecimal("11592.63"));
+            put(ema.getInstrumentId(), ema);
+        }
+        {
+            EMA ema = new EMA();
+            ema.setInstrumentId("CF809");
+            ema.setPersiod("5m");
+            ema.setTitle("14:55:00");
+            ema.setEma5(new BigDecimal("15648.94"));
+            ema.setEma619(new BigDecimal("15568.60"));
+            put(ema.getInstrumentId(), ema);
         }
     };
     @Override
@@ -60,6 +213,9 @@ public class QuotaHandle implements MessageReceive{
         
         String instrumentId = marketData.getInstrumentID();
         
+        if(emaMap.get(instrumentId) == null) {
+            return;
+        }
         
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
         LocalTime time = LocalTime.parse(marketData.getUpdateTime(), formatter);
@@ -86,6 +242,7 @@ public class QuotaHandle implements MessageReceive{
                     EMA ema = this.calcEMA(instrumentId, fiveMinMap.get(instrumentId).getClosePrice());
                     if(ema != null){
                         ema.setTitle(fiveMinMap.get(instrumentId).getTitle());
+                        ema.setTradingDay(marketData.getTradingDate());
                         ema.setUpperPrice(new BigDecimal(marketData.getUpperLimitPrice()));
                         ema.setLowerPrice(new BigDecimal(marketData.getLowerLimitPrice()));
                         ema.setHighestPrice(fiveMinMap.get(instrumentId).getHighestPrice());
@@ -139,6 +296,7 @@ public class QuotaHandle implements MessageReceive{
                     EMA ema = this.calcEMA(instrumentId, fiveMinMap.get(instrumentId).getClosePrice());
                     if(ema != null){
                         ema.setTitle(fiveMinMap.get(instrumentId).getTitle());
+                        ema.setTradingDay(marketData.getTradingDate());
                         ema.setUpperPrice(new BigDecimal(marketData.getUpperLimitPrice()));
                         ema.setLowerPrice(new BigDecimal(marketData.getLowerLimitPrice()));
                         ema.setHighestPrice(fiveMinMap.get(instrumentId).getHighestPrice());
@@ -162,6 +320,7 @@ public class QuotaHandle implements MessageReceive{
                     EMA ema = this.calcEMA(instrumentId, fiveMinMap.get(instrumentId).getClosePrice());
                     if(ema != null){
                         ema.setTitle(fiveMinMap.get(instrumentId).getTitle());
+                        ema.setTradingDay(marketData.getTradingDate());
                         ema.setUpperPrice(new BigDecimal(marketData.getUpperLimitPrice()));
                         ema.setLowerPrice(new BigDecimal(marketData.getLowerLimitPrice()));
                         ema.setHighestPrice(fiveMinMap.get(instrumentId).getHighestPrice());
