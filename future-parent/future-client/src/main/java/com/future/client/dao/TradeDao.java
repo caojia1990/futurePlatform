@@ -57,7 +57,7 @@ public class TradeDao {
                     }
             
                 }, 
-                instrumentId,accountNo,instrumentId,direction);
+                investorId,accountNo,instrumentId,direction);
     }
     
     public List<OnRtnTradeVO> selectByCondition(String investorId, String accountNo, String instrumentId) {
@@ -83,7 +83,7 @@ public class TradeDao {
                     }
             
                 }, 
-                instrumentId,accountNo,instrumentId);
+                investorId,accountNo,instrumentId);
     }
     
     public int deleteByCondition(String investorId, String accountNo, String instrumentId, String direction){
@@ -94,6 +94,6 @@ public class TradeDao {
                 + "and DIRECTION != ?";
         
         return this.jdbcTemplate.update(sql, 
-                instrumentId,accountNo,instrumentId,direction);
+                investorId,accountNo,instrumentId,direction);
     }
 }
