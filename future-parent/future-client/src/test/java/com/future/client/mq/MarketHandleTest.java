@@ -1,6 +1,5 @@
 package com.future.client.mq;
 
-import java.math.BigDecimal;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -11,9 +10,7 @@ import java.util.Map;
 import org.apache.commons.lang3.time.StopWatch;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.EmptyResultDataAccessException;
 
-import com.alibaba.fastjson.JSON;
 import com.future.client.dao.FutureTickDao;
 import com.future.client.dao.KlineRangeDao;
 import com.future.client.entity.Kline;
@@ -49,7 +46,7 @@ public class MarketHandleTest implements MessageReceive{
         }
         list.add(marketData);
         
-        if(list.size() >= 120){
+        if(list.size() >= 60){
             //StopWatch stopWatch = StopWatch.createStarted();
             
             int r = this.futureTickDao.batchInsert(instrumentId, list);
