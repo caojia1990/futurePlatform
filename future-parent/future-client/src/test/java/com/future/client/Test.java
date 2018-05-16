@@ -1,5 +1,7 @@
 package com.future.client;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalTime;
@@ -9,6 +11,27 @@ import java.util.Date;
 public class Test {
 
     public static void main(String[] args) throws ParseException {
+        
+        
+        /*BigDecimal diff = new BigDecimal("11615")
+                .subtract(new BigDecimal("11615").subtract(new BigDecimal("11250"))
+                        .multiply(new BigDecimal("0.4"))).setScale(2, RoundingMode.HALF_UP);
+        
+        System.out.println(diff);*/
+        
+        
+        BigDecimal touch = (new BigDecimal("11615").subtract(new BigDecimal("11250"))).divide(new BigDecimal("11250"), 2, RoundingMode.HALF_UP);
+        if(touch.compareTo(new BigDecimal("0.3")) >= 0){
+            //判断回撤是否到位
+            //止盈价位 = 最低价 +（最高价-最低价）*回撤比例
+            BigDecimal diff = new BigDecimal("11615")
+                    .subtract(new BigDecimal("11615").subtract(new BigDecimal("11250"))
+                            .multiply(new BigDecimal("0.4"))).setScale(2, RoundingMode.HALF_UP);
+            if(new BigDecimal("11470").compareTo(diff) >= 0){
+                System.out.println("止盈");
+            }
+        }
+        
         
         if("09:04:59".compareTo("09:00:00") > -1 && "08:59:00".compareTo("09:04:59") < 1){
             System.out.println("在区间内");

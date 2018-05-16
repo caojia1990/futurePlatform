@@ -49,7 +49,7 @@ public class FiveMinutesEMA implements Runnable {
             TargetProfit targetProfit = new TargetProfit();
             targetProfit.setProduct("m");
             targetProfit.setStopLessTick(20);
-            targetProfit.setTigger(new BigDecimal("0.2"));
+            targetProfit.setTigger(new BigDecimal("0.02"));
             targetProfit.setBack(new BigDecimal("0.33"));
             put(targetProfit.getProduct(), targetProfit);
             
@@ -75,7 +75,7 @@ public class FiveMinutesEMA implements Runnable {
             put(targetProfit.getProduct(), targetProfit);
             
             targetProfit.setProduct("i");
-            targetProfit.setTigger(new BigDecimal("0.3"));
+            targetProfit.setTigger(new BigDecimal("0.03"));
             targetProfit.setBack(new BigDecimal("0.4"));
             put(targetProfit.getProduct(), targetProfit);
             
@@ -113,7 +113,7 @@ public class FiveMinutesEMA implements Runnable {
             put(targetProfit.getProduct(), targetProfit);
             
             targetProfit.setProduct("CF");
-            targetProfit.setTigger(new BigDecimal("0.2"));
+            targetProfit.setTigger(new BigDecimal("0.02"));
             targetProfit.setBack(new BigDecimal("0.4"));
             put(targetProfit.getProduct(), targetProfit);
         }
@@ -346,12 +346,12 @@ public class FiveMinutesEMA implements Runnable {
                         }
                         
                         //判断是否触发止盈
-                        BigDecimal touch = (ema.getHighestPrice().subtract(ema.getLowestPrice())).divide(ema.getLowestPrice(), 2, RoundingMode.HALF_UP);
+                        BigDecimal touch = (ema.getHighestPrice().subtract(ema.getLowestPrice())).divide(ema.getHighestPrice(), 2, RoundingMode.HALF_UP);
                         if(touch.compareTo(targetProfit.getTigger()) >= 0){
                             //判断回撤是否到位
                             //止盈价位 = 最低价 +（最高价-最低价）*回撤比例
-                            BigDecimal diff = ema.getHighestPrice()
-                                    .subtract(ema.getHighestPrice().subtract(ema.getLowestPrice())
+                            BigDecimal diff = ema.getLowestPrice()
+                                    .add(ema.getHighestPrice().subtract(ema.getLowestPrice())
                                             .multiply(targetProfit.getBack())).setScale(2, RoundingMode.HALF_UP);
                             if(ema.getClosePrice().compareTo(diff) >= 0){
                                 //止盈
