@@ -14,6 +14,9 @@ import com.future.client.ClientStarter;
 import com.future.client.dao.TradeDao;
 import com.future.client.entity.TargetProfit;
 import com.future.client.utils.CacheMap;
+import com.future.common.exception.CommonFutureException;
+import com.future.instrument.api.exception.InstrumentException;
+import com.future.market.api.vo.DepthMarketData;
 import com.future.order.api.service.OrderService;
 import com.future.order.api.vo.CombOffsetFlag;
 import com.future.order.api.vo.Direction;
@@ -257,8 +260,7 @@ public class FiveMinutesEMA implements Runnable {
             //缓存本次EMA
             this.redisTemplate.opsForHash().put(instrumentId, "EMA5", ema);
             
-            
-            //先判断是否有持仓
+          /*//先判断是否有持仓
             List<OnRtnTradeVO> list = this.tradeDao.selectByCondition(ClientStarter.INVESTOR_ID, ACCOUNT_NO, instrumentId);
             if(list != null && list.size() > 0){
                 for (OnRtnTradeVO tradeVO : list) {
@@ -376,7 +378,7 @@ public class FiveMinutesEMA implements Runnable {
                         }
                     }
                 }
-            }
+            }*/
             
         } catch (Exception e) {
             // TODO Auto-generated catch block
@@ -386,4 +388,185 @@ public class FiveMinutesEMA implements Runnable {
     }
     
 
+    /**
+     * 止盈止损策略
+     * @author BHQH-CXYWB
+     *
+     */
+    public static class StopProfit implements Runnable{
+        
+        static Logger logger = Logger.getLogger(StopProfit.class);
+        
+        static final String ACCOUNT_NO = "00009";
+        
+        final private DepthMarketData marketData;
+        
+        final private OrderService orderService;
+        
+        final private CacheMap cacheMap;
+        
+        final private TradeDao tradeDao;
+        
+        final private StringRedisTemplate redisTemplate;
+        
+        public StopProfit(OrderService orderService, CacheMap cacheMap, TradeDao tradeDao, 
+                DepthMarketData marketData, StringRedisTemplate redisTemplate) {
+            this.orderService = orderService;
+            this.cacheMap = cacheMap;
+            this.tradeDao = tradeDao;
+            this.marketData = marketData;
+            this.redisTemplate = redisTemplate;
+        }
+
+        @Override
+        public void run() {
+            
+            
+            try {
+                //先获取缓存中的指标信息
+                String instrumentId = marketData.getInstrumentID();
+                EMA oldEma = (EMA) this.redisTemplate.opsForHash().get(instrumentId, "EMA5");
+                if(oldEma == null) {
+                    return;
+                }
+                
+                //更新最高价和最低价
+                if(new BigDecimal(marketData.getLastPrice()).compareTo(oldEma.getHighestPrice()) > 0){
+                    oldEma.setHighestPrice(new BigDecimal(marketData.getLastPrice()));
+                    //缓存EMA
+                    this.redisTemplate.opsForHash().put(instrumentId, "EMA5", oldEma);
+                }
+                if(new BigDecimal(marketData.getLastPrice()).compareTo(oldEma.getLowestPrice()) < 0){
+                    oldEma.setLowestPrice(new BigDecimal(marketData.getLastPrice()));
+                    //缓存EMA
+                    this.redisTemplate.opsForHash().put(instrumentId, "EMA5", oldEma);
+                }
+                
+                //先判断是否有持仓
+                List<OnRtnTradeVO> list = this.tradeDao.selectByCondition(ClientStarter.INVESTOR_ID, ACCOUNT_NO, instrumentId);
+                if(list != null && list.size() > 0){
+                    for (OnRtnTradeVO tradeVO : list) {
+                      //判断是否需要止损  20点止损
+                        String product = instrumentId.replaceAll("[^a-z^A-Z]", "");
+                        //止盈止损参数
+                        TargetProfit targetProfit = targetMap.get(product);
+                        
+                        double tickPrice = this.cacheMap.getTickPrice(instrumentId);
+                        if(tradeVO.getDirection() == Direction.BUY) {
+                            //买开
+                            if(tradeVO.getPrice() - tickPrice*targetProfit.getStopLessTick() >= marketData.getLastPrice().doubleValue()) {
+                                //止损
+                                logger.info("触发止损"+instrumentId);
+                                ReqOrderInsertVO reqOrderInsertVO = new ReqOrderInsertVO();
+                                reqOrderInsertVO.setAccountNo(ACCOUNT_NO);
+                                reqOrderInsertVO.setInvestorID(ClientStarter.INVESTOR_ID);
+                                reqOrderInsertVO.setInstrumentID(instrumentId);
+                                reqOrderInsertVO.setLimitPrice(marketData.getLowerLimitPrice().doubleValue());
+                                if(tradeVO.getTradingDay().equals(marketData.getTradingDate())) {
+                                    reqOrderInsertVO.setCombOffsetFlag(CombOffsetFlag.CloseToday);
+                                }else {
+                                    reqOrderInsertVO.setCombOffsetFlag(CombOffsetFlag.CLOSE);
+                                }
+                                reqOrderInsertVO.setTimeCondition(TimeCondition.GFD);
+                                reqOrderInsertVO.setDirection(Direction.SELL);
+                                reqOrderInsertVO.setMinVolume(1);
+                                reqOrderInsertVO.setVolumeTotalOriginal(tradeVO.getVolume());
+                                reqOrderInsertVO.setOrderPriceType(OrderPriceType.LimitPrice);
+                                orderService.reqOrderInsert(reqOrderInsertVO);
+                            }
+                            
+                            //判断是否触发止盈
+                            BigDecimal touch = (oldEma.getHighestPrice().subtract(oldEma.getLowestPrice())).divide(oldEma.getLowestPrice(), 2, RoundingMode.HALF_UP);
+                            if(touch.compareTo(targetProfit.getTigger()) >= 0){
+                                //判断回撤是否到位
+                                //止盈价位 = 最高价-（最高价-最低价）*回撤比例
+                                BigDecimal diff = oldEma.getHighestPrice()
+                                        .subtract(oldEma.getHighestPrice().subtract(oldEma.getLowestPrice())
+                                                .multiply(targetProfit.getBack())).setScale(2, RoundingMode.HALF_UP);
+                                
+                                if(new BigDecimal(marketData.getLastPrice()).compareTo(diff) <= 0){
+                                    //止盈
+                                    logger.info("触发止盈"+instrumentId);
+                                    ReqOrderInsertVO reqOrderInsertVO = new ReqOrderInsertVO();
+                                    reqOrderInsertVO.setAccountNo(ACCOUNT_NO);
+                                    reqOrderInsertVO.setInvestorID(ClientStarter.INVESTOR_ID);
+                                    reqOrderInsertVO.setInstrumentID(instrumentId);
+                                    reqOrderInsertVO.setLimitPrice(marketData.getLowerLimitPrice().doubleValue());
+                                    if(tradeVO.getTradingDay().equals(marketData.getTradingDate())) {
+                                        reqOrderInsertVO.setCombOffsetFlag(CombOffsetFlag.CloseToday);
+                                    }else {
+                                        reqOrderInsertVO.setCombOffsetFlag(CombOffsetFlag.CLOSE);
+                                    }
+                                    reqOrderInsertVO.setTimeCondition(TimeCondition.GFD);
+                                    reqOrderInsertVO.setDirection(Direction.SELL);
+                                    reqOrderInsertVO.setMinVolume(1);
+                                    reqOrderInsertVO.setVolumeTotalOriginal(tradeVO.getVolume());
+                                    reqOrderInsertVO.setOrderPriceType(OrderPriceType.LimitPrice);
+                                    orderService.reqOrderInsert(reqOrderInsertVO);
+                                }
+                            }
+                            
+                        }else {
+                            //卖开
+                            if(tradeVO.getPrice() + tickPrice*targetProfit.getStopLessTick() <= marketData.getLastPrice().doubleValue()) {
+                              //止损
+                                logger.info("触发止损"+instrumentId);
+                                ReqOrderInsertVO reqOrderInsertVO = new ReqOrderInsertVO();
+                                reqOrderInsertVO.setAccountNo(ACCOUNT_NO);
+                                reqOrderInsertVO.setInvestorID(ClientStarter.INVESTOR_ID);
+                                reqOrderInsertVO.setInstrumentID(instrumentId);
+                                reqOrderInsertVO.setLimitPrice(marketData.getUpperLimitPrice().doubleValue());
+                                if(tradeVO.getTradingDay().equals(marketData.getTradingDate())) {
+                                    reqOrderInsertVO.setCombOffsetFlag(CombOffsetFlag.CloseToday);
+                                }else {
+                                    reqOrderInsertVO.setCombOffsetFlag(CombOffsetFlag.CLOSE);
+                                }
+                                reqOrderInsertVO.setTimeCondition(TimeCondition.GFD);
+                                reqOrderInsertVO.setDirection(Direction.BUY);
+                                reqOrderInsertVO.setMinVolume(1);
+                                reqOrderInsertVO.setVolumeTotalOriginal(tradeVO.getVolume());
+                                reqOrderInsertVO.setOrderPriceType(OrderPriceType.LimitPrice);
+                                orderService.reqOrderInsert(reqOrderInsertVO);
+                            }
+                            
+                            //判断是否触发止盈
+                            BigDecimal touch = (oldEma.getHighestPrice().subtract(oldEma.getLowestPrice())).divide(oldEma.getHighestPrice(), 2, RoundingMode.HALF_UP);
+                            if(touch.compareTo(targetProfit.getTigger()) >= 0){
+                                //判断回撤是否到位
+                                //止盈价位 = 最低价 +（最高价-最低价）*回撤比例
+                                BigDecimal diff = oldEma.getLowestPrice()
+                                        .add(oldEma.getHighestPrice().subtract(oldEma.getLowestPrice())
+                                                .multiply(targetProfit.getBack())).setScale(2, RoundingMode.HALF_UP);
+                                if(new BigDecimal(marketData.getLastPrice()).compareTo(diff) >= 0){
+                                    //止盈
+                                    logger.info("触发止盈"+instrumentId);
+                                    ReqOrderInsertVO reqOrderInsertVO = new ReqOrderInsertVO();
+                                    reqOrderInsertVO.setAccountNo(ACCOUNT_NO);
+                                    reqOrderInsertVO.setInvestorID(ClientStarter.INVESTOR_ID);
+                                    reqOrderInsertVO.setInstrumentID(instrumentId);
+                                    reqOrderInsertVO.setLimitPrice(marketData.getUpperLimitPrice().doubleValue());
+                                    if(tradeVO.getTradingDay().equals(marketData.getTradingDate())) {
+                                        reqOrderInsertVO.setCombOffsetFlag(CombOffsetFlag.CloseToday);
+                                    }else {
+                                        reqOrderInsertVO.setCombOffsetFlag(CombOffsetFlag.CLOSE);
+                                    }
+                                    reqOrderInsertVO.setTimeCondition(TimeCondition.GFD);
+                                    reqOrderInsertVO.setDirection(Direction.BUY);
+                                    reqOrderInsertVO.setMinVolume(1);
+                                    reqOrderInsertVO.setVolumeTotalOriginal(tradeVO.getVolume());
+                                    reqOrderInsertVO.setOrderPriceType(OrderPriceType.LimitPrice);
+                                    orderService.reqOrderInsert(reqOrderInsertVO);
+                                }
+                            }
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+            
+        }
+        
+    }
 }

@@ -17,18 +17,52 @@ public class EMAStarter {
                 new ClassPathXmlApplicationContext("applicationContext.xml");
         
         context.start();
-        
-        TopicExchange topicExchange = (TopicExchange) context.getBean("com.future.quota");
-        Queue quotaQ = (Queue) context.getBean("quotaQ");
         RabbitAdmin admin = context.getBean(RabbitAdmin.class);
-        admin.declareBinding(BindingBuilder.bind(quotaQ).to(topicExchange).with("quota.*.EMA.5m"));
+        {
+            //订阅EMA指标
+            TopicExchange topicExchange = (TopicExchange) context.getBean("com.future.quota");
+            Queue quotaQ = (Queue) context.getBean("quotaQ");
+            admin.declareBinding(BindingBuilder.bind(quotaQ).to(topicExchange).with("quota.*.EMA.5m"));
+        }
         
-        Queue onRtnOrderQ = (Queue) context.getBean("onRtnOrderQ");
-        TopicExchange onRtnOrderExchange = (TopicExchange) context.getBean("onRtnOrderExchange");
-        admin.declareBinding(BindingBuilder.bind(onRtnOrderQ).to(onRtnOrderExchange).with(INVESTOR_ID));
-        Queue onRtnTradeQ = (Queue) context.getBean("onRtnTradeQ");
-        TopicExchange onRtnTradeExchange = (TopicExchange) context.getBean("onRtnTradeExchange");
-        admin.declareBinding(BindingBuilder.bind(onRtnTradeQ).to(onRtnTradeExchange).with(INVESTOR_ID));
+        {
+            //订阅行情
+            TopicExchange marketExchange = (TopicExchange) context.getBean("com.future.market");
+            Queue marketQ = (Queue) context.getBean("marketQ");
+            admin.declareBinding(BindingBuilder.bind(marketQ).to(marketExchange).with("instrument.rb1810"));
+            admin.declareBinding(BindingBuilder.bind(marketQ).to(marketExchange).with("instrument.cu1807"));
+            admin.declareBinding(BindingBuilder.bind(marketQ).to(marketExchange).with("instrument.m1809"));
+            admin.declareBinding(BindingBuilder.bind(marketQ).to(marketExchange).with("instrument.RM809"));
+            admin.declareBinding(BindingBuilder.bind(marketQ).to(marketExchange).with("instrument.y1809"));
+            admin.declareBinding(BindingBuilder.bind(marketQ).to(marketExchange).with("instrument.p1809"));
+            admin.declareBinding(BindingBuilder.bind(marketQ).to(marketExchange).with("instrument.OI809"));
+            admin.declareBinding(BindingBuilder.bind(marketQ).to(marketExchange).with("instrument.hc1810"));
+            admin.declareBinding(BindingBuilder.bind(marketQ).to(marketExchange).with("instrument.i1809"));
+            admin.declareBinding(BindingBuilder.bind(marketQ).to(marketExchange).with("instrument.j1809"));
+            admin.declareBinding(BindingBuilder.bind(marketQ).to(marketExchange).with("instrument.jm1809"));
+            admin.declareBinding(BindingBuilder.bind(marketQ).to(marketExchange).with("instrument.ZC809"));
+            admin.declareBinding(BindingBuilder.bind(marketQ).to(marketExchange).with("instrument.ni1807"));
+            admin.declareBinding(BindingBuilder.bind(marketQ).to(marketExchange).with("instrument.zn1807"));
+            admin.declareBinding(BindingBuilder.bind(marketQ).to(marketExchange).with("instrument.MA809"));
+            admin.declareBinding(BindingBuilder.bind(marketQ).to(marketExchange).with("instrument.pp1809"));
+            admin.declareBinding(BindingBuilder.bind(marketQ).to(marketExchange).with("instrument.bu1812"));
+            admin.declareBinding(BindingBuilder.bind(marketQ).to(marketExchange).with("instrument.ru1809"));
+            admin.declareBinding(BindingBuilder.bind(marketQ).to(marketExchange).with("instrument.CF809"));
+        }
+        
+        {
+            //订阅报单回报
+            Queue onRtnOrderQ = (Queue) context.getBean("onRtnOrderQ");
+            TopicExchange onRtnOrderExchange = (TopicExchange) context.getBean("onRtnOrderExchange");
+            admin.declareBinding(BindingBuilder.bind(onRtnOrderQ).to(onRtnOrderExchange).with(INVESTOR_ID));
+        }
+        
+        {
+            //订阅成交回报
+            Queue onRtnTradeQ = (Queue) context.getBean("onRtnTradeQ");
+            TopicExchange onRtnTradeExchange = (TopicExchange) context.getBean("onRtnTradeExchange");
+            admin.declareBinding(BindingBuilder.bind(onRtnTradeQ).to(onRtnTradeExchange).with(INVESTOR_ID));
+        }
         
     }
 

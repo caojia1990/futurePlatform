@@ -6,7 +6,10 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import com.future.client.dao.QuotaDao;
+import com.future.client.dao.TradeDao;
 import com.future.client.strategy.Breakthrough;
+import com.future.client.strategy.FiveMinutesEMA;
+import com.future.client.strategy.FiveMinutesEMA.StopProfit;
 import com.future.client.strategy.FiveSecsFollow;
 import com.future.client.strategy.Hedging;
 import com.future.client.utils.CacheMap;
@@ -32,14 +35,19 @@ public class MarketMessageHandle implements MessageReceive{
     
     @Autowired
     private QuotaDao quotaDao;
+    
+    @Autowired
+    private TradeDao tradeDao;
 
     @Override
     public void handleMessage(DepthMarketData marketData) {
         
-        taskExecutor.execute(new FiveSecsFollow(marketData, orderService, redisTemplate, cacheMap,quotaDao));
+        taskExecutor.execute(new StopProfit(orderService, cacheMap, tradeDao, marketData, redisTemplate));
+        
+        /*taskExecutor.execute(new FiveSecsFollow(marketData, orderService, redisTemplate, cacheMap,quotaDao));
         if(taskExecutor.getActiveCount() > 50) {
             logger.info("当前活跃线程数："+taskExecutor.getActiveCount());
-        }
+        }*/
         //taskExecutor.execute(new Breakthrough(marketData, orderService, redisTemplate, cacheMap,quotaDao));
         //对冲保护策略
         //taskExecutor.execute(new Hedging(marketData, orderService, redisTemplate, cacheMap));
