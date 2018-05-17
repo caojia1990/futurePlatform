@@ -20,14 +20,14 @@ public class Test {
         System.out.println(diff);*/
         
         
-        BigDecimal touch = (new BigDecimal("11615").subtract(new BigDecimal("11250"))).divide(new BigDecimal("11250"), 2, RoundingMode.HALF_UP);
-        if(touch.compareTo(new BigDecimal("0.3")) >= 0){
+        BigDecimal touch = (new BigDecimal("5800").subtract(new BigDecimal("5708"))).divide(new BigDecimal("5800"), 3, RoundingMode.HALF_UP);
+        if(touch.compareTo(new BigDecimal("0.02")) >= 0){
             //判断回撤是否到位
             //止盈价位 = 最低价 +（最高价-最低价）*回撤比例
-            BigDecimal diff = new BigDecimal("11615")
-                    .subtract(new BigDecimal("11615").subtract(new BigDecimal("11250"))
-                            .multiply(new BigDecimal("0.4"))).setScale(2, RoundingMode.HALF_UP);
-            if(new BigDecimal("11470").compareTo(diff) >= 0){
+            BigDecimal diff = new BigDecimal("5708")
+                    .subtract(new BigDecimal("5800").subtract(new BigDecimal("5708"))
+                            .multiply(new BigDecimal("0.33"))).setScale(2, RoundingMode.HALF_UP);
+            if(new BigDecimal("5746").compareTo(diff) >= 0){
                 System.out.println("止盈");
             }
         }
