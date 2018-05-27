@@ -20,6 +20,6 @@
     </rabbit:listener-container>
     
     <!-- 行情消息处理 -->
-    <bean id="marketMessageHandle" class="com.future.quota.service.mq.QuotaHandle" />
+    <bean id="marketMessageHandle" class="com.future.quota.service.mq.QuotaHandle" init-method="init"/>
        
 </beans>
