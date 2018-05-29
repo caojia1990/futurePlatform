@@ -5,7 +5,9 @@
     <artifactId>future-parent</artifactId>
     <version>0.0.1-SNAPSHOT</version>
   </parent>
+  
   <artifactId>future-thost-api</artifactId>
+  
   <name>ctp接口</name>
   <description>64位接口（支持win,linux）</description>
 </project>
