@@ -1,13 +1,13 @@
 package com.future.trade.service;
 
-import org.hraink.futures.ctp.thostftdcuserapidatatype.ThostFtdcUserApiDataTypeLibrary.THOST_TE_RESUME_TYPE;
-import org.hraink.futures.jctp.trader.JCTPTraderApi;
-import org.hraink.futures.jctp.trader.JCTPTraderSpi;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.future.instrument.api.service.InstrumentService;
+import com.future.thost.api.CThostFtdcTraderApi;
+import com.future.thost.api.CThostFtdcTraderSpi;
+import com.future.thost.api.THOST_TE_RESUME_TYPE;
 import com.future.trade.service.ctp.MyTraderSpi;
 
 public class TradeMain {
@@ -17,8 +17,14 @@ public class TradeMain {
     public static String PASSWORD = "caojiactp1";
     
     public static String tradeFront = "tcp://180.168.146.187:10001";
-    public static JCTPTraderApi traderApi;
-    static JCTPTraderSpi traderSpi;
+    public static CThostFtdcTraderApi traderApi;
+    static CThostFtdcTraderSpi traderSpi;
+    
+    static{
+        System.load("D:/git/futurePlatform/future-parent/future-thost-api/src/main/resources/win/thostmduserapi.dll");
+        System.load("D:/git/futurePlatform/future-parent/future-thost-api/src/main/resources/win/thosttraderapi.dll");
+        System.load("D:/git/futurePlatform/future-parent/future-thost-api/src/main/resources/win/thosttraderapi_wrap.dll");
+    }
     
     public static void main(String[] args) {
         
@@ -27,23 +33,24 @@ public class TradeMain {
             RabbitTemplate template = ctx.getBean(RabbitTemplate.class);
             InstrumentService instrumentService = (InstrumentService) ctx.getBean("instrumentService");
             
-            traderApi = JCTPTraderApi.createFtdcTraderApi("ctpdata/trade/");
+            traderApi = CThostFtdcTraderApi.CreateFtdcTraderApi("ctpdata/trade/");
             
             traderSpi = new MyTraderSpi(traderApi,template,instrumentService);
             
             //注册traderpi
-            traderApi.registerSpi(traderSpi);
-            //注册公有流
-            traderApi.subscribePublicTopic(THOST_TE_RESUME_TYPE.THOST_TERT_QUICK);
-            //注册私有流
-            traderApi.subscribePrivateTopic(THOST_TE_RESUME_TYPE.THOST_TERT_QUICK);
+            traderApi.RegisterSpi(traderSpi);
             //注册前置机地址
-            traderApi.registerFront(tradeFront);
+            traderApi.RegisterFront(tradeFront);
+            //注册公有流
+            traderApi.SubscribePublicTopic(THOST_TE_RESUME_TYPE.THOST_TERT_QUICK);
+            //注册私有流
+            traderApi.SubscribePrivateTopic(THOST_TE_RESUME_TYPE.THOST_TERT_QUICK);
             
-            traderApi.init();
-            traderApi.join();
+            traderApi.Init();
+            traderApi.Join();
             //回收api和JCTP
-            traderApi.release();
+            return;
+            //traderApi.Release();
     }
 
 }

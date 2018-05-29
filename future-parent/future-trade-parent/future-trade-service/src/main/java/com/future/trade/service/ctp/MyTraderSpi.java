@@ -2,30 +2,30 @@ package com.future.trade.service.ctp;
 
 
 import org.apache.log4j.Logger;
-import org.hraink.futures.ctp.thostftdcuserapistruct.CThostFtdcInputOrderActionField;
-import org.hraink.futures.ctp.thostftdcuserapistruct.CThostFtdcInputOrderField;
-import org.hraink.futures.ctp.thostftdcuserapistruct.CThostFtdcInstrumentCommissionRateField;
-import org.hraink.futures.ctp.thostftdcuserapistruct.CThostFtdcInstrumentField;
-import org.hraink.futures.ctp.thostftdcuserapistruct.CThostFtdcInstrumentMarginRateField;
-import org.hraink.futures.ctp.thostftdcuserapistruct.CThostFtdcInvestorPositionDetailField;
-import org.hraink.futures.ctp.thostftdcuserapistruct.CThostFtdcInvestorPositionField;
-import org.hraink.futures.ctp.thostftdcuserapistruct.CThostFtdcOrderField;
-import org.hraink.futures.ctp.thostftdcuserapistruct.CThostFtdcQryInstrumentField;
-import org.hraink.futures.ctp.thostftdcuserapistruct.CThostFtdcQryInvestorPositionDetailField;
-import org.hraink.futures.ctp.thostftdcuserapistruct.CThostFtdcQryOrderField;
-import org.hraink.futures.ctp.thostftdcuserapistruct.CThostFtdcReqUserLoginField;
-import org.hraink.futures.ctp.thostftdcuserapistruct.CThostFtdcRspInfoField;
-import org.hraink.futures.ctp.thostftdcuserapistruct.CThostFtdcRspUserLoginField;
-import org.hraink.futures.ctp.thostftdcuserapistruct.CThostFtdcSettlementInfoConfirmField;
-import org.hraink.futures.ctp.thostftdcuserapistruct.CThostFtdcTradeField;
-import org.hraink.futures.jctp.trader.JCTPTraderApi;
-import org.hraink.futures.jctp.trader.JCTPTraderSpi;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 
 import com.alibaba.fastjson.JSON;
 import com.future.instrument.api.service.InstrumentService;
 import com.future.instrument.api.vo.InstrumentCommissionRateVO;
 import com.future.instrument.api.vo.InstrumentVO;
+import com.future.thost.api.CThostFtdcInputOrderActionField;
+import com.future.thost.api.CThostFtdcInputOrderField;
+import com.future.thost.api.CThostFtdcInstrumentCommissionRateField;
+import com.future.thost.api.CThostFtdcInstrumentField;
+import com.future.thost.api.CThostFtdcInstrumentMarginRateField;
+import com.future.thost.api.CThostFtdcInvestorPositionDetailField;
+import com.future.thost.api.CThostFtdcInvestorPositionField;
+import com.future.thost.api.CThostFtdcOrderField;
+import com.future.thost.api.CThostFtdcQryInstrumentField;
+import com.future.thost.api.CThostFtdcQryInvestorPositionDetailField;
+import com.future.thost.api.CThostFtdcQryOrderField;
+import com.future.thost.api.CThostFtdcReqUserLoginField;
+import com.future.thost.api.CThostFtdcRspInfoField;
+import com.future.thost.api.CThostFtdcRspUserLoginField;
+import com.future.thost.api.CThostFtdcSettlementInfoConfirmField;
+import com.future.thost.api.CThostFtdcTradeField;
+import com.future.thost.api.CThostFtdcTraderApi;
+import com.future.thost.api.CThostFtdcTraderSpi;
 import com.future.trade.api.vo.CombHedgeFlag;
 import com.future.trade.api.vo.CombOffsetFlag;
 import com.future.trade.api.vo.ContingentCondition;
@@ -48,11 +48,11 @@ import com.future.trade.service.TradeMain;
  * @author Hraink E-mail:Hraink@Gmail.com
  * @version 2013-1-25 下午11:46:13
  */
-public class MyTraderSpi extends JCTPTraderSpi {
+public class MyTraderSpi extends CThostFtdcTraderSpi {
 
     static Logger logger = Logger.getLogger(MyTraderSpi.class);
     
-	JCTPTraderApi traderApi;
+    CThostFtdcTraderApi traderApi;
 	int nRequestID = 0;
 	
 	final static String ONRTNORDER_KEY = "onRtnOrder";
@@ -66,16 +66,16 @@ public class MyTraderSpi extends JCTPTraderSpi {
 	
 	private RabbitTemplate template;
 	
-	public MyTraderSpi(JCTPTraderApi traderApi, RabbitTemplate template,InstrumentService instrumentService) {
+	public MyTraderSpi(CThostFtdcTraderApi traderApi, RabbitTemplate template,InstrumentService instrumentService) {
 		this.traderApi = traderApi;
 		this.template = template;
 		this.instrumentService = instrumentService;
 	}
 	
-	public MyTraderSpi(JCTPTraderApi traderApi, TradeMain main) {
+	public MyTraderSpi(CThostFtdcTraderApi traderApi, TradeMain main) {
 	    this.traderApi = traderApi;
 	}
-	public void onFrontConnected() {
+	/*public void onFrontConnected() {
 		System.out.println("前置机连接");
 		CThostFtdcReqUserLoginField userLoginField = new CThostFtdcReqUserLoginField();
 		
@@ -83,14 +83,26 @@ public class MyTraderSpi extends JCTPTraderSpi {
 		userLoginField.setUserID(TradeMain.USER_ID);
 		userLoginField.setPassword(TradeMain.PASSWORD);
 		
-		traderApi.reqUserLogin(userLoginField, 112);
+		traderApi.ReqUserLogin(userLoginField, 112);
 		
-	}
+	}*/
 	
 	@Override
-	public void onRspUserLogin(CThostFtdcRspUserLoginField pRspUserLogin,
+    public void OnFrontConnected(){
+        System.out.println("On Front Connected");
+        CThostFtdcReqUserLoginField field = new CThostFtdcReqUserLoginField();
+        field.setBrokerID(TradeMain.BROKER_ID);
+        field.setUserID(TradeMain.USER_ID);
+        field.setPassword(TradeMain.PASSWORD);
+        field.setUserProductInfo("JAVA_API");
+        traderApi.ReqUserLogin(field,0);
+        System.out.println("Send login ok");
+    }
+	
+	@Override
+	public void OnRspUserLogin(CThostFtdcRspUserLoginField pRspUserLogin,
 			CThostFtdcRspInfoField pRspInfo, int nRequestID, boolean bIsLast) {
-		System.out.println("TradingDay:" + traderApi.getTradingDay()+"请求编号："+nRequestID);
+		System.out.println("TradingDay:" + traderApi.GetTradingDay()+"请求编号："+nRequestID);
 		System.out.println(pRspInfo.getErrorID());
 		System.out.println(pRspUserLogin.getLoginTime());
 		System.out.println(pRspUserLogin.getCZCETime());
@@ -111,17 +123,17 @@ public class MyTraderSpi extends JCTPTraderSpi {
 		CThostFtdcSettlementInfoConfirmField confirmField = new CThostFtdcSettlementInfoConfirmField();
 		confirmField.setBrokerID(TradeMain.BROKER_ID);
 		confirmField.setInvestorID(TradeMain.USER_ID);
-		traderApi.reqSettlementInfoConfirm(confirmField, ++nRequestID);
+		traderApi.ReqSettlementInfoConfirm(confirmField, ++nRequestID);
 		
 		//查询合约信息
 		CThostFtdcQryInstrumentField pQryInstrument = new CThostFtdcQryInstrumentField();
-		traderApi.reqQryInstrument(pQryInstrument, ++nRequestID);
+		traderApi.ReqQryInstrument(pQryInstrument, ++nRequestID);
 		
 	}
 	
 	//报单回报
 	@Override
-	public void onRtnOrder(CThostFtdcOrderField pOrder) {
+	public void OnRtnOrder(CThostFtdcOrderField pOrder) {
 		System.out.println(pOrder.getStatusMsg());
 		
 		OnRtnOrderVO onRtnOrderVO = new OnRtnOrderVO();
@@ -180,7 +192,7 @@ public class MyTraderSpi extends JCTPTraderSpi {
 	
 	//报单响应
 	@Override
-	public void onRspOrderInsert(CThostFtdcInputOrderField pInputOrder,
+	public void OnRspOrderInsert(CThostFtdcInputOrderField pInputOrder,
 			CThostFtdcRspInfoField pRspInfo, int nRequestID, boolean bIsLast) {
 		logger.error("报单失败："+JSON.toJSONString(pRspInfo)+JSON.toJSONString(pInputOrder));
 		//traderMain.onRspOrderInsert(pInputOrder, pRspInfo, nRequestID, bIsLast);
@@ -188,7 +200,7 @@ public class MyTraderSpi extends JCTPTraderSpi {
 	
 	//撤单
 	@Override
-	public void onRspOrderAction(
+	public void OnRspOrderAction(
 			CThostFtdcInputOrderActionField pInputOrderAction,
 			CThostFtdcRspInfoField pRspInfo, int nRequestID, boolean bIsLast) {
 		logger.error(pRspInfo.getErrorMsg());
@@ -196,7 +208,7 @@ public class MyTraderSpi extends JCTPTraderSpi {
 	
 	//成交回报
 	@Override
-	public void onRtnTrade(CThostFtdcTradeField pTrade) {
+	public void OnRtnTrade(CThostFtdcTradeField pTrade) {
 		//System.out.println("成交"+pTrade.getInstrumentID());
 	    OnRtnTradeVO onRtnTradeVO = new OnRtnTradeVO();
 	    //TODO 账户号  不需要返回
@@ -225,7 +237,7 @@ public class MyTraderSpi extends JCTPTraderSpi {
 	}
 	
 	@Override
-	public void onRspQryInvestorPositionDetail(
+	public void OnRspQryInvestorPositionDetail(
 			CThostFtdcInvestorPositionDetailField pInvestorPositionDetail,
 			CThostFtdcRspInfoField pRspInfo, int nRequestID, boolean bIsLast) {
 		System.out.println("持仓明细查询回调");
@@ -233,7 +245,7 @@ public class MyTraderSpi extends JCTPTraderSpi {
 	
 	
 	@Override
-	public void onRspQryInvestorPosition(
+	public void OnRspQryInvestorPosition(
 			CThostFtdcInvestorPositionField pInvestorPosition,
 			CThostFtdcRspInfoField pRspInfo, int nRequestID, boolean bIsLast) {
 		System.out.println("持仓查询回调");
@@ -247,19 +259,19 @@ public class MyTraderSpi extends JCTPTraderSpi {
      * @param bIsLast
      */
 	@Override
-	public void onRspSettlementInfoConfirm(
+	public void OnRspSettlementInfoConfirm(
 			CThostFtdcSettlementInfoConfirmField pSettlementInfoConfirm,
 			CThostFtdcRspInfoField pRspInfo, int nRequestID, boolean bIsLast) {
 		logger.info("确认结算单："+JSON.toJSONString(pSettlementInfoConfirm));
 	}
 	
 	@Override
-	public void onRspError(CThostFtdcRspInfoField pRspInfo, int nRequestID,
+	public void OnRspError(CThostFtdcRspInfoField pRspInfo, int nRequestID,
 			boolean bIsLast) {
 	    logger.error("错误回调");
 	}
 	@Override
-	public void onErrRtnOrderInsert(CThostFtdcInputOrderField pInputOrder,
+	public void OnErrRtnOrderInsert(CThostFtdcInputOrderField pInputOrder,
 			CThostFtdcRspInfoField pRspInfo) {
 	    logger.error("报单录入错误回调："+JSON.toJSONString(pRspInfo));
 	}
@@ -272,7 +284,7 @@ public class MyTraderSpi extends JCTPTraderSpi {
      * @param bIsLast
      */
 	@Override
-	public void onRspQryInstrumentMarginRate(CThostFtdcInstrumentMarginRateField pInstrumentMarginRate,
+	public void OnRspQryInstrumentMarginRate(CThostFtdcInstrumentMarginRateField pInstrumentMarginRate,
 	        CThostFtdcRspInfoField pRspInfo, int nRequestID, boolean bIsLast) {
 	    
 	}
@@ -285,7 +297,7 @@ public class MyTraderSpi extends JCTPTraderSpi {
      * @param bIsLast
      */
 	@Override
-    public void onRspQryInstrument(CThostFtdcInstrumentField pInstrument, CThostFtdcRspInfoField pRspInfo, int nRequestID, boolean bIsLast) {
+    public void OnRspQryInstrument(CThostFtdcInstrumentField pInstrument, CThostFtdcRspInfoField pRspInfo, int nRequestID, boolean bIsLast) {
 	    
 	    InstrumentVO info = new InstrumentVO();
 	    info.setInstrumentID(pInstrument.getInstrumentID());
@@ -302,7 +314,7 @@ public class MyTraderSpi extends JCTPTraderSpi {
 	    info.setMinLimitOrderVolume(pInstrument.getMinLimitOrderVolume());
 	    info.setLongMarginRatio(pInstrument.getLongMarginRatio());
 	    info.setShortMarginRatio(pInstrument.getShortMarginRatio());
-	    info.setTradingDate(this.traderApi.getTradingDay());//交易日
+	    info.setTradingDate(this.traderApi.GetTradingDay());//交易日
 	    info.setDeliveryMonth(pInstrument.getDeliveryMonth());//交割月
 	    info.setDeliveryYear(pInstrument.getDeliveryYear());//交割年
 	    info.setStartDelivDate(pInstrument.getStartDelivDate());//开始交割日
@@ -318,7 +330,7 @@ public class MyTraderSpi extends JCTPTraderSpi {
 	    if(bIsLast){
 	        CThostFtdcQryOrderField pQryOrder = new CThostFtdcQryOrderField();
 	        pQryOrder.setInvestorID(TradeMain.USER_ID);
-	        System.out.println("查询报单:"+traderApi.reqQryOrder(pQryOrder, ++nRequestID));
+	        System.out.println("查询报单:"+traderApi.ReqQryOrder(pQryOrder, ++nRequestID));
 	    }
 	    
 	    
@@ -354,7 +366,7 @@ public class MyTraderSpi extends JCTPTraderSpi {
     }
     
     @Override
-    public void onRspQryOrder(CThostFtdcOrderField pOrder, CThostFtdcRspInfoField pRspInfo, int nRequestID, boolean bIsLast){
+    public void OnRspQryOrder(CThostFtdcOrderField pOrder, CThostFtdcRspInfoField pRspInfo, int nRequestID, boolean bIsLast){
         System.out.println("查询报单返回："+JSON.toJSONString(pOrder));
     }
 

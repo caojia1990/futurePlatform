@@ -10,6 +10,7 @@
   <description>交易接口</description>
   
   <properties>
+    <future-thost-api.version>0.0.1-SNAPSHOT</future-thost-api.version>
     <future-trade-api.version>0.0.1-SNAPSHOT</future-trade-api.version>
     <future-instrument-api.version>0.0.1-SNAPSHOT</future-instrument-api.version>
     <spring-context.version>5.0.3.RELEASE</spring-context.version>

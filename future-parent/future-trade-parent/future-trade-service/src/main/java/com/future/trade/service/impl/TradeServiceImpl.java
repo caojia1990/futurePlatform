@@ -1,8 +1,8 @@
 package com.future.trade.service.impl;
 
-import org.hraink.futures.ctp.thostftdcuserapistruct.CThostFtdcInputOrderField;
 import org.springframework.stereotype.Service;
 
+import com.future.thost.api.CThostFtdcInputOrderField;
 import com.future.trade.api.exception.TradeError;
 import com.future.trade.api.exception.TradeException;
 import com.future.trade.api.service.TradeService;
@@ -45,7 +45,7 @@ public class TradeServiceImpl implements TradeService{
         pInputOrder.setVolumeCondition(reqOrderInsertVO.getVolumeCondition().getCode());
         pInputOrder.setVolumeTotalOriginal(reqOrderInsertVO.getVolumeTotalOriginal());//手数
         
-        int r = TradeMain.traderApi.reqOrderInsert(pInputOrder, reqOrderInsertVO.getRequestID());
+        int r = TradeMain.traderApi.ReqOrderInsert(pInputOrder, reqOrderInsertVO.getRequestID());
         switch (r) {
         case 1:
             throw new TradeException(TradeError.ConnectFailed);
