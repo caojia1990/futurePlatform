@@ -51,5 +51,6 @@
   	<module>future-client</module>
   	<module>future-quota</module>
   	<module>future-quota-parent</module>
+  	<module>future-thost-api</module>
   </modules>
 </project>
