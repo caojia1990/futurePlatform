@@ -17,6 +17,7 @@
     <fileSet>
       <directory>${project.basedir}/ctpdata</directory>
       <outputDirectory>./ctpdata</outputDirectory>
+      <fileMode>0755</fileMode>
     </fileSet>
     <fileSet>
       <directory>${project.basedir}/jre</directory>

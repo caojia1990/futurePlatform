@@ -95,4 +95,8 @@
         <version>${slf4j-log4j12.version}</version>
     </dependency>
   </dependencies>
+  
+  <build>
+    <finalName>future-trade-service</finalName>
+  </build>
 </project>

@@ -15,9 +15,23 @@ public class LibLoader {
     public static synchronized void loadLib(String libName) throws IOException {
         
         String systemType = System.getProperty("os.name");
-        String libExtension = (systemType.toLowerCase().indexOf("win") != -1) ? ".dll" : ".so";
-        String libFullName = libName + libExtension;
+        System.out.println("操作系统："+systemType);
+        String libExtension = "";
+        String prefix = "";
+        if(systemType.toLowerCase().indexOf("win") != -1){
+            libExtension = ".dll";
+        }else {
+            prefix="lib";
+            libExtension = ".so";
+        }
+        String libFullName = prefix+libName + libExtension;
+        
+        System.out.println("动态链接库名称："+libFullName);
+        
         String nativeTempDir = System.getProperty("java.io.tmpdir");
+        
+        System.out.println("临时文件目录："+nativeTempDir);
+        
         String fileSeparator = System.getProperty("file.separator");
         
         String filepath = nativeTempDir+fileSeparator+libFullName;
