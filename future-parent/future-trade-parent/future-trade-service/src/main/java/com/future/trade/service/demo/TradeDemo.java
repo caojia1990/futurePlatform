@@ -1,4 +1,4 @@
-package com.future.trade.service;
+package com.future.trade.service.demo;
 
 import java.io.IOException;
 
@@ -13,7 +13,7 @@ import com.future.thost.api.THOST_TE_RESUME_TYPE;
 import com.future.thost.util.LibLoader;
 import com.future.trade.service.ctp.MyTraderSpi;
 
-public class TradeMain {
+public class TradeDemo {
     
     public static String BROKER_ID = "9999";
     public static String USER_ID = "105839";
@@ -37,14 +37,9 @@ public class TradeMain {
     
     public static void main(String[] args) {
         
-        AbstractApplicationContext ctx =
-                new ClassPathXmlApplicationContext("applicationContext.xml");
-            RabbitTemplate template = ctx.getBean(RabbitTemplate.class);
-            InstrumentService instrumentService = (InstrumentService) ctx.getBean("instrumentService");
-            
             traderApi = CThostFtdcTraderApi.CreateFtdcTraderApi("ctpdata/trade/");
             
-            traderSpi = new MyTraderSpi(traderApi,template,instrumentService);
+            traderSpi = new TraderSpiDemo(traderApi);
             
             //注册traderpi
             traderApi.RegisterSpi(traderSpi);
