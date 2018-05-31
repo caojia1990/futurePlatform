@@ -1,29 +1,29 @@
 package com.future.market.service.ctp;
 
-import org.hraink.futures.ctp.thostftdcuserapistruct.CThostFtdcDepthMarketDataField;
-import org.hraink.futures.ctp.thostftdcuserapistruct.CThostFtdcReqUserLoginField;
-import org.hraink.futures.ctp.thostftdcuserapistruct.CThostFtdcRspInfoField;
-import org.hraink.futures.ctp.thostftdcuserapistruct.CThostFtdcRspUserLoginField;
-import org.hraink.futures.ctp.thostftdcuserapistruct.CThostFtdcSpecificInstrumentField;
-import org.hraink.futures.ctp.thostftdcuserapistruct.CThostFtdcUserLogoutField;
-import org.hraink.futures.jctp.md.JCTPMdApi;
-import org.hraink.futures.jctp.md.JCTPMdSpi;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 
 import com.future.instrument.api.service.InstrumentService;
 import com.future.market.api.vo.DepthMarketData;
 import com.future.market.service.MarketMain;
+import com.future.thost.api.CThostFtdcDepthMarketDataField;
+import com.future.thost.api.CThostFtdcMdApi;
+import com.future.thost.api.CThostFtdcMdSpi;
+import com.future.thost.api.CThostFtdcReqUserLoginField;
+import com.future.thost.api.CThostFtdcRspInfoField;
+import com.future.thost.api.CThostFtdcRspUserLoginField;
+import com.future.thost.api.CThostFtdcSpecificInstrumentField;
+import com.future.thost.api.CThostFtdcUserLogoutField;
 
-public class MyMdSpi extends JCTPMdSpi {
-	private JCTPMdApi mdApi;
+public class MyMdSpi extends CThostFtdcMdSpi {
+	private CThostFtdcMdApi mdApi;
 	private RabbitTemplate template;
 	private InstrumentService instrumentService;
     
-	public MyMdSpi(JCTPMdApi mdApi) {
+	public MyMdSpi(CThostFtdcMdApi mdApi) {
 		this.mdApi = mdApi;
 	}
 	
-	public MyMdSpi(JCTPMdApi mdApi,RabbitTemplate template,InstrumentService instrumentService) {
+	public MyMdSpi(CThostFtdcMdApi mdApi,RabbitTemplate template,InstrumentService instrumentService) {
 	    this.mdApi = mdApi;
 	    this.template = template;
 	    this.instrumentService = instrumentService;
@@ -31,7 +31,7 @@ public class MyMdSpi extends JCTPMdSpi {
 	}
 	
 	@Override
-	public void onFrontConnected() {
+	public void OnFrontConnected() {
 		System.out.println("准备登陆");
 		//登陆
 		CThostFtdcReqUserLoginField userLoginField = new CThostFtdcReqUserLoginField();
@@ -39,12 +39,12 @@ public class MyMdSpi extends JCTPMdSpi {
 		userLoginField.setUserID(MarketMain.USER_ID);
 		userLoginField.setPassword(MarketMain.PASSWORD);
 		
-		mdApi.reqUserLogin(userLoginField, 112);
+		mdApi.ReqUserLogin(userLoginField, 112);
 		System.out.println("登陆完成");
 	}
 	
 	@Override
-	public void onRspUserLogin(CThostFtdcRspUserLoginField pRspUserLogin, CThostFtdcRspInfoField pRspInfo, int nRequestID,
+	public void OnRspUserLogin(CThostFtdcRspUserLoginField pRspUserLogin, CThostFtdcRspInfoField pRspInfo, int nRequestID,
 			boolean bIsLast) {
 		System.out.println("登录回调");
 		System.out.println(pRspUserLogin.getLoginTime());
@@ -54,12 +54,12 @@ public class MyMdSpi extends JCTPMdSpi {
 		String[] instruments = instrumentService.queryInstrumentName().toArray(new String[0]);
 		
 		
-		subResult = mdApi.subscribeMarketData(instruments);
+		subResult = mdApi.SubscribeMarketData(instruments,instruments.length);
 		System.out.println(subResult == 0 ? "订阅成功" : "订阅失败");
 	}
 
 	@Override
-	public void onRtnDepthMarketData(CThostFtdcDepthMarketDataField pDepthMarketData) {
+	public void OnRtnDepthMarketData(CThostFtdcDepthMarketDataField pDepthMarketData) {
 		
 		DepthMarketData marketData = new DepthMarketData();
 		marketData.setAskPrice1(pDepthMarketData.getAskPrice1());
@@ -94,7 +94,7 @@ public class MyMdSpi extends JCTPMdSpi {
 	}
 //	
 	@Override
-	public void onRspSubMarketData(CThostFtdcSpecificInstrumentField pSpecificInstrument, CThostFtdcRspInfoField pRspInfo, int nRequestID,
+	public void OnRspSubMarketData(CThostFtdcSpecificInstrumentField pSpecificInstrument, CThostFtdcRspInfoField pRspInfo, int nRequestID,
 			boolean bIsLast) {
 		
 		System.out.println("订阅回报:" + bIsLast +" : "+ pRspInfo.getErrorID()+":"+pRspInfo.getErrorMsg());
@@ -102,21 +102,21 @@ public class MyMdSpi extends JCTPMdSpi {
 	}
 	
 	@Override
-	public void onHeartBeatWarning(int nTimeLapse) {
+	public void OnHeartBeatWarning(int nTimeLapse) {
 	}
 	
 	@Override
-	public void onFrontDisconnected(int nReason) {
+	public void OnFrontDisconnected(int nReason) {
 	}
 	
 	@Override
-	public void onRspError(CThostFtdcRspInfoField pRspInfo, int nRequestID,
+	public void OnRspError(CThostFtdcRspInfoField pRspInfo, int nRequestID,
 			boolean bIsLast) {
 		System.out.println("异常ID："+pRspInfo.getErrorID()+" 异常信息:"+pRspInfo.getErrorMsg());
 	}
 	
 	@Override
-	public void onRspUnSubMarketData(
+	public void OnRspUnSubMarketData(
 			CThostFtdcSpecificInstrumentField pSpecificInstrument,
 			CThostFtdcRspInfoField pRspInfo, int nRequestID, boolean bIsLast) {
 	    System.out.println("取消订阅回报:" + bIsLast +" : "+ pRspInfo.getErrorID()+":"+pRspInfo.getErrorMsg());
@@ -124,7 +124,7 @@ public class MyMdSpi extends JCTPMdSpi {
 	}
 	
 	@Override
-	public void onRspUserLogout(CThostFtdcUserLogoutField pUserLogout,
+	public void OnRspUserLogout(CThostFtdcUserLogoutField pUserLogout,
 			CThostFtdcRspInfoField pRspInfo, int nRequestID, boolean bIsLast) {
 		// TODO Auto-generated method stub
 	}

@@ -1,18 +1,16 @@
 package com.future.market.service;
 
-import org.hraink.futures.jctp.md.JCTPMdApi;
-import org.hraink.futures.jctp.md.JCTPMdSpi;
-import org.springframework.amqp.core.AnonymousQueue;
-import org.springframework.amqp.core.BindingBuilder;
-import org.springframework.amqp.core.Queue;
-import org.springframework.amqp.core.TopicExchange;
-import org.springframework.amqp.rabbit.core.RabbitAdmin;
+import java.io.IOException;
+
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.future.instrument.api.service.InstrumentService;
 import com.future.market.service.ctp.MyMdSpi;
+import com.future.thost.api.CThostFtdcMdApi;
+import com.future.thost.api.CThostFtdcMdSpi;
+import com.future.thost.util.LibLoader;
 
 public class MarketMain {
     
@@ -23,8 +21,20 @@ public class MarketMain {
   //行情地址
     public static String marketFront = "tcp://180.168.146.187:10010";
     /** 行情API **/
-    public static JCTPMdApi mdApi;
-    static JCTPMdSpi mdSpi;
+    public static CThostFtdcMdApi mdApi;
+    static CThostFtdcMdSpi mdSpi;
+    
+    static{
+        
+        try {
+            LibLoader.loadLib("thostmduserapi");
+            LibLoader.loadLib("thosttraderapi");
+            LibLoader.loadLib("thosttraderapi_wrap");
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
 
     public static void main(String[] args) {
         AbstractApplicationContext ctx =
@@ -32,13 +42,13 @@ public class MarketMain {
             RabbitTemplate template = ctx.getBean(RabbitTemplate.class);
             InstrumentService instrumentService = ctx.getBean(InstrumentService.class);
             
-            mdApi = JCTPMdApi.createFtdcTraderApi("ctpdata/market/",false);
+            mdApi = CThostFtdcMdApi.CreateFtdcMdApi("ctpdata/market/",false);
             
             mdSpi = new MyMdSpi(mdApi, template, instrumentService);
             //注册spi
-            mdApi.registerSpi(mdSpi);
+            mdApi.RegisterSpi(mdSpi);
             //注册前置机地址
-            mdApi.registerFront(marketFront);
+            mdApi.RegisterFront(marketFront);
             mdApi.Init();
             
             mdApi.Join();

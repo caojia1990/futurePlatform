@@ -19,7 +19,7 @@
     <dependency>
         <artifactId>future-thost-api</artifactId>
         <groupId>com.future.caojia</groupId>
-        <version>${future-trade-api.version}</version>
+        <version>${future-thost-api.version}</version>
     </dependency>
     
     <dependency>

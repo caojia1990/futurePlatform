@@ -125,4 +125,8 @@
         <version>2.9.0</version>
     </dependency>
   </dependencies>
+  
+  <build>
+    <finalName>future-order-service</finalName>
+  </build>
 </project>

@@ -1,87 +1,97 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <parent>
-    <groupId>com.future.caojia</groupId>
-    <artifactId>future-market-parent</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
-  </parent>
-  <artifactId>future-market-service</artifactId>
-  <description>行情服务</description>
-  
-  <dependencies>
-  
-  	<!-- <dependency>
-  		<groupId>org.hraink.futures</groupId>
-		<artifactId>JCTP</artifactId>
-	    <version>0.0.3-SNAPSHOT</version>
-  	</dependency> -->
-  	
-    <dependency>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
         <groupId>com.future.caojia</groupId>
-        <artifactId>future-market-api</artifactId>
-        <version>${future-market-api.version}</version>
-    </dependency>
-    
-    <dependency>
-        <groupId>com.future.caojia</groupId>
-        <artifactId>future-instrument-api</artifactId>
-        <version>${future-instrument-api.version}</version>
-    </dependency>
-    
-    <dependency>
-        <groupId>org.springframework.amqp</groupId>
-        <artifactId>spring-rabbit</artifactId>
-        <version>${spring-rabbit.version}</version>
-    </dependency>
-    
-    <dependency>
-        <groupId>com.alibaba</groupId>
-        <artifactId>dubbo</artifactId>
-        <version>${dubbo.version}</version>
-        <exclusions>
-            <exclusion>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-context</artifactId>
-            </exclusion>
-            <exclusion>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-beans</artifactId>
-            </exclusion>
-            <exclusion>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-web</artifactId>
-            </exclusion>
-        </exclusions>
-    </dependency>
-    
-    <dependency>
-        <groupId>org.apache.zookeeper</groupId>
-        <artifactId>zookeeper</artifactId>
-        <version>3.4.6</version>
-    </dependency>
-    
-    <dependency>
-        <groupId>com.101tec</groupId>
-        <artifactId>zkclient</artifactId>
-        <version>0.4</version>
-    </dependency>
-    
-    <dependency>
-        <groupId>org.apache.commons</groupId>
-        <artifactId>commons-lang3</artifactId>
-        <version>3.7</version>
-    </dependency>
+        <artifactId>future-market-parent</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+    </parent>
+    <artifactId>future-market-service</artifactId>
+    <description>行情服务</description>
 
-    <dependency>
-        <artifactId>log4j</artifactId>
-        <groupId>log4j</groupId>
-        <version>1.2.16</version>
-    </dependency>
-    
-    <dependency>
-        <groupId>org.slf4j</groupId>
-        <artifactId>slf4j-log4j12</artifactId>
-        <version>1.7.25</version>
-    </dependency>
-  </dependencies>
+    <dependencies>
+
+
+
+        <!-- <dependency> <groupId>org.hraink.futures</groupId> <artifactId>JCTP</artifactId> 
+            <version>0.0.3-SNAPSHOT</version> </dependency> -->
+        <dependency>
+            <groupId>com.future.caojia</groupId>
+            <artifactId>future-thost-api</artifactId>
+            <version>${future-thost-api.version}</version>
+        </dependency>
+
+
+        <dependency>
+            <groupId>com.future.caojia</groupId>
+            <artifactId>future-market-api</artifactId>
+            <version>${future-market-api.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.future.caojia</groupId>
+            <artifactId>future-instrument-api</artifactId>
+            <version>${future-instrument-api.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.amqp</groupId>
+            <artifactId>spring-rabbit</artifactId>
+            <version>${spring-rabbit.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>dubbo</artifactId>
+            <version>${dubbo.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-context</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-beans</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-web</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.zookeeper</groupId>
+            <artifactId>zookeeper</artifactId>
+            <version>3.4.6</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.101tec</groupId>
+            <artifactId>zkclient</artifactId>
+            <version>0.4</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.7</version>
+        </dependency>
+
+        <dependency>
+            <artifactId>log4j</artifactId>
+            <groupId>log4j</groupId>
+            <version>1.2.16</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <version>1.7.25</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <finalName>future-market-service</finalName>
+    </build>
 </project>
