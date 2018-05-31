@@ -10,7 +10,7 @@
        
     <rabbit:annotation-driven/>
     
-    <rabbit:connection-factory id="connectionFactory" host="localhost"/>
+    <rabbit:connection-factory id="connectionFactory" host="localhost" username="${rabbit.username}" password="${rabbit.passwd}"/>
     
     <rabbit:template id="amqpTemplate" connection-factory="connectionFactory"
          message-converter="messageConverter"/>
