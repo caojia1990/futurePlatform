@@ -16,6 +16,7 @@ import com.future.client.entity.TargetProfit;
 import com.future.client.utils.CacheMap;
 import com.future.common.exception.CommonFutureException;
 import com.future.instrument.api.exception.InstrumentException;
+import com.future.instrument.api.vo.InstrumentVO;
 import com.future.market.api.vo.DepthMarketData;
 import com.future.order.api.service.OrderService;
 import com.future.order.api.vo.CombOffsetFlag;
@@ -144,6 +145,11 @@ public class FiveMinutesEMA implements Runnable {
                 return;
             }
             
+            //获取合约详情
+            InstrumentVO instrumentVO = cacheMap.getInstrument(instrumentId);
+            //计算开一手的金额
+            double turnover = instrumentVO.getVolumeMultiple() * ema.getClosePrice().doubleValue();
+            long volume = Math.round(250000/turnover);
             
             
             int oldflag = oldEma.getEma5().compareTo(oldEma.getEma619());
@@ -167,6 +173,7 @@ public class FiveMinutesEMA implements Runnable {
                 ema.setLowestPrice(ema.getClosePrice());
                 //下多单
                 {
+                    
                     ReqOrderInsertVO reqOrderInsertVO = new ReqOrderInsertVO();
                     reqOrderInsertVO.setAccountNo(ACCOUNT_NO);
                     reqOrderInsertVO.setInvestorID(ClientStarter.INVESTOR_ID);
@@ -176,7 +183,7 @@ public class FiveMinutesEMA implements Runnable {
                     reqOrderInsertVO.setTimeCondition(TimeCondition.GFD);
                     reqOrderInsertVO.setDirection(Direction.BUY);
                     reqOrderInsertVO.setMinVolume(1);
-                    reqOrderInsertVO.setVolumeTotalOriginal(1);
+                    reqOrderInsertVO.setVolumeTotalOriginal((int)volume);
                     reqOrderInsertVO.setOrderPriceType(OrderPriceType.LimitPrice);
                     orderService.reqOrderInsert(reqOrderInsertVO);
                 }
@@ -226,7 +233,7 @@ public class FiveMinutesEMA implements Runnable {
                     reqOrderInsertVO.setTimeCondition(TimeCondition.GFD);
                     reqOrderInsertVO.setDirection(Direction.SELL);
                     reqOrderInsertVO.setMinVolume(1);
-                    reqOrderInsertVO.setVolumeTotalOriginal(1);
+                    reqOrderInsertVO.setVolumeTotalOriginal((int)volume);
                     reqOrderInsertVO.setOrderPriceType(OrderPriceType.LimitPrice);
                     orderService.reqOrderInsert(reqOrderInsertVO);
                 }

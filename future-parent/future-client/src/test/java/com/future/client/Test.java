@@ -12,7 +12,9 @@ public class Test {
 
     public static void main(String[] args) throws ParseException {
         
+        long volume = Math.round(250000/new BigDecimal(130000).doubleValue());
         
+        System.out.println(volume);
         /*BigDecimal diff = new BigDecimal("11615")
                 .subtract(new BigDecimal("11615").subtract(new BigDecimal("11250"))
                         .multiply(new BigDecimal("0.4"))).setScale(2, RoundingMode.HALF_UP);
