@@ -36,7 +36,6 @@ public class EMAStarter {
             admin.declareBinding(BindingBuilder.bind(marketQ).to(marketExchange).with("instrument.y1809"));
             admin.declareBinding(BindingBuilder.bind(marketQ).to(marketExchange).with("instrument.p1809"));
             admin.declareBinding(BindingBuilder.bind(marketQ).to(marketExchange).with("instrument.OI809"));
-            admin.declareBinding(BindingBuilder.bind(marketQ).to(marketExchange).with("instrument.hc1810"));
             admin.declareBinding(BindingBuilder.bind(marketQ).to(marketExchange).with("instrument.i1809"));
             admin.declareBinding(BindingBuilder.bind(marketQ).to(marketExchange).with("instrument.j1809"));
             admin.declareBinding(BindingBuilder.bind(marketQ).to(marketExchange).with("instrument.jm1809"));
