@@ -42,26 +42,30 @@ public class LibLoader {
         File extractedLibFile = new File(filepath);
 
         if(extractedLibFile.exists()){
-            extractedLibFile.delete();
-        }
-        
-        try {
-            String resource = "/"+((systemType.toLowerCase().indexOf("win") != -1) ? "win" : "linux")+"/"+libFullName;
-            in = Class.class.getResourceAsStream(resource);
-            
-            writer = new FileOutputStream(extractedLibFile);
-            byte[] buffer = new byte[1024];
-            int bytesRead = 0;
-            while ((bytesRead = in.read(buffer)) != -1) {
-                writer.write(buffer,0,bytesRead);
+            try {
+                extractedLibFile.delete();
+            } catch (Exception e) {
+                System.load(extractedLibFile.toString());
             }
-        } catch (IOException e) {
-            throw e;
-        } finally {
-            if (in != null)
-                in.close();
-            if (writer != null)
-                writer.close();
+        }else {
+            try {
+                String resource = "/"+((systemType.toLowerCase().indexOf("win") != -1) ? "win" : "linux")+"/"+libFullName;
+                in = Class.class.getResourceAsStream(resource);
+                
+                writer = new FileOutputStream(extractedLibFile);
+                byte[] buffer = new byte[1024];
+                int bytesRead = 0;
+                while ((bytesRead = in.read(buffer)) != -1) {
+                    writer.write(buffer,0,bytesRead);
+                }
+            } catch (IOException e) {
+                throw e;
+            } finally {
+                if (in != null)
+                    in.close();
+                if (writer != null)
+                    writer.close();
+            }
         }
         
         System.load(extractedLibFile.toString());

@@ -79,7 +79,4 @@
     </dependency>
   </dependencies>
   
-  <build>
-    <finalName>future-instrument-service</finalName>
-  </build>
 </project>

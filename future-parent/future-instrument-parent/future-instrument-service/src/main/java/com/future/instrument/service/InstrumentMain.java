@@ -10,12 +10,13 @@ public class InstrumentMain {
     public static void main(String[] args) throws IOException {
         // TODO Auto-generated method stub
 
-        AbstractApplicationContext context =
+        /*AbstractApplicationContext context =
                 new ClassPathXmlApplicationContext("applicationContext.xml");
         
         context.start();
         
-        System.in.read();
+        System.in.read();*/
+        com.alibaba.dubbo.container.Main.main(args);
     }
 
 }

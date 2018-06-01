@@ -7,4 +7,5 @@
   </parent>
   <artifactId>future-market-api</artifactId>
   <description>行情api接口</description>
+  
 </project>
