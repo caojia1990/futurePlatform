@@ -147,10 +147,10 @@ public class FiveMinutesEMA implements Runnable {
             
             //获取合约详情
             InstrumentVO instrumentVO = cacheMap.getInstrument(instrumentId);
-            //计算开一手的金额
+            //计算开一手的金额    每个品种拿20万做
             double turnover = instrumentVO.getVolumeMultiple() * ema.getClosePrice().doubleValue();
-            long volume = Math.round(250000/turnover);
-            
+            long volume = Math.round(200000/turnover);
+            volume = volume == 0 ? 1:volume;
             
             int oldflag = oldEma.getEma5().compareTo(oldEma.getEma619());
             int newflag = ema.getEma5().compareTo(ema.getEma619());
