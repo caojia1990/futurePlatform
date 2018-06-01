@@ -16,7 +16,8 @@ public class InstrumentMain {
         context.start();
         
         System.in.read();*/
-        com.alibaba.dubbo.container.Main.main(args);
+        String[] arg = {};
+        com.alibaba.dubbo.container.Main.main(arg);
     }
 
 }
