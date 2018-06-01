@@ -16,7 +16,6 @@ public class OrderMain {
         
         context.start();
         
-        System.in.read();
     }
 
 }
