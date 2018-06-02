@@ -126,7 +126,4 @@
     </dependency>
   </dependencies>
   
-  <build>
-    <finalName>future-order-service</finalName>
-  </build>
 </project>
