@@ -7,6 +7,8 @@ import org.springframework.amqp.rabbit.core.RabbitAdmin;
 import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import com.future.client.strategy.PriceFollow;
+
 public class ClientStarter {
     
     public static String INVESTOR_ID = "001";
@@ -53,6 +55,7 @@ public class ClientStarter {
         TopicExchange onRtnTradeExchange = (TopicExchange) context.getBean("onRtnTradeExchange");
         admin.declareBinding(BindingBuilder.bind(onRtnTradeQ).to(onRtnTradeExchange).with(INVESTOR_ID));
         
+        PriceFollow.START();
     }
 
 }

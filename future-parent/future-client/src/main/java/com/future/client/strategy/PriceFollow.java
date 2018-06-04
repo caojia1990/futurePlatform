@@ -8,6 +8,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 import com.future.client.ClientStarter;
 import com.future.client.dao.TradeDao;
 import com.future.client.utils.CacheMap;
+import com.future.client.utils.SpringContextUtil;
 import com.future.market.api.vo.DepthMarketData;
 import com.future.order.api.service.OrderService;
 import com.future.order.api.vo.CombOffsetFlag;
@@ -24,6 +25,11 @@ import com.future.order.api.vo.TimeCondition;
  *
  */
 public class PriceFollow implements Runnable{
+    
+    /**
+     * 行情队列
+     */
+    public static LinkedBlockingQueue<DepthMarketData> MARKET_QUEUE = new LinkedBlockingQueue<>();
 
     private static Map<String,LinkedBlockingQueue<Double>> priceMap = new HashMap<>();
     
@@ -31,16 +37,23 @@ public class PriceFollow implements Runnable{
     
     private static final int FLUCTUATE_TICK = 5;
     
-    private final DepthMarketData marketData;
+    private DepthMarketData marketData;
     
     private final CacheMap cacheMap;
     
     private final OrderService orderService;
     
+    private static PriceFollow priceFollow;
+    
     public PriceFollow(DepthMarketData marketData, CacheMap cacheMap, OrderService orderService) {
         this.marketData = marketData;
         this.cacheMap = cacheMap;
         this.orderService = orderService;
+    }
+    
+    public PriceFollow(){
+        this.cacheMap = (CacheMap) SpringContextUtil.getBean("cacheMap");
+        this.orderService = (OrderService) SpringContextUtil.getBean("orderService");
     }
 
     @Override
@@ -48,56 +61,61 @@ public class PriceFollow implements Runnable{
         
         try {
             
-            String instrumentID = this.marketData.getInstrumentID();
             
-            LinkedBlockingQueue<Double> priceQueue = priceMap.get(instrumentID);
-            if(priceQueue == null){
-                priceQueue = new LinkedBlockingQueue<>();
-                priceMap.put(instrumentID, priceQueue);
-            }
-            priceQueue.offer(marketData.getLastPrice());
-            
-            if(priceQueue.size() < 6){
-                return;
-            }
-            
-            Double tickPrice = this.cacheMap.getTickPrice(instrumentID);
-            
-            //之前5跳的价格
-            Double passPrice = priceQueue.take();
-            //现在的最新价
-            Double lastPrice = marketData.getLastPrice();
-            
-            if(lastPrice - passPrice >= tickPrice * FLUCTUATE_TICK){
-                priceQueue.clear();
-                //价格涨了5跳，跟单做多
-                ReqOrderInsertVO reqOrderInsertVO = new ReqOrderInsertVO();
-                reqOrderInsertVO.setAccountNo(ACCOUNT_NO);
-                reqOrderInsertVO.setInvestorID(ClientStarter.INVESTOR_ID);
-                reqOrderInsertVO.setInstrumentID(marketData.getInstrumentID());
-                reqOrderInsertVO.setLimitPrice(marketData.getUpperLimitPrice());
-                reqOrderInsertVO.setCombOffsetFlag(CombOffsetFlag.OPEN);
-                reqOrderInsertVO.setTimeCondition(TimeCondition.IOC);
-                reqOrderInsertVO.setDirection(Direction.BUY);
-                reqOrderInsertVO.setMinVolume(1);
-                reqOrderInsertVO.setVolumeTotalOriginal(1);
-                reqOrderInsertVO.setOrderPriceType(OrderPriceType.LimitPrice);
-                orderService.reqOrderInsert(reqOrderInsertVO);
-            }else if (passPrice - lastPrice >= tickPrice * FLUCTUATE_TICK ) {
-                priceQueue.clear();
-                //价格跌了5跳，跟单做空
-                ReqOrderInsertVO reqOrderInsertVO = new ReqOrderInsertVO();
-                reqOrderInsertVO.setAccountNo(ACCOUNT_NO);
-                reqOrderInsertVO.setInvestorID(ClientStarter.INVESTOR_ID);
-                reqOrderInsertVO.setInstrumentID(marketData.getInstrumentID());
-                reqOrderInsertVO.setLimitPrice(marketData.getLowerLimitPrice());
-                reqOrderInsertVO.setCombOffsetFlag(CombOffsetFlag.OPEN);
-                reqOrderInsertVO.setTimeCondition(TimeCondition.IOC);
-                reqOrderInsertVO.setDirection(Direction.SELL);
-                reqOrderInsertVO.setMinVolume(1);
-                reqOrderInsertVO.setVolumeTotalOriginal(1);
-                reqOrderInsertVO.setOrderPriceType(OrderPriceType.LimitPrice);
-                orderService.reqOrderInsert(reqOrderInsertVO);
+            while (true) {
+                DepthMarketData marketData = MARKET_QUEUE.take();
+                
+                String instrumentID = marketData.getInstrumentID();
+                LinkedBlockingQueue<Double> priceQueue = priceMap.get(instrumentID);
+                if(priceQueue == null){
+                    priceQueue = new LinkedBlockingQueue<>();
+                    priceMap.put(instrumentID, priceQueue);
+                }
+                
+                priceQueue.offer(marketData.getLastPrice());
+                
+                if(priceQueue.size() < 5){
+                    return;
+                }
+                
+                Double tickPrice = this.cacheMap.getTickPrice(instrumentID);
+                
+                //之前5跳的价格
+                Double passPrice = priceQueue.take();
+                //现在的最新价
+                Double lastPrice = marketData.getLastPrice();
+                
+                if(lastPrice - passPrice >= tickPrice * FLUCTUATE_TICK){
+                    priceQueue.clear();
+                    //价格涨了5跳，跟单做多
+                    ReqOrderInsertVO reqOrderInsertVO = new ReqOrderInsertVO();
+                    reqOrderInsertVO.setAccountNo(ACCOUNT_NO);
+                    reqOrderInsertVO.setInvestorID(ClientStarter.INVESTOR_ID);
+                    reqOrderInsertVO.setInstrumentID(marketData.getInstrumentID());
+                    reqOrderInsertVO.setLimitPrice(marketData.getUpperLimitPrice());
+                    reqOrderInsertVO.setCombOffsetFlag(CombOffsetFlag.OPEN);
+                    reqOrderInsertVO.setTimeCondition(TimeCondition.IOC);
+                    reqOrderInsertVO.setDirection(Direction.BUY);
+                    reqOrderInsertVO.setMinVolume(1);
+                    reqOrderInsertVO.setVolumeTotalOriginal(1);
+                    reqOrderInsertVO.setOrderPriceType(OrderPriceType.LimitPrice);
+                    orderService.reqOrderInsert(reqOrderInsertVO);
+                }else if (passPrice - lastPrice >= tickPrice * FLUCTUATE_TICK ) {
+                    priceQueue.clear();
+                    //价格跌了5跳，跟单做空
+                    ReqOrderInsertVO reqOrderInsertVO = new ReqOrderInsertVO();
+                    reqOrderInsertVO.setAccountNo(ACCOUNT_NO);
+                    reqOrderInsertVO.setInvestorID(ClientStarter.INVESTOR_ID);
+                    reqOrderInsertVO.setInstrumentID(marketData.getInstrumentID());
+                    reqOrderInsertVO.setLimitPrice(marketData.getLowerLimitPrice());
+                    reqOrderInsertVO.setCombOffsetFlag(CombOffsetFlag.OPEN);
+                    reqOrderInsertVO.setTimeCondition(TimeCondition.IOC);
+                    reqOrderInsertVO.setDirection(Direction.SELL);
+                    reqOrderInsertVO.setMinVolume(1);
+                    reqOrderInsertVO.setVolumeTotalOriginal(1);
+                    reqOrderInsertVO.setOrderPriceType(OrderPriceType.LimitPrice);
+                    orderService.reqOrderInsert(reqOrderInsertVO);
+                }
             }
         } catch (Exception e) {
             // TODO Auto-generated catch block
@@ -105,6 +123,18 @@ public class PriceFollow implements Runnable{
         }
         
     }
+    
+    public static void START(){
+        if(priceFollow == null){
+            priceFollow = new PriceFollow();
+        }
+        new Thread(priceFollow).start();
+    }
+    
+    public static void offerMarket(DepthMarketData marketData){
+        MARKET_QUEUE.offer(marketData);
+    }
+    
     
     /**
      * 止盈策略

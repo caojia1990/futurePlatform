@@ -49,7 +49,8 @@ public class MarketMessageHandle implements MessageReceive{
         //对冲保护策略
         //taskExecutor.execute(new Hedging(marketData, orderService, redisTemplate, cacheMap));
         
-        taskExecutor.execute(new PriceFollow(marketData, cacheMap, orderService));
+        //taskExecutor.execute(new PriceFollow(marketData, cacheMap, orderService));
+        PriceFollow.offerMarket(marketData);
         taskExecutor.execute(new StopProfit(marketData, cacheMap, orderService, tradeDao));
     }
 
