@@ -1,6 +1,8 @@
 package com.future.client.strategy;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import com.future.client.ClientStarter;
@@ -23,7 +25,7 @@ import com.future.order.api.vo.TimeCondition;
  */
 public class PriceFollow implements Runnable{
 
-    private static LinkedBlockingQueue<Double> priceQueue = new LinkedBlockingQueue<>();
+    private static Map<String,LinkedBlockingQueue<Double>> priceMap = new HashMap<>();
     
     private static final String ACCOUNT_NO = "12345";
     
@@ -48,6 +50,11 @@ public class PriceFollow implements Runnable{
             
             String instrumentID = this.marketData.getInstrumentID();
             
+            LinkedBlockingQueue<Double> priceQueue = priceMap.get(instrumentID);
+            if(priceQueue == null){
+                priceQueue = new LinkedBlockingQueue<>();
+                priceMap.put(instrumentID, priceQueue);
+            }
             priceQueue.offer(marketData.getLastPrice());
             
             if(priceQueue.size() < 6){
@@ -83,7 +90,7 @@ public class PriceFollow implements Runnable{
                 reqOrderInsertVO.setAccountNo(ACCOUNT_NO);
                 reqOrderInsertVO.setInvestorID(ClientStarter.INVESTOR_ID);
                 reqOrderInsertVO.setInstrumentID(marketData.getInstrumentID());
-                reqOrderInsertVO.setLimitPrice(marketData.getUpperLimitPrice());
+                reqOrderInsertVO.setLimitPrice(marketData.getLowerLimitPrice());
                 reqOrderInsertVO.setCombOffsetFlag(CombOffsetFlag.OPEN);
                 reqOrderInsertVO.setTimeCondition(TimeCondition.IOC);
                 reqOrderInsertVO.setDirection(Direction.SELL);
