@@ -52,7 +52,7 @@
         <property name="validationQuery" value="SELECT NOW() FROM DUAL"/>  
     </bean>
     
-    <jdbc:initialize-database enabled="true" data-source="dataSource">
+    <jdbc:initialize-database enabled="${db.script.enabled}" data-source="dataSource">
         <jdbc:script location="classpath:sql/db/h2.future.create.sql"/>
     </jdbc:initialize-database>
     

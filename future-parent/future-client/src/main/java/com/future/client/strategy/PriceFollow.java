@@ -43,17 +43,21 @@ public class PriceFollow implements Runnable{
     
     private final OrderService orderService;
     
+    private final TradeDao tradeDao;
+    
     private static PriceFollow priceFollow;
     
-    public PriceFollow(DepthMarketData marketData, CacheMap cacheMap, OrderService orderService) {
+    public PriceFollow(DepthMarketData marketData, CacheMap cacheMap, OrderService orderService, TradeDao tradeDao) {
         this.marketData = marketData;
         this.cacheMap = cacheMap;
         this.orderService = orderService;
+        this.tradeDao = tradeDao;
     }
     
     public PriceFollow(){
         this.cacheMap = (CacheMap) SpringContextUtil.getBean("cacheMap");
         this.orderService = (OrderService) SpringContextUtil.getBean("orderService");
+        this.tradeDao = (TradeDao) SpringContextUtil.getBean("tradeDao");
     }
 
     @Override
@@ -86,6 +90,11 @@ public class PriceFollow implements Runnable{
                 Double lastPrice = marketData.getLastPrice();
                 
                 if(lastPrice - passPrice >= tickPrice * FLUCTUATE_TICK){
+                    List<OnRtnTradeVO> list = this.tradeDao.selectByCondition(ClientStarter.INVESTOR_ID, ACCOUNT_NO, instrumentID, "0");
+                    if(list != null && list.size() >0) {
+                        //有仓位不再开
+                        return;
+                    }
                     priceQueue.clear();
                     //价格涨了5跳，跟单做多
                     ReqOrderInsertVO reqOrderInsertVO = new ReqOrderInsertVO();
@@ -101,6 +110,11 @@ public class PriceFollow implements Runnable{
                     reqOrderInsertVO.setOrderPriceType(OrderPriceType.LimitPrice);
                     orderService.reqOrderInsert(reqOrderInsertVO);
                 }else if (passPrice - lastPrice >= tickPrice * FLUCTUATE_TICK ) {
+                    List<OnRtnTradeVO> list = this.tradeDao.selectByCondition(ClientStarter.INVESTOR_ID, ACCOUNT_NO, instrumentID, "1");
+                    if(list != null && list.size() >0) {
+                        //有仓位不再开
+                        return;
+                    }
                     priceQueue.clear();
                     //价格跌了5跳，跟单做空
                     ReqOrderInsertVO reqOrderInsertVO = new ReqOrderInsertVO();
@@ -192,6 +206,24 @@ public class PriceFollow implements Runnable{
                                 reqOrderInsertVO.setVolumeTotalOriginal(tradeVO.getVolume());
                                 reqOrderInsertVO.setOrderPriceType(OrderPriceType.LimitPrice);
                                 orderService.reqOrderInsert(reqOrderInsertVO);
+                            }else if (tradeVO.getPrice() - tickPrice*(STOP_TICK+2) >= marketData.getBidPrice1().doubleValue()) {
+                              //止损
+                                ReqOrderInsertVO reqOrderInsertVO = new ReqOrderInsertVO();
+                                reqOrderInsertVO.setAccountNo(ACCOUNT_NO);
+                                reqOrderInsertVO.setInvestorID(ClientStarter.INVESTOR_ID);
+                                reqOrderInsertVO.setInstrumentID(instrumentId);
+                                reqOrderInsertVO.setLimitPrice(marketData.getBidPrice1().doubleValue());
+                                if(tradeVO.getTradingDay().equals(marketData.getTradingDate())) {
+                                    reqOrderInsertVO.setCombOffsetFlag(CombOffsetFlag.CloseToday);
+                                }else {
+                                    reqOrderInsertVO.setCombOffsetFlag(CombOffsetFlag.CLOSE);
+                                }
+                                reqOrderInsertVO.setTimeCondition(TimeCondition.IOC);
+                                reqOrderInsertVO.setDirection(Direction.SELL);
+                                reqOrderInsertVO.setMinVolume(1);
+                                reqOrderInsertVO.setVolumeTotalOriginal(tradeVO.getVolume());
+                                reqOrderInsertVO.setOrderPriceType(OrderPriceType.LimitPrice);
+                                orderService.reqOrderInsert(reqOrderInsertVO);
                             }
                         }else {
                             //卖开
@@ -213,7 +245,25 @@ public class PriceFollow implements Runnable{
                                   reqOrderInsertVO.setVolumeTotalOriginal(tradeVO.getVolume());
                                   reqOrderInsertVO.setOrderPriceType(OrderPriceType.LimitPrice);
                                   orderService.reqOrderInsert(reqOrderInsertVO);
-                              }
+                              }else if (tradeVO.getPrice() + tickPrice*(STOP_TICK+2) <= marketData.getAskPrice1().doubleValue()) {
+                                //止损
+                                  ReqOrderInsertVO reqOrderInsertVO = new ReqOrderInsertVO();
+                                  reqOrderInsertVO.setAccountNo(ACCOUNT_NO);
+                                  reqOrderInsertVO.setInvestorID(ClientStarter.INVESTOR_ID);
+                                  reqOrderInsertVO.setInstrumentID(instrumentId);
+                                  reqOrderInsertVO.setLimitPrice(marketData.getAskPrice1().doubleValue());
+                                  if(tradeVO.getTradingDay().equals(marketData.getTradingDate())) {
+                                      reqOrderInsertVO.setCombOffsetFlag(CombOffsetFlag.CloseToday);
+                                  }else {
+                                      reqOrderInsertVO.setCombOffsetFlag(CombOffsetFlag.CLOSE);
+                                  }
+                                  reqOrderInsertVO.setTimeCondition(TimeCondition.IOC);
+                                  reqOrderInsertVO.setDirection(Direction.BUY);
+                                  reqOrderInsertVO.setMinVolume(1);
+                                  reqOrderInsertVO.setVolumeTotalOriginal(tradeVO.getVolume());
+                                  reqOrderInsertVO.setOrderPriceType(OrderPriceType.LimitPrice);
+                                  orderService.reqOrderInsert(reqOrderInsertVO);
+                            }
                         }
                     }
                     
