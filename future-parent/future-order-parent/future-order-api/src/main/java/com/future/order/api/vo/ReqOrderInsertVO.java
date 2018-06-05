@@ -15,9 +15,13 @@ public class ReqOrderInsertVO implements Serializable{
      */
     private static final long serialVersionUID = -7390751012439707057L;
 
+    /**
+     * 客户端请求编号（由客户端指定，报单和成交返回时会带上该编号）
+     */
+    private int clientRequestId;
     
     /**
-     * 请求编号
+     * 请求编号（由下单中心指定）
      */
     private int requestID;
     
@@ -260,6 +264,14 @@ public class ReqOrderInsertVO implements Serializable{
 
     public void setAccountNo(String accountNo) {
         this.accountNo = accountNo;
+    }
+
+    public int getClientRequestId() {
+        return clientRequestId;
+    }
+
+    public void setClientRequestId(int clientRequestId) {
+        this.clientRequestId = clientRequestId;
     }
 
 }

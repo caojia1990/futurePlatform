@@ -15,6 +15,11 @@ public class OnRtnTradeVO implements Serializable{
     private static final long serialVersionUID = -5737531848459078186L;
 
     /**
+     * 客户端请求编号，报单时传入的值
+     */
+    private int clientRequestId;
+    
+    /**
      * 投资者代码
      */
     private String investorId;

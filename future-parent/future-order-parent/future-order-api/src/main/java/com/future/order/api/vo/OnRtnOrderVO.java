@@ -12,6 +12,11 @@ public class OnRtnOrderVO implements Serializable{
      * 
      */
     private static final long serialVersionUID = -6367780618016491530L;
+    
+    /**
+     * 客户端请求id ,报单请求时传入
+     */
+    private int clientRequestId;
 
     /**
      * 投资者代码
@@ -425,22 +430,31 @@ public class OnRtnOrderVO implements Serializable{
     public void setAccountNo(String accountNo) {
         this.accountNo = accountNo;
     }
+    
+    
+    public int getClientRequestId() {
+        return clientRequestId;
+    }
+    public void setClientRequestId(int clientRequestId) {
+        this.clientRequestId = clientRequestId;
+    }
     @Override
-	public String toString() {
-		return "OnRtnOrderVO [investorID=" + investorID + ", accountNo=" + accountNo + ", instrumentID=" + instrumentID
-				+ ", OrderRef=" + OrderRef + ", userID=" + userID + ", orderPriceType=" + orderPriceType
-				+ ", direction=" + direction + ", combOffsetFlag=" + combOffsetFlag + ", combHedgeFlag=" + combHedgeFlag
-				+ ", limitPrice=" + limitPrice + ", volumeTotalOriginal=" + volumeTotalOriginal + ", timeCondition="
-				+ timeCondition + ", gTDDate=" + gTDDate + ", volumeCondition=" + volumeCondition + ", minVolume="
-				+ minVolume + ", contingentCondition=" + contingentCondition + ", stopPrice=" + stopPrice
-				+ ", forceCloseReason=" + forceCloseReason + ", requestID=" + requestID + ", exchangeID=" + exchangeID
-				+ ", orderSysID=" + orderSysID + ", exchangeInstID=" + exchangeInstID + ", orderSubmitStatus="
-				+ orderSubmitStatus + ", tradingDay=" + tradingDay + ", orderSource=" + orderSource + ", orderStatus="
-				+ orderStatus + ", orderType=" + orderType + ", volumeTraded=" + volumeTraded + ", volumeTotal="
-				+ volumeTotal + ", insertDate=" + insertDate + ", insertTime=" + insertTime + ", activeTime="
-				+ activeTime + ", suspendTime=" + suspendTime + ", updateTime=" + updateTime + ", cancelTime="
-				+ cancelTime + ", frontID=" + frontID + ", sessionID=" + sessionID + ", statusMsg=" + statusMsg + "]";
-	}
+    public String toString() {
+        return "OnRtnOrderVO [clientRequestId=" + clientRequestId + ", investorID=" + investorID + ", accountNo="
+                + accountNo + ", instrumentID=" + instrumentID + ", OrderRef=" + OrderRef + ", userID=" + userID
+                + ", orderPriceType=" + orderPriceType + ", direction=" + direction + ", combOffsetFlag="
+                + combOffsetFlag + ", combHedgeFlag=" + combHedgeFlag + ", limitPrice=" + limitPrice
+                + ", volumeTotalOriginal=" + volumeTotalOriginal + ", timeCondition=" + timeCondition + ", gTDDate="
+                + gTDDate + ", volumeCondition=" + volumeCondition + ", minVolume=" + minVolume
+                + ", contingentCondition=" + contingentCondition + ", stopPrice=" + stopPrice + ", forceCloseReason="
+                + forceCloseReason + ", requestID=" + requestID + ", exchangeID=" + exchangeID + ", orderSysID="
+                + orderSysID + ", exchangeInstID=" + exchangeInstID + ", orderSubmitStatus=" + orderSubmitStatus
+                + ", tradingDay=" + tradingDay + ", orderSource=" + orderSource + ", orderStatus=" + orderStatus
+                + ", orderType=" + orderType + ", volumeTraded=" + volumeTraded + ", volumeTotal=" + volumeTotal
+                + ", insertDate=" + insertDate + ", insertTime=" + insertTime + ", activeTime=" + activeTime
+                + ", suspendTime=" + suspendTime + ", updateTime=" + updateTime + ", cancelTime=" + cancelTime
+                + ", frontID=" + frontID + ", sessionID=" + sessionID + ", statusMsg=" + statusMsg + "]";
+    }
     
     
 
