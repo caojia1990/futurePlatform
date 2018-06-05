@@ -46,7 +46,7 @@ public class ClientStarter {
         admin.declareBinding(BindingBuilder.bind(marketQ).to(topicExchange).with("instrument.CF810"));
         admin.declareBinding(BindingBuilder.bind(marketQ).to(topicExchange).with("instrument.SR809"));
         admin.declareBinding(BindingBuilder.bind(marketQ).to(topicExchange).with("instrument.cs1809"));
-        admin.declareBinding(BindingBuilder.bind(marketQ).to(topicExchange).with("instrument.AP810"));
+        //admin.declareBinding(BindingBuilder.bind(marketQ).to(topicExchange).with("instrument.AP810"));
         
         Queue onRtnOrderQ = (Queue) context.getBean("onRtnOrderQ");
         TopicExchange onRtnOrderExchange = (TopicExchange) context.getBean("onRtnOrderExchange");

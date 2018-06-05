@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.LinkedBlockingQueue;
 
+import org.apache.log4j.Logger;
+
 import com.future.client.ClientStarter;
 import com.future.client.dao.TradeDao;
 import com.future.client.utils.CacheMap;
@@ -21,10 +23,12 @@ import com.future.order.api.vo.TimeCondition;
 /**
  * 价格跟随策略（高频）
  * @author caojia
- * 5跳里价格波动超过5跳，则跟随
+ * n跳里价格波动超过f跳，则跟随
  *
  */
 public class PriceFollow implements Runnable{
+    
+    static Logger logger = Logger.getLogger(PriceFollow.class);
     
     /**
      * 行情队列
@@ -35,7 +39,9 @@ public class PriceFollow implements Runnable{
     
     private static final String ACCOUNT_NO = "12345";
     
-    private static final int FLUCTUATE_TICK = 5;
+    private static final int FLUCTUATE_TICK = 3;
+    
+    private static final int QUEUE_LENTH = 5;
     
     private DepthMarketData marketData;
     
@@ -78,8 +84,8 @@ public class PriceFollow implements Runnable{
                 
                 priceQueue.offer(marketData.getLastPrice());
                 
-                if(priceQueue.size() < 5){
-                    return;
+                if(priceQueue.size() < QUEUE_LENTH){
+                    continue;
                 }
                 
                 Double tickPrice = this.cacheMap.getTickPrice(instrumentID);
@@ -93,8 +99,30 @@ public class PriceFollow implements Runnable{
                     List<OnRtnTradeVO> list = this.tradeDao.selectByCondition(ClientStarter.INVESTOR_ID, ACCOUNT_NO, instrumentID, "0");
                     if(list != null && list.size() >0) {
                         //有仓位不再开
-                        return;
+                        continue;
                     }
+                    
+                    //挂单量少则抢反弹
+                    if(marketData.getBidVolume1()*3 < marketData.getAskVolume1()){
+                        List<OnRtnTradeVO> l = this.tradeDao.selectByCondition(ClientStarter.INVESTOR_ID, ACCOUNT_NO, instrumentID, "1");
+                        if(l == null || l.size() < 1){
+                            //做空期望反弹
+                            ReqOrderInsertVO reqOrderInsertVO = new ReqOrderInsertVO();
+                            reqOrderInsertVO.setAccountNo(ACCOUNT_NO);
+                            reqOrderInsertVO.setInvestorID(ClientStarter.INVESTOR_ID);
+                            reqOrderInsertVO.setInstrumentID(marketData.getInstrumentID());
+                            reqOrderInsertVO.setLimitPrice(marketData.getLowerLimitPrice());
+                            reqOrderInsertVO.setCombOffsetFlag(CombOffsetFlag.OPEN);
+                            reqOrderInsertVO.setTimeCondition(TimeCondition.IOC);
+                            reqOrderInsertVO.setDirection(Direction.SELL);
+                            reqOrderInsertVO.setMinVolume(1);
+                            reqOrderInsertVO.setVolumeTotalOriginal(1);
+                            reqOrderInsertVO.setOrderPriceType(OrderPriceType.LimitPrice);
+                            orderService.reqOrderInsert(reqOrderInsertVO);
+                        }
+                        continue;
+                    }
+                    
                     priceQueue.clear();
                     //价格涨了5跳，跟单做多
                     ReqOrderInsertVO reqOrderInsertVO = new ReqOrderInsertVO();
@@ -109,12 +137,35 @@ public class PriceFollow implements Runnable{
                     reqOrderInsertVO.setVolumeTotalOriginal(1);
                     reqOrderInsertVO.setOrderPriceType(OrderPriceType.LimitPrice);
                     orderService.reqOrderInsert(reqOrderInsertVO);
+                    logger.info("追涨");
                 }else if (passPrice - lastPrice >= tickPrice * FLUCTUATE_TICK ) {
                     List<OnRtnTradeVO> list = this.tradeDao.selectByCondition(ClientStarter.INVESTOR_ID, ACCOUNT_NO, instrumentID, "1");
                     if(list != null && list.size() >0) {
                         //有仓位不再开
-                        return;
+                        continue;
                     }
+                    
+                    //挂单量少则期望反弹
+                    if(marketData.getAskVolume1()*3 < marketData.getBidVolume1()){
+                        List<OnRtnTradeVO> l = this.tradeDao.selectByCondition(ClientStarter.INVESTOR_ID, ACCOUNT_NO, instrumentID, "0");
+                        if(l == null || l.size() < 1){
+                            ReqOrderInsertVO reqOrderInsertVO = new ReqOrderInsertVO();
+                            reqOrderInsertVO.setAccountNo(ACCOUNT_NO);
+                            reqOrderInsertVO.setInvestorID(ClientStarter.INVESTOR_ID);
+                            reqOrderInsertVO.setInstrumentID(marketData.getInstrumentID());
+                            reqOrderInsertVO.setLimitPrice(marketData.getUpperLimitPrice());
+                            reqOrderInsertVO.setCombOffsetFlag(CombOffsetFlag.OPEN);
+                            reqOrderInsertVO.setTimeCondition(TimeCondition.IOC);
+                            reqOrderInsertVO.setDirection(Direction.BUY);
+                            reqOrderInsertVO.setMinVolume(1);
+                            reqOrderInsertVO.setVolumeTotalOriginal(1);
+                            reqOrderInsertVO.setOrderPriceType(OrderPriceType.LimitPrice);
+                            orderService.reqOrderInsert(reqOrderInsertVO);
+                        }
+                        
+                        continue;
+                    }
+                    
                     priceQueue.clear();
                     //价格跌了5跳，跟单做空
                     ReqOrderInsertVO reqOrderInsertVO = new ReqOrderInsertVO();
@@ -129,6 +180,7 @@ public class PriceFollow implements Runnable{
                     reqOrderInsertVO.setVolumeTotalOriginal(1);
                     reqOrderInsertVO.setOrderPriceType(OrderPriceType.LimitPrice);
                     orderService.reqOrderInsert(reqOrderInsertVO);
+                    logger.info("追跌");
                 }
             }
         } catch (Exception e) {
@@ -157,7 +209,9 @@ public class PriceFollow implements Runnable{
      */
     public static class StopProfit implements Runnable{
         
-        private static final int STOP_TICK = 1;
+        private static final int STOP_WIN = 1;
+        
+        private static final int STOP_LOSS = 2;
         
         private final DepthMarketData marketData;
         
@@ -188,7 +242,13 @@ public class PriceFollow implements Runnable{
                         
                         if(tradeVO.getDirection() == Direction.BUY) {
                             //买开
-                            if(tradeVO.getPrice() + tickPrice*STOP_TICK <= marketData.getBidPrice1().doubleValue()) {
+                            if(tradeVO.getPrice() + tickPrice*STOP_WIN <= marketData.getBidPrice1().doubleValue()) {
+                                
+                                //买挂单支撑强则继续持有
+                                if(marketData.getBidVolume1()*2 >= marketData.getAskVolume1()){
+                                    continue;
+                                }
+                                
                                 //止赢
                                 ReqOrderInsertVO reqOrderInsertVO = new ReqOrderInsertVO();
                                 reqOrderInsertVO.setAccountNo(ACCOUNT_NO);
@@ -206,7 +266,12 @@ public class PriceFollow implements Runnable{
                                 reqOrderInsertVO.setVolumeTotalOriginal(tradeVO.getVolume());
                                 reqOrderInsertVO.setOrderPriceType(OrderPriceType.LimitPrice);
                                 orderService.reqOrderInsert(reqOrderInsertVO);
-                            }else if (tradeVO.getPrice() - tickPrice*(STOP_TICK+2) >= marketData.getBidPrice1().doubleValue()) {
+                            }else if (tradeVO.getPrice() - tickPrice*(STOP_LOSS) >= marketData.getBidPrice1().doubleValue()) {
+                                
+                              //买挂单支撑强则继续持有
+                                if(marketData.getBidVolume1()*2 >= marketData.getAskVolume1()){
+                                    continue;
+                                }
                               //止损
                                 ReqOrderInsertVO reqOrderInsertVO = new ReqOrderInsertVO();
                                 reqOrderInsertVO.setAccountNo(ACCOUNT_NO);
@@ -227,7 +292,12 @@ public class PriceFollow implements Runnable{
                             }
                         }else {
                             //卖开
-                            if(tradeVO.getPrice() - tickPrice*STOP_TICK >= marketData.getAskPrice1().doubleValue()) {
+                            if(tradeVO.getPrice() - tickPrice*STOP_WIN >= marketData.getAskPrice1().doubleValue()) {
+                                
+                                //卖单支撑强则继续持有
+                                if(marketData.getAskVolume1()*2 >= marketData.getBidVolume1()){
+                                    continue;
+                                }
                                 //止赢
                                   ReqOrderInsertVO reqOrderInsertVO = new ReqOrderInsertVO();
                                   reqOrderInsertVO.setAccountNo(ACCOUNT_NO);
@@ -245,7 +315,12 @@ public class PriceFollow implements Runnable{
                                   reqOrderInsertVO.setVolumeTotalOriginal(tradeVO.getVolume());
                                   reqOrderInsertVO.setOrderPriceType(OrderPriceType.LimitPrice);
                                   orderService.reqOrderInsert(reqOrderInsertVO);
-                              }else if (tradeVO.getPrice() + tickPrice*(STOP_TICK+2) <= marketData.getAskPrice1().doubleValue()) {
+                              }else if (tradeVO.getPrice() + tickPrice*(STOP_LOSS) <= marketData.getAskPrice1().doubleValue()) {
+                                  
+                                //卖单支撑强则继续持有
+                                  if(marketData.getAskVolume1()*2 >= marketData.getBidVolume1()){
+                                      continue;
+                                  }
                                 //止损
                                   ReqOrderInsertVO reqOrderInsertVO = new ReqOrderInsertVO();
                                   reqOrderInsertVO.setAccountNo(ACCOUNT_NO);
