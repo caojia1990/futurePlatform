@@ -82,6 +82,7 @@ public class FasterTradeMessageHandle {
                 new com.future.order.api.vo.OnRtnOrderVO();
         
         message.setOrderRef(onRtnOrderVO.getOrderRef());
+        message.setClientRequestId(input.getClientRequestId());
         message.setAccountNo(input.getAccountNo());
         message.setActiveTime(onRtnOrderVO.getActiveTime());
         message.setCancelTime(onRtnOrderVO.getCancelTime());
@@ -102,7 +103,7 @@ public class FasterTradeMessageHandle {
         message.setInsertDate(onRtnOrderVO.getInsertDate());
         message.setInsertTime(onRtnOrderVO.getInsertTime());
         message.setInstrumentID(onRtnOrderVO.getInstrumentID());
-        message.setInvestorID(input.getInvestorID());
+        message.setInvestorID(input.getInvestorId());
         message.setLimitPrice(onRtnOrderVO.getLimitPrice());
         message.setMinVolume(onRtnOrderVO.getMinVolume());
         message.setOrderPriceType(OrderPriceType.ofCode(
@@ -121,7 +122,7 @@ public class FasterTradeMessageHandle {
         message.setTimeCondition(TimeCondition.ofCode(
                 onRtnOrderVO.getTimeCondition().getCode()));
         //TODO
-        rabbitTemplate.convertAndSend(this.onRtnOrder, input.getInvestorID(), message);
+        rabbitTemplate.convertAndSend(this.onRtnOrder, input.getInvestorId(), message);
         
     }
     
@@ -146,13 +147,14 @@ public class FasterTradeMessageHandle {
         }
         
         com.future.order.api.vo.OnRtnTradeVO message = new com.future.order.api.vo.OnRtnTradeVO();
+        message.setClientRequestId(orderInput.getClientRequestId());
         message.setAccountNo(orderInput.getAccountNo());
         message.setDirection(Direction.ofCode(onRtnTrade.getDirection().getCode()));
         message.setExchangeId(onRtnTrade.getExchangeID());
         message.setExchangeInstId(onRtnTrade.getExchangeInstID());
         message.setHedgeFlag(HedgeFlag.ofCode(onRtnTrade.getHedgeFlag().getCode()));
         message.setInstrumentId(onRtnTrade.getInstrumentID());
-        message.setInvestorId(orderInput.getInvestorID());
+        message.setInvestorId(orderInput.getInvestorId());
         message.setOffsetFlag(OffsetFlag.ofCode(onRtnTrade.getOffsetFlag().getCode()));
         message.setOrderRef(onRtnTrade.getOrderRef());
         message.setOrderSysId(onRtnTrade.getOrderSysID());
@@ -166,7 +168,7 @@ public class FasterTradeMessageHandle {
         message.setUserId(onRtnTrade.getUserID());
         message.setVolume(onRtnTrade.getVolume());
         
-        rabbitTemplate.convertAndSend(this.onRtnTrade, orderInput.getInvestorID(), message);
+        rabbitTemplate.convertAndSend(this.onRtnTrade, orderInput.getInvestorId(), message);
     }
     
     /**

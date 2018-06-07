@@ -101,8 +101,8 @@ public class FiveSecsFollow implements Runnable{
                         if(marketData.getAskPrice1().doubleValue() == marketData.getHighestPrice().doubleValue()){
                         ReqOrderInsertVO reqOrderInsertVO = new ReqOrderInsertVO();
                         reqOrderInsertVO.setAccountNo(ACCOUNT_NO);
-                        reqOrderInsertVO.setInvestorID(ClientStarter.INVESTOR_ID);
-                        reqOrderInsertVO.setInstrumentID(marketData.getInstrumentID());
+                        reqOrderInsertVO.setInvestorId(ClientStarter.INVESTOR_ID);
+                        reqOrderInsertVO.setInstrumentId(marketData.getInstrumentID());
                         reqOrderInsertVO.setLimitPrice(marketData.getUpperLimitPrice());
                         reqOrderInsertVO.setCombHedgeFlag(CombHedgeFlag.Speculation);
                         reqOrderInsertVO.setCombOffsetFlag(CombOffsetFlag.OPEN);
@@ -130,8 +130,8 @@ public class FiveSecsFollow implements Runnable{
                             //}else if (marketData.getBidPrice1().doubleValue() == (double)map.get("LOWEST_PRICE")) {
                         ReqOrderInsertVO reqOrderInsertVO = new ReqOrderInsertVO();
                         reqOrderInsertVO.setAccountNo(ACCOUNT_NO);
-                        reqOrderInsertVO.setInvestorID(ClientStarter.INVESTOR_ID);
-                        reqOrderInsertVO.setInstrumentID(marketData.getInstrumentID());
+                        reqOrderInsertVO.setInvestorId(ClientStarter.INVESTOR_ID);
+                        reqOrderInsertVO.setInstrumentId(marketData.getInstrumentID());
                         reqOrderInsertVO.setLimitPrice(marketData.getLowerLimitPrice());
                         reqOrderInsertVO.setCombHedgeFlag(CombHedgeFlag.Speculation);
                         reqOrderInsertVO.setCombOffsetFlag(CombOffsetFlag.OPEN);
@@ -168,8 +168,8 @@ public class FiveSecsFollow implements Runnable{
                             //两跳止盈
                             ReqOrderInsertVO reqOrderInsertVO = new ReqOrderInsertVO();
                             reqOrderInsertVO.setAccountNo(ACCOUNT_NO);
-                            reqOrderInsertVO.setInvestorID(ClientStarter.INVESTOR_ID);
-                            reqOrderInsertVO.setInstrumentID(marketData.getInstrumentID());
+                            reqOrderInsertVO.setInvestorId(ClientStarter.INVESTOR_ID);
+                            reqOrderInsertVO.setInstrumentId(marketData.getInstrumentID());
                             reqOrderInsertVO.setLimitPrice(marketData.getBidPrice1());
                             reqOrderInsertVO.setCombHedgeFlag(CombHedgeFlag.Speculation);
                             reqOrderInsertVO.setCombOffsetFlag(CombOffsetFlag.CloseToday);
@@ -197,8 +197,8 @@ public class FiveSecsFollow implements Runnable{
                             //两跳止盈
                             ReqOrderInsertVO reqOrderInsertVO = new ReqOrderInsertVO();
                             reqOrderInsertVO.setAccountNo(ACCOUNT_NO);
-                            reqOrderInsertVO.setInvestorID(ClientStarter.INVESTOR_ID);
-                            reqOrderInsertVO.setInstrumentID(marketData.getInstrumentID());
+                            reqOrderInsertVO.setInvestorId(ClientStarter.INVESTOR_ID);
+                            reqOrderInsertVO.setInstrumentId(marketData.getInstrumentID());
                             reqOrderInsertVO.setLimitPrice(marketData.getAskPrice1());
                             reqOrderInsertVO.setCombHedgeFlag(CombHedgeFlag.Speculation);
                             reqOrderInsertVO.setCombOffsetFlag(CombOffsetFlag.CloseToday);

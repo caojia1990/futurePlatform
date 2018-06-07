@@ -4,9 +4,11 @@ import java.math.BigDecimal;
 
 public class OrderInput {
     
+    private String clientRequestId;
+    
     private String orderRef;
     
-    private String investorID;
+    private String investorId;
     
     private String accountNo;
     
@@ -21,6 +23,15 @@ public class OrderInput {
     private BigDecimal commissionEachHand;
     
     private BigDecimal marginEachHand;
+    
+
+    public String getClientRequestId() {
+        return clientRequestId;
+    }
+
+    public void setClientRequestId(String clientRequestId) {
+        this.clientRequestId = clientRequestId;
+    }
 
     public String getOrderRef() {
         return orderRef;
@@ -30,12 +41,12 @@ public class OrderInput {
         this.orderRef = orderRef;
     }
 
-    public String getInvestorID() {
-        return investorID;
+    public String getInvestorId() {
+        return investorId;
     }
 
-    public void setInvestorID(String investorID) {
-        this.investorID = investorID;
+    public void setInvestorId(String investorId) {
+        this.investorId = investorId;
     }
 
     public String getAccountNo() {

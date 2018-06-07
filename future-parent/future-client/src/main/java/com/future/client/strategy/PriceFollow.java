@@ -109,8 +109,8 @@ public class PriceFollow implements Runnable{
                             //做空期望反弹
                             ReqOrderInsertVO reqOrderInsertVO = new ReqOrderInsertVO();
                             reqOrderInsertVO.setAccountNo(ACCOUNT_NO);
-                            reqOrderInsertVO.setInvestorID(ClientStarter.INVESTOR_ID);
-                            reqOrderInsertVO.setInstrumentID(marketData.getInstrumentID());
+                            reqOrderInsertVO.setInvestorId(ClientStarter.INVESTOR_ID);
+                            reqOrderInsertVO.setInstrumentId(marketData.getInstrumentID());
                             reqOrderInsertVO.setLimitPrice(marketData.getLowerLimitPrice());
                             reqOrderInsertVO.setCombOffsetFlag(CombOffsetFlag.OPEN);
                             reqOrderInsertVO.setTimeCondition(TimeCondition.IOC);
@@ -127,8 +127,8 @@ public class PriceFollow implements Runnable{
                     //价格涨了5跳，跟单做多
                     ReqOrderInsertVO reqOrderInsertVO = new ReqOrderInsertVO();
                     reqOrderInsertVO.setAccountNo(ACCOUNT_NO);
-                    reqOrderInsertVO.setInvestorID(ClientStarter.INVESTOR_ID);
-                    reqOrderInsertVO.setInstrumentID(marketData.getInstrumentID());
+                    reqOrderInsertVO.setInvestorId(ClientStarter.INVESTOR_ID);
+                    reqOrderInsertVO.setInstrumentId(marketData.getInstrumentID());
                     reqOrderInsertVO.setLimitPrice(marketData.getUpperLimitPrice());
                     reqOrderInsertVO.setCombOffsetFlag(CombOffsetFlag.OPEN);
                     reqOrderInsertVO.setTimeCondition(TimeCondition.IOC);
@@ -151,8 +151,8 @@ public class PriceFollow implements Runnable{
                         if(l == null || l.size() < 1){
                             ReqOrderInsertVO reqOrderInsertVO = new ReqOrderInsertVO();
                             reqOrderInsertVO.setAccountNo(ACCOUNT_NO);
-                            reqOrderInsertVO.setInvestorID(ClientStarter.INVESTOR_ID);
-                            reqOrderInsertVO.setInstrumentID(marketData.getInstrumentID());
+                            reqOrderInsertVO.setInvestorId(ClientStarter.INVESTOR_ID);
+                            reqOrderInsertVO.setInstrumentId(marketData.getInstrumentID());
                             reqOrderInsertVO.setLimitPrice(marketData.getUpperLimitPrice());
                             reqOrderInsertVO.setCombOffsetFlag(CombOffsetFlag.OPEN);
                             reqOrderInsertVO.setTimeCondition(TimeCondition.IOC);
@@ -170,8 +170,8 @@ public class PriceFollow implements Runnable{
                     //价格跌了5跳，跟单做空
                     ReqOrderInsertVO reqOrderInsertVO = new ReqOrderInsertVO();
                     reqOrderInsertVO.setAccountNo(ACCOUNT_NO);
-                    reqOrderInsertVO.setInvestorID(ClientStarter.INVESTOR_ID);
-                    reqOrderInsertVO.setInstrumentID(marketData.getInstrumentID());
+                    reqOrderInsertVO.setInvestorId(ClientStarter.INVESTOR_ID);
+                    reqOrderInsertVO.setInstrumentId(marketData.getInstrumentID());
                     reqOrderInsertVO.setLimitPrice(marketData.getLowerLimitPrice());
                     reqOrderInsertVO.setCombOffsetFlag(CombOffsetFlag.OPEN);
                     reqOrderInsertVO.setTimeCondition(TimeCondition.IOC);
@@ -252,8 +252,8 @@ public class PriceFollow implements Runnable{
                                 //止赢
                                 ReqOrderInsertVO reqOrderInsertVO = new ReqOrderInsertVO();
                                 reqOrderInsertVO.setAccountNo(ACCOUNT_NO);
-                                reqOrderInsertVO.setInvestorID(ClientStarter.INVESTOR_ID);
-                                reqOrderInsertVO.setInstrumentID(instrumentId);
+                                reqOrderInsertVO.setInvestorId(ClientStarter.INVESTOR_ID);
+                                reqOrderInsertVO.setInstrumentId(instrumentId);
                                 reqOrderInsertVO.setLimitPrice(marketData.getBidPrice1().doubleValue());
                                 if(tradeVO.getTradingDay().equals(marketData.getTradingDate())) {
                                     reqOrderInsertVO.setCombOffsetFlag(CombOffsetFlag.CloseToday);
@@ -275,8 +275,8 @@ public class PriceFollow implements Runnable{
                               //止损
                                 ReqOrderInsertVO reqOrderInsertVO = new ReqOrderInsertVO();
                                 reqOrderInsertVO.setAccountNo(ACCOUNT_NO);
-                                reqOrderInsertVO.setInvestorID(ClientStarter.INVESTOR_ID);
-                                reqOrderInsertVO.setInstrumentID(instrumentId);
+                                reqOrderInsertVO.setInvestorId(ClientStarter.INVESTOR_ID);
+                                reqOrderInsertVO.setInstrumentId(instrumentId);
                                 reqOrderInsertVO.setLimitPrice(marketData.getBidPrice1().doubleValue());
                                 if(tradeVO.getTradingDay().equals(marketData.getTradingDate())) {
                                     reqOrderInsertVO.setCombOffsetFlag(CombOffsetFlag.CloseToday);
@@ -301,8 +301,8 @@ public class PriceFollow implements Runnable{
                                 //止赢
                                   ReqOrderInsertVO reqOrderInsertVO = new ReqOrderInsertVO();
                                   reqOrderInsertVO.setAccountNo(ACCOUNT_NO);
-                                  reqOrderInsertVO.setInvestorID(ClientStarter.INVESTOR_ID);
-                                  reqOrderInsertVO.setInstrumentID(instrumentId);
+                                  reqOrderInsertVO.setInvestorId(ClientStarter.INVESTOR_ID);
+                                  reqOrderInsertVO.setInstrumentId(instrumentId);
                                   reqOrderInsertVO.setLimitPrice(marketData.getAskPrice1().doubleValue());
                                   if(tradeVO.getTradingDay().equals(marketData.getTradingDate())) {
                                       reqOrderInsertVO.setCombOffsetFlag(CombOffsetFlag.CloseToday);
@@ -324,8 +324,8 @@ public class PriceFollow implements Runnable{
                                 //止损
                                   ReqOrderInsertVO reqOrderInsertVO = new ReqOrderInsertVO();
                                   reqOrderInsertVO.setAccountNo(ACCOUNT_NO);
-                                  reqOrderInsertVO.setInvestorID(ClientStarter.INVESTOR_ID);
-                                  reqOrderInsertVO.setInstrumentID(instrumentId);
+                                  reqOrderInsertVO.setInvestorId(ClientStarter.INVESTOR_ID);
+                                  reqOrderInsertVO.setInstrumentId(instrumentId);
                                   reqOrderInsertVO.setLimitPrice(marketData.getAskPrice1().doubleValue());
                                   if(tradeVO.getTradingDay().equals(marketData.getTradingDate())) {
                                       reqOrderInsertVO.setCombOffsetFlag(CombOffsetFlag.CloseToday);

@@ -14,9 +14,9 @@ public class OnRtnOrderVO implements Serializable{
     private static final long serialVersionUID = -6367780618016491530L;
     
     /**
-     * 客户端请求id ,报单请求时传入
+     * 客户端请求id ,报单请求时传入,最大长度10位
      */
-    private int clientRequestId;
+    private String clientRequestId;
 
     /**
      * 投资者代码
@@ -432,10 +432,10 @@ public class OnRtnOrderVO implements Serializable{
     }
     
     
-    public int getClientRequestId() {
+    public String getClientRequestId() {
         return clientRequestId;
     }
-    public void setClientRequestId(int clientRequestId) {
+    public void setClientRequestId(String clientRequestId) {
         this.clientRequestId = clientRequestId;
     }
     @Override

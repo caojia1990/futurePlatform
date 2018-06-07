@@ -10,8 +10,11 @@ import java.util.Date;
 
 public class Test {
 
+    int i;
+    
     public static void main(String[] args) throws ParseException {
-        
+        Test test = new Test();
+        System.out.println(test.i);
         long volume = Math.round(250000/new BigDecimal(130000).doubleValue());
         
         System.out.println(volume);
