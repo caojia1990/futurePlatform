@@ -26,6 +26,7 @@ public class Console {
                 try {
                     Console window = new Console();
                     window.frame.setVisible(true);
+                    
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -49,6 +50,9 @@ public class Console {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.getContentPane().setLayout(new BorderLayout(0, 0));
         
+        JSplitPane splitPane = new JSplitPane();
+        splitPane.setDividerLocation(0.3);
+        frame.getContentPane().add(splitPane, BorderLayout.CENTER);
         JMenuBar menuBar = new JMenuBar();
         frame.setJMenuBar(menuBar);
     }
