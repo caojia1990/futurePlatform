@@ -9,6 +9,9 @@ import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.JTree;
 import javax.swing.JScrollPane;
+import javax.swing.JToolBar;
+import javax.swing.JTable;
+import javax.swing.JTextField;
 
 public class Console {
 
@@ -45,16 +48,6 @@ public class Console {
         frame.setBounds(100, 100, 704, 430);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.getContentPane().setLayout(new BorderLayout(0, 0));
-        
-        JSplitPane splitPane = new JSplitPane();
-        splitPane.setOneTouchExpandable(true);
-        frame.getContentPane().add(splitPane, BorderLayout.CENTER);
-        
-        JScrollPane scrollPane = new JScrollPane();
-        splitPane.setLeftComponent(scrollPane);
-        
-        JTree tree = new JTree();
-        scrollPane.setViewportView(tree);
         
         JMenuBar menuBar = new JMenuBar();
         frame.setJMenuBar(menuBar);
