@@ -103,8 +103,8 @@ public class OrderServiceImpl implements OrderService {
         //调用合约中心查询每手应冻结手续费
         InvestorTradeParamVO paramVO = new InvestorTradeParamVO();
         paramVO.setDirection(String.valueOf(reqOrderInsertVO.getDirection().getCode()));
-        paramVO.setInstrumentID(reqOrderInsertVO.getInstrumentID());
-        paramVO.setInvestorNo(reqOrderInsertVO.getInvestorID());
+        paramVO.setInstrumentID(reqOrderInsertVO.getInstrumentId());
+        paramVO.setInvestorNo(reqOrderInsertVO.getInvestorId());
         paramVO.setLimitPrice(new BigDecimal(reqOrderInsertVO.getLimitPrice()));
         paramVO.setOffset(reqOrderInsertVO.getCombOffsetFlag().getText());
         paramVO.setPriceType(String.valueOf(reqOrderInsertVO.getOrderPriceType()));
@@ -125,7 +125,7 @@ public class OrderServiceImpl implements OrderService {
             break;
         case CLOSE:
             //平仓
-            InstrumentVO instrumentVO = this.instrumentService.queryInstrument(reqOrderInsertVO.getInstrumentID());
+            InstrumentVO instrumentVO = this.instrumentService.queryInstrument(reqOrderInsertVO.getInstrumentId());
             if(ExchangeName.SHFE.getExchangeCode().equals(instrumentVO.getExchangeID())){
                 //上期所
                 
@@ -147,7 +147,7 @@ public class OrderServiceImpl implements OrderService {
         OrderInput r = new OrderInput();
         r.setAccountNo(reqOrderInsertVO.getAccountNo());
         r.setOrderRef(String.valueOf(orderRef));
-        r.setInvestorID(reqOrderInsertVO.getInvestorID());
+        r.setInvestorId(reqOrderInsertVO.getInvestorId());
         r.setFrozenCommission(commission);
         r.setFrozenMargin(margin);
         r.setCommissionEachHand(commissionEachHand);
@@ -158,12 +158,12 @@ public class OrderServiceImpl implements OrderService {
         stringRedisTemplate.opsForHash().put(ORDERREF_KEY, String.valueOf(orderRef), reqOrderInsertVO.getAccountNo());
         
         //调用账户中心冻结资金
-        accountService.frozenCapital(reqOrderInsertVO.getInvestorID(), reqOrderInsertVO.getAccountNo(), commission, margin);
+        accountService.frozenCapital(reqOrderInsertVO.getInvestorId(), reqOrderInsertVO.getAccountNo(), commission, margin);
         //调用交易中心下单
         ReqOrderInsertVO orderInsertVO = new ReqOrderInsertVO();
         orderInsertVO.setOrderRef(String.valueOf(orderRef));//报单引用
         orderInsertVO.setLimitPrice(reqOrderInsertVO.getLimitPrice());//指定价格
-        orderInsertVO.setInstrumentID(reqOrderInsertVO.getInstrumentID());//合约
+        orderInsertVO.setInstrumentID(reqOrderInsertVO.getInstrumentId());//合约
         orderInsertVO.setVolumeTotalOriginal(reqOrderInsertVO.getVolumeTotalOriginal());//手数
         orderInsertVO.setDirection(Direction.ofCode(
                 reqOrderInsertVO.getDirection().getCode()));//买卖方向
@@ -182,13 +182,13 @@ public class OrderServiceImpl implements OrderService {
         orderInsertVO.setForceCloseReason(ForceCloseReason.ofCode(
                 reqOrderInsertVO.getForceCloseReason().getCode()));//强平原因
         orderInsertVO.setMinVolume(reqOrderInsertVO.getMinVolume());
-        orderInsertVO.setRequestID(reqOrderInsertVO.getRequestID());//请求ID
+        orderInsertVO.setRequestID(reqOrderInsertVO.getRequestId());//请求ID
         
         try {
             tradeService.reqOrderInsert(orderInsertVO);
         } catch (TradeException e) {
             //下单失败先解冻手续费和保证金
-            accountService.thawCapital(reqOrderInsertVO.getInvestorID(), reqOrderInsertVO.getAccountNo(), commission, margin);
+            accountService.thawCapital(reqOrderInsertVO.getInvestorId(), reqOrderInsertVO.getAccountNo(), commission, margin);
             throw e;
         }
     }

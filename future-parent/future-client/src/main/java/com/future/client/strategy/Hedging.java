@@ -63,8 +63,8 @@ public class Hedging implements Runnable {
                             //对冲反向开仓
                             ReqOrderInsertVO reqOrderInsertVO = new ReqOrderInsertVO();
                             reqOrderInsertVO.setAccountNo(ACCOUNT_NO);
-                            reqOrderInsertVO.setInvestorID(ClientStarter.INVESTOR_ID);
-                            reqOrderInsertVO.setInstrumentID(marketData.getInstrumentID());
+                            reqOrderInsertVO.setInvestorId(ClientStarter.INVESTOR_ID);
+                            reqOrderInsertVO.setInstrumentId(marketData.getInstrumentID());
                             reqOrderInsertVO.setLimitPrice(marketData.getLowerLimitPrice());
                             reqOrderInsertVO.setCombOffsetFlag(CombOffsetFlag.OPEN);
                             reqOrderInsertVO.setTimeCondition(TimeCondition.IOC);
@@ -90,8 +90,8 @@ public class Hedging implements Runnable {
                             
                             ReqOrderInsertVO reqOrderInsertVO = new ReqOrderInsertVO();
                             reqOrderInsertVO.setAccountNo(ACCOUNT_NO);
-                            reqOrderInsertVO.setInvestorID(ClientStarter.INVESTOR_ID);
-                            reqOrderInsertVO.setInstrumentID(marketData.getInstrumentID());
+                            reqOrderInsertVO.setInvestorId(ClientStarter.INVESTOR_ID);
+                            reqOrderInsertVO.setInstrumentId(marketData.getInstrumentID());
                             reqOrderInsertVO.setLimitPrice(marketData.getUpperLimitPrice());
                             reqOrderInsertVO.setCombOffsetFlag(CombOffsetFlag.OPEN);
                             reqOrderInsertVO.setTimeCondition(TimeCondition.IOC);

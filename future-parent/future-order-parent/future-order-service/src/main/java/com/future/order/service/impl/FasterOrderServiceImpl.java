@@ -79,19 +79,20 @@ public class FasterOrderServiceImpl implements OrderService {
         //生成委托编号
         Long orderRef = stringRedisTemplate.opsForValue().increment(ORDERREF_SEQUENCE_KEY, 1);
         OrderInput r = new OrderInput();
+        r.setClientRequestId(reqOrderInsertVO.getClientRequestId());
         r.setAccountNo(reqOrderInsertVO.getAccountNo());
         r.setOrderRef(String.valueOf(orderRef));
-        r.setInvestorID(reqOrderInsertVO.getInvestorID());
+        r.setInvestorId(reqOrderInsertVO.getInvestorId());
         orderInputDao.insert(r);
         
         //缓存orderRef与账户关系
-        stringRedisTemplate.opsForHash().put(ORDERREF_KEY, String.valueOf(orderRef), reqOrderInsertVO.getAccountNo());
+        //stringRedisTemplate.opsForHash().put(ORDERREF_KEY, String.valueOf(orderRef), reqOrderInsertVO.getAccountNo());
         
         //调用交易中心下单
         ReqOrderInsertVO orderInsertVO = new ReqOrderInsertVO();
         orderInsertVO.setOrderRef(String.valueOf(orderRef));//报单引用
         orderInsertVO.setLimitPrice(reqOrderInsertVO.getLimitPrice());//指定价格
-        orderInsertVO.setInstrumentID(reqOrderInsertVO.getInstrumentID());//合约
+        orderInsertVO.setInstrumentID(reqOrderInsertVO.getInstrumentId());//合约
         orderInsertVO.setVolumeTotalOriginal(reqOrderInsertVO.getVolumeTotalOriginal());//手数
         orderInsertVO.setDirection(Direction.ofCode(
                 reqOrderInsertVO.getDirection().getCode()));//买卖方向
@@ -136,7 +137,7 @@ public class FasterOrderServiceImpl implements OrderService {
                     reqOrderInsertVO.getForceCloseReason().getCode()));
         }
         orderInsertVO.setMinVolume(reqOrderInsertVO.getMinVolume());
-        orderInsertVO.setRequestID(reqOrderInsertVO.getRequestID());//请求ID
+        orderInsertVO.setRequestID(reqOrderInsertVO.getRequestId());//请求ID
         
         tradeService.reqOrderInsert(orderInsertVO);
     }

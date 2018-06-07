@@ -11,7 +11,4 @@
   <name>ctp接口</name>
   <description>64位接口（支持win,linux）</description>
   
-  <build>
-    <finalName>future-thost-api</finalName>
-  </build>
 </project>

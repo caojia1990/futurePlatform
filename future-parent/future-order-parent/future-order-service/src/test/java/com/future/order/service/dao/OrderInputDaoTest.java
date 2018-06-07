@@ -43,7 +43,7 @@ public class OrderInputDaoTest extends AbstractJUnit4SpringContextTests{
             OrderInput r = new OrderInput();
             r.setAccountNo("123");
             r.setOrderRef(inputStr);
-            r.setInvestorID("caojia");
+            r.setInvestorId("caojia");
             r.setVolumeTotalOriginal(5);
             r.setTradeVolume(2);
             r.setFrozenCommission(new BigDecimal(200));

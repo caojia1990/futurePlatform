@@ -15,6 +15,11 @@ public class OnRtnTradeVO implements Serializable{
     private static final long serialVersionUID = -5737531848459078186L;
 
     /**
+     * 客户端请求编号，报单时传入的值(最大长度10位)
+     */
+    private String clientRequestId;
+    
+    /**
      * 投资者代码
      */
     private String investorId;
@@ -261,15 +266,26 @@ public class OnRtnTradeVO implements Serializable{
     public void setAccountNo(String accountNo) {
         this.accountNo = accountNo;
     }
+    
+    
+
+    public String getClientRequestId() {
+        return clientRequestId;
+    }
+
+    public void setClientRequestId(String clientRequestId) {
+        this.clientRequestId = clientRequestId;
+    }
 
     @Override
     public String toString() {
-        return "OnRtnTradeVO [investorId=" + investorId + ", accountNo=" + accountNo + ", instrumentId=" + instrumentId
-                + ", orderRef=" + orderRef + ", userId=" + userId + ", exchangeId=" + exchangeId + ", tradeId="
-                + tradeId + ", direction=" + direction + ", orderSysId=" + orderSysId + ", exchangeInstId="
-                + exchangeInstId + ", offsetFlag=" + offsetFlag + ", hedgeFlag=" + hedgeFlag + ", price=" + price
-                + ", volume=" + volume + ", tradeDate=" + tradeDate + ", tradeTime=" + tradeTime + ", tradeType="
-                + tradeType + ", sequenceNo=" + sequenceNo + ", tradingDay=" + tradingDay + "]";
+        return "OnRtnTradeVO [clientRequestId=" + clientRequestId + ", investorId=" + investorId + ", accountNo="
+                + accountNo + ", instrumentId=" + instrumentId + ", orderRef=" + orderRef + ", userId=" + userId
+                + ", exchangeId=" + exchangeId + ", tradeId=" + tradeId + ", direction=" + direction + ", orderSysId="
+                + orderSysId + ", exchangeInstId=" + exchangeInstId + ", offsetFlag=" + offsetFlag + ", hedgeFlag="
+                + hedgeFlag + ", price=" + price + ", volume=" + volume + ", tradeDate=" + tradeDate + ", tradeTime="
+                + tradeTime + ", tradeType=" + tradeType + ", sequenceNo=" + sequenceNo + ", tradingDay=" + tradingDay
+                + "]";
     }
     
 }

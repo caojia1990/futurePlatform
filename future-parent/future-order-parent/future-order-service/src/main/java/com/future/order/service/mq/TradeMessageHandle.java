@@ -108,7 +108,7 @@ public class TradeMessageHandle {
             {
                 BigDecimal thrawCommission = input.getCommissionEachHand().multiply(new BigDecimal(onRtnOrderVO.getVolumeTotal()));
                 BigDecimal thrawMargin = input.getMarginEachHand().multiply(new BigDecimal(onRtnOrderVO.getVolumeTotal()));
-                this.accountService.thawCapital(input.getInvestorID(), input.getAccountNo(), thrawCommission, thrawMargin);
+                this.accountService.thawCapital(input.getInvestorId(), input.getAccountNo(), thrawCommission, thrawMargin);
             }
             break;
         case AllTraded:
@@ -119,7 +119,7 @@ public class TradeMessageHandle {
             {
                 BigDecimal thrawCommission = input.getCommissionEachHand().multiply(new BigDecimal(onRtnOrderVO.getVolumeTotal()));
                 BigDecimal thrawMargin = input.getMarginEachHand().multiply(new BigDecimal(onRtnOrderVO.getVolumeTotal()));
-                this.accountService.thawCapital(input.getInvestorID(), input.getAccountNo(), thrawCommission, thrawMargin);
+                this.accountService.thawCapital(input.getInvestorId(), input.getAccountNo(), thrawCommission, thrawMargin);
             }
             break;
         case PartTradedNotQueueing:
@@ -127,7 +127,7 @@ public class TradeMessageHandle {
             {
                 BigDecimal thrawCommission = input.getCommissionEachHand().multiply(new BigDecimal(onRtnOrderVO.getVolumeTotal()));
                 BigDecimal thrawMargin = input.getMarginEachHand().multiply(new BigDecimal(onRtnOrderVO.getVolumeTotal()));
-                this.accountService.thawCapital(input.getInvestorID(), input.getAccountNo(), thrawCommission, thrawMargin);
+                this.accountService.thawCapital(input.getInvestorId(), input.getAccountNo(), thrawCommission, thrawMargin);
             }
             break;
         case PartTradedQueueing:
@@ -168,7 +168,7 @@ public class TradeMessageHandle {
         message.setInsertDate(onRtnOrderVO.getInsertDate());
         message.setInsertTime(onRtnOrderVO.getInsertTime());
         message.setInstrumentID(onRtnOrderVO.getInstrumentID());
-        message.setInvestorID(input.getInvestorID());
+        message.setInvestorID(input.getInvestorId());
         message.setLimitPrice(onRtnOrderVO.getLimitPrice());
         message.setMinVolume(onRtnOrderVO.getMinVolume());
         message.setOrderPriceType(OrderPriceType.ofCode(
@@ -187,7 +187,7 @@ public class TradeMessageHandle {
         message.setTimeCondition(TimeCondition.ofCode(
                 onRtnOrderVO.getTimeCondition().getCode()));
         //TODO
-        rabbitTemplate.convertAndSend(this.onRtnOrder, input.getInvestorID(), message);
+        rabbitTemplate.convertAndSend(this.onRtnOrder, input.getInvestorId(), message);
         
     }
     
@@ -218,7 +218,7 @@ public class TradeMessageHandle {
         message.setExchangeInstId(onRtnTrade.getExchangeInstID());
         message.setHedgeFlag(HedgeFlag.ofCode(onRtnTrade.getHedgeFlag().getCode()));
         message.setInstrumentId(onRtnTrade.getInstrumentID());
-        message.setInvestorId(orderInput.getInvestorID());
+        message.setInvestorId(orderInput.getInvestorId());
         message.setOffsetFlag(OffsetFlag.ofCode(onRtnTrade.getOffsetFlag().getCode()));
         message.setOrderRef(onRtnTrade.getOrderRef());
         message.setOrderSysId(onRtnTrade.getOrderSysID());
@@ -246,7 +246,7 @@ public class TradeMessageHandle {
         
         //计算需扣除的手续费和占用的保证金金额
         InvestorTradeParamVO paramVO = new InvestorTradeParamVO();
-        paramVO.setInvestorNo(orderInput.getInvestorID());
+        paramVO.setInvestorNo(orderInput.getInvestorId());
         paramVO.setInstrumentID(onRtnTrade.getInstrumentID());
         paramVO.setDirection(String.valueOf(onRtnTrade.getDirection().getCode()));
         paramVO.setLimitPrice(new BigDecimal(onRtnTrade.getPrice()));
@@ -257,10 +257,10 @@ public class TradeMessageHandle {
         BigDecimal occupyMargin = occupyMarginEachHand.multiply(new BigDecimal(onRtnTrade.getVolume()));
         
         // 解冻手续费和保证金然后扣除手续费并占用保证金（原子操作）
-        accountService.thawThenDeductAndOccupy(orderInput.getInvestorID(), orderInput.getAccountNo(), 
+        accountService.thawThenDeductAndOccupy(orderInput.getInvestorId(), orderInput.getAccountNo(), 
             thrawCommission, thrawMargin, deductCommission, occupyMargin);
         
-        rabbitTemplate.convertAndSend(this.onRtnTrade, orderInput.getInvestorID(), message);
+        rabbitTemplate.convertAndSend(this.onRtnTrade, orderInput.getInvestorId(), message);
     }
     
     /**

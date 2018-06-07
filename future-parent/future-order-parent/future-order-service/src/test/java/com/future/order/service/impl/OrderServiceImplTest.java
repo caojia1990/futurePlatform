@@ -68,8 +68,8 @@ public class OrderServiceImplTest extends AbstractJUnit4SpringContextTests{
             
             ReqOrderInsertVO reqOrderInsertVO = new ReqOrderInsertVO();
             reqOrderInsertVO.setAccountNo("00001");
-            reqOrderInsertVO.setInvestorID(investorID);
-            reqOrderInsertVO.setInstrumentID("cu1805");
+            reqOrderInsertVO.setInvestorId(investorID);
+            reqOrderInsertVO.setInstrumentId("cu1805");
             reqOrderInsertVO.setLimitPrice(Double.valueOf(inputStr));
             reqOrderInsertVO.setCombHedgeFlag(CombHedgeFlag.Speculation);
             reqOrderInsertVO.setCombOffsetFlag(CombOffsetFlag.OPEN);

@@ -96,7 +96,4 @@
     </dependency>
   </dependencies>
   
-  <build>
-    <finalName>future-trade-service</finalName>
-  </build>
 </project>

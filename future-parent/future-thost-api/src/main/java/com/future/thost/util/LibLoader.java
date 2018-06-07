@@ -40,14 +40,7 @@ public class LibLoader {
         FileOutputStream writer = null;
 
         File extractedLibFile = new File(filepath);
-
-        if(extractedLibFile.exists()){
-            try {
-                extractedLibFile.delete();
-            } catch (Exception e) {
-                System.load(extractedLibFile.toString());
-            }
-        }else {
+        if (!extractedLibFile.exists()) {
             try {
                 String resource = "/"+((systemType.toLowerCase().indexOf("win") != -1) ? "win" : "linux")+"/"+libFullName;
                 in = Class.class.getResourceAsStream(resource);
@@ -59,7 +52,7 @@ public class LibLoader {
                     writer.write(buffer,0,bytesRead);
                 }
             } catch (IOException e) {
-                throw e;
+                e.printStackTrace();
             } finally {
                 if (in != null)
                     in.close();

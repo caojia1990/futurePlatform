@@ -1,5 +1,7 @@
 package com.future.member.api.service;
 
+import java.util.List;
+
 import com.future.member.api.vo.MemberVO;
 
 /**
@@ -22,5 +24,12 @@ public interface MemberService {
      * @param passwd
      */
     public void signUp(String userName, String passwd);
+    
+
+    /**
+     * 查询所有投资者信息
+     * @return
+     */
+    public List<MemberVO> queryMembers();
     
 }

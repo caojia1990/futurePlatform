@@ -18,9 +18,10 @@ public class OrderInputDao {
     
     public int insert(OrderInput r) {
         
-        return jdbcTemplate.update("INSERT INTO FUTURE_ORDER_INPUT VALUES(?,?,?,?,?,?,?,?,?)", 
+        return jdbcTemplate.update("INSERT INTO FUTURE_ORDER_INPUT VALUES(?,?,?,?,?,?,?,?,?,?)", 
                 r.getOrderRef(),
-                r.getInvestorID(),
+                r.getClientRequestId(),
+                r.getInvestorId(),
                 r.getAccountNo(),
                 r.getVolumeTotalOriginal(),
                 r.getTradeVolume(),
@@ -40,8 +41,9 @@ public class OrderInputDao {
 							// TODO Auto-generated method stub
 							OrderInput input = new OrderInput();
 							input.setOrderRef(arg0.getString("ORDER_REF"));
+							input.setClientRequestId(arg0.getString("CLIENT_REQUEST_ID"));
 							input.setAccountNo(arg0.getString("ACCOUNT_NO"));
-							input.setInvestorID(arg0.getString("INVESTOR_ID"));
+							input.setInvestorId(arg0.getString("INVESTOR_ID"));
 							input.setFrozenCommission(arg0.getBigDecimal("FROZEN_COMMISSION"));
 							input.setFrozenMargin(arg0.getBigDecimal("FROZEN_MARGIN"));
 							input.setCommissionEachHand(arg0.getBigDecimal("COMMISSION_EACH_HAND"));

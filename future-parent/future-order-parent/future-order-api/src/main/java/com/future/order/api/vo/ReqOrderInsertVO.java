@@ -15,16 +15,20 @@ public class ReqOrderInsertVO implements Serializable{
      */
     private static final long serialVersionUID = -7390751012439707057L;
 
+    /**
+     * 客户端请求编号（由客户端指定，报单和成交返回时会带上该编号）
+     */
+    private String clientRequestId;
     
     /**
-     * 请求编号
+     * 请求编号（由下单中心指定）
      */
-    private int requestID;
+    private int requestId;
     
     /**
      * 投资者代码
      */
-    private String investorID;
+    private String investorId;
     
     /**
      * 账户编号
@@ -34,7 +38,7 @@ public class ReqOrderInsertVO implements Serializable{
     /**
      * 合约代码
      */
-    private String instrumentID;
+    private String instrumentId;
     
     /**
      * 报单引用
@@ -44,7 +48,7 @@ public class ReqOrderInsertVO implements Serializable{
     /**
      * 用户代码
      */
-    private String userID;
+    private String userId;
     
     /**
      * 报单价格条件
@@ -110,28 +114,28 @@ public class ReqOrderInsertVO implements Serializable{
      */
     private ForceCloseReason forceCloseReason;
     
-    public int getRequestID() {
-        return requestID;
+    public int getRequestId() {
+        return requestId;
     }
 
-    public void setRequestID(int requestID) {
-        this.requestID = requestID;
+    public void setRequestId(int requestID) {
+        this.requestId = requestID;
     }
 
-    public String getInvestorID() {
-        return investorID;
+    public String getInvestorId() {
+        return investorId;
     }
 
-    public void setInvestorID(String investorID) {
-        this.investorID = investorID;
+    public void setInvestorId(String investorID) {
+        this.investorId = investorID;
     }
 
-    public String getInstrumentID() {
-        return instrumentID;
+    public String getInstrumentId() {
+        return instrumentId;
     }
 
-    public void setInstrumentID(String instrumentID) {
-        this.instrumentID = instrumentID;
+    public void setInstrumentId(String instrumentId) {
+        this.instrumentId = instrumentId;
     }
 
     public String getOrderRef() {
@@ -142,12 +146,12 @@ public class ReqOrderInsertVO implements Serializable{
         this.orderRef = orderRef;
     }
 
-    public String getUserID() {
-        return userID;
+    public String getUserId() {
+        return userId;
     }
 
-    public void setUserID(String userID) {
-        this.userID = userID;
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     public OrderPriceType getOrderPriceType() {
@@ -260,6 +264,14 @@ public class ReqOrderInsertVO implements Serializable{
 
     public void setAccountNo(String accountNo) {
         this.accountNo = accountNo;
+    }
+
+    public String getClientRequestId() {
+        return clientRequestId;
+    }
+
+    public void setClientRequestId(String clientRequestId) {
+        this.clientRequestId = clientRequestId;
     }
 
 }

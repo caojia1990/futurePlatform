@@ -176,8 +176,8 @@ public class FiveMinutesEMA implements Runnable {
                     
                     ReqOrderInsertVO reqOrderInsertVO = new ReqOrderInsertVO();
                     reqOrderInsertVO.setAccountNo(ACCOUNT_NO);
-                    reqOrderInsertVO.setInvestorID(ClientStarter.INVESTOR_ID);
-                    reqOrderInsertVO.setInstrumentID(instrumentId);
+                    reqOrderInsertVO.setInvestorId(ClientStarter.INVESTOR_ID);
+                    reqOrderInsertVO.setInstrumentId(instrumentId);
                     reqOrderInsertVO.setLimitPrice(ema.getUpperPrice().doubleValue());
                     reqOrderInsertVO.setCombOffsetFlag(CombOffsetFlag.OPEN);
                     reqOrderInsertVO.setTimeCondition(TimeCondition.GFD);
@@ -196,8 +196,8 @@ public class FiveMinutesEMA implements Runnable {
                     for (OnRtnTradeVO onRtnTradeVO : list) {
                         ReqOrderInsertVO reqOrderInsertVO = new ReqOrderInsertVO();
                         reqOrderInsertVO.setAccountNo(ACCOUNT_NO);
-                        reqOrderInsertVO.setInvestorID(ClientStarter.INVESTOR_ID);
-                        reqOrderInsertVO.setInstrumentID(instrumentId);
+                        reqOrderInsertVO.setInvestorId(ClientStarter.INVESTOR_ID);
+                        reqOrderInsertVO.setInstrumentId(instrumentId);
                         reqOrderInsertVO.setLimitPrice(ema.getUpperPrice().doubleValue());
                         if(onRtnTradeVO.getTradingDay().equals(ema.getTradingDay())) {
                             reqOrderInsertVO.setCombOffsetFlag(CombOffsetFlag.CloseToday);
@@ -226,8 +226,8 @@ public class FiveMinutesEMA implements Runnable {
                 {
                     ReqOrderInsertVO reqOrderInsertVO = new ReqOrderInsertVO();
                     reqOrderInsertVO.setAccountNo(ACCOUNT_NO);
-                    reqOrderInsertVO.setInvestorID(ClientStarter.INVESTOR_ID);
-                    reqOrderInsertVO.setInstrumentID(instrumentId);
+                    reqOrderInsertVO.setInvestorId(ClientStarter.INVESTOR_ID);
+                    reqOrderInsertVO.setInstrumentId(instrumentId);
                     reqOrderInsertVO.setLimitPrice(ema.getLowerPrice().doubleValue());
                     reqOrderInsertVO.setCombOffsetFlag(CombOffsetFlag.OPEN);
                     reqOrderInsertVO.setTimeCondition(TimeCondition.GFD);
@@ -245,8 +245,8 @@ public class FiveMinutesEMA implements Runnable {
                     for (OnRtnTradeVO onRtnTradeVO : list) {
                         ReqOrderInsertVO reqOrderInsertVO = new ReqOrderInsertVO();
                         reqOrderInsertVO.setAccountNo(ACCOUNT_NO);
-                        reqOrderInsertVO.setInvestorID(ClientStarter.INVESTOR_ID);
-                        reqOrderInsertVO.setInstrumentID(instrumentId);
+                        reqOrderInsertVO.setInvestorId(ClientStarter.INVESTOR_ID);
+                        reqOrderInsertVO.setInstrumentId(instrumentId);
                         reqOrderInsertVO.setLimitPrice(ema.getLowerPrice().doubleValue());
                         if(onRtnTradeVO.getTradingDay().equals(ema.getTradingDay())) {
                             reqOrderInsertVO.setCombOffsetFlag(CombOffsetFlag.CloseToday);
@@ -466,8 +466,8 @@ public class FiveMinutesEMA implements Runnable {
                                 logger.info("触发止损"+instrumentId);
                                 ReqOrderInsertVO reqOrderInsertVO = new ReqOrderInsertVO();
                                 reqOrderInsertVO.setAccountNo(ACCOUNT_NO);
-                                reqOrderInsertVO.setInvestorID(ClientStarter.INVESTOR_ID);
-                                reqOrderInsertVO.setInstrumentID(instrumentId);
+                                reqOrderInsertVO.setInvestorId(ClientStarter.INVESTOR_ID);
+                                reqOrderInsertVO.setInstrumentId(instrumentId);
                                 reqOrderInsertVO.setLimitPrice(marketData.getLowerLimitPrice().doubleValue());
                                 if(tradeVO.getTradingDay().equals(marketData.getTradingDate())) {
                                     reqOrderInsertVO.setCombOffsetFlag(CombOffsetFlag.CloseToday);
@@ -496,8 +496,8 @@ public class FiveMinutesEMA implements Runnable {
                                     logger.info("触发止盈"+instrumentId);
                                     ReqOrderInsertVO reqOrderInsertVO = new ReqOrderInsertVO();
                                     reqOrderInsertVO.setAccountNo(ACCOUNT_NO);
-                                    reqOrderInsertVO.setInvestorID(ClientStarter.INVESTOR_ID);
-                                    reqOrderInsertVO.setInstrumentID(instrumentId);
+                                    reqOrderInsertVO.setInvestorId(ClientStarter.INVESTOR_ID);
+                                    reqOrderInsertVO.setInstrumentId(instrumentId);
                                     reqOrderInsertVO.setLimitPrice(marketData.getLowerLimitPrice().doubleValue());
                                     if(tradeVO.getTradingDay().equals(marketData.getTradingDate())) {
                                         reqOrderInsertVO.setCombOffsetFlag(CombOffsetFlag.CloseToday);
@@ -520,8 +520,8 @@ public class FiveMinutesEMA implements Runnable {
                                 logger.info("触发止损"+instrumentId);
                                 ReqOrderInsertVO reqOrderInsertVO = new ReqOrderInsertVO();
                                 reqOrderInsertVO.setAccountNo(ACCOUNT_NO);
-                                reqOrderInsertVO.setInvestorID(ClientStarter.INVESTOR_ID);
-                                reqOrderInsertVO.setInstrumentID(instrumentId);
+                                reqOrderInsertVO.setInvestorId(ClientStarter.INVESTOR_ID);
+                                reqOrderInsertVO.setInstrumentId(instrumentId);
                                 reqOrderInsertVO.setLimitPrice(marketData.getUpperLimitPrice().doubleValue());
                                 if(tradeVO.getTradingDay().equals(marketData.getTradingDate())) {
                                     reqOrderInsertVO.setCombOffsetFlag(CombOffsetFlag.CloseToday);
@@ -549,8 +549,8 @@ public class FiveMinutesEMA implements Runnable {
                                     logger.info("触发止盈"+instrumentId);
                                     ReqOrderInsertVO reqOrderInsertVO = new ReqOrderInsertVO();
                                     reqOrderInsertVO.setAccountNo(ACCOUNT_NO);
-                                    reqOrderInsertVO.setInvestorID(ClientStarter.INVESTOR_ID);
-                                    reqOrderInsertVO.setInstrumentID(instrumentId);
+                                    reqOrderInsertVO.setInvestorId(ClientStarter.INVESTOR_ID);
+                                    reqOrderInsertVO.setInstrumentId(instrumentId);
                                     reqOrderInsertVO.setLimitPrice(marketData.getUpperLimitPrice().doubleValue());
                                     if(tradeVO.getTradingDay().equals(marketData.getTradingDate())) {
                                         reqOrderInsertVO.setCombOffsetFlag(CombOffsetFlag.CloseToday);

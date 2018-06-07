@@ -7,11 +7,8 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import com.future.client.dao.QuotaDao;
 import com.future.client.dao.TradeDao;
-import com.future.client.strategy.Breakthrough;
-import com.future.client.strategy.FiveMinutesEMA;
-import com.future.client.strategy.FiveMinutesEMA.StopProfit;
-import com.future.client.strategy.FiveSecsFollow;
-import com.future.client.strategy.Hedging;
+import com.future.client.strategy.PriceFollow;
+import com.future.client.strategy.PriceFollow.StopProfit;
 import com.future.client.utils.CacheMap;
 import com.future.market.api.mq.MessageReceive;
 import com.future.market.api.vo.DepthMarketData;
@@ -42,7 +39,7 @@ public class MarketMessageHandle implements MessageReceive{
     @Override
     public void handleMessage(DepthMarketData marketData) {
         
-        taskExecutor.execute(new StopProfit(orderService, cacheMap, tradeDao, marketData, redisTemplate));
+        /*taskExecutor.execute(new StopProfit(orderService, cacheMap, tradeDao, marketData, redisTemplate));*/
         
         /*taskExecutor.execute(new FiveSecsFollow(marketData, orderService, redisTemplate, cacheMap,quotaDao));
         if(taskExecutor.getActiveCount() > 50) {
@@ -51,6 +48,10 @@ public class MarketMessageHandle implements MessageReceive{
         //taskExecutor.execute(new Breakthrough(marketData, orderService, redisTemplate, cacheMap,quotaDao));
         //对冲保护策略
         //taskExecutor.execute(new Hedging(marketData, orderService, redisTemplate, cacheMap));
+        
+        //taskExecutor.execute(new PriceFollow(marketData, cacheMap, orderService));
+        PriceFollow.offerMarket(marketData);
+        taskExecutor.execute(new StopProfit(marketData, cacheMap, orderService, tradeDao));
     }
 
 }
