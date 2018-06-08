@@ -5,6 +5,8 @@ import javax.swing.JTextField;
 import javax.swing.JLabel;
 import javax.swing.JSpinner;
 import javax.swing.JButton;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 /**
  * 下单版
@@ -51,6 +53,12 @@ public class OrderBoard extends JPanel {
 		add(spinner_1);
 		
 		JButton btnNewButton = new JButton("开仓");
+		btnNewButton.addMouseListener(new MouseAdapter() {
+		    @Override
+		    public void mousePressed(MouseEvent e) {
+		        
+		    }
+		});
 		btnNewButton.setBounds(27, 153, 117, 29);
 		add(btnNewButton);
 		

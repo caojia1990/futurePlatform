@@ -29,24 +29,29 @@ public class EMAStarter {
             //订阅行情
             TopicExchange marketExchange = (TopicExchange) context.getBean("com.future.market");
             Queue marketQ = (Queue) context.getBean("marketQ");
-            admin.declareBinding(BindingBuilder.bind(marketQ).to(marketExchange).with("instrument.rb1810"));
-            admin.declareBinding(BindingBuilder.bind(marketQ).to(marketExchange).with("instrument.cu1807"));
-            admin.declareBinding(BindingBuilder.bind(marketQ).to(marketExchange).with("instrument.m1809"));
-            admin.declareBinding(BindingBuilder.bind(marketQ).to(marketExchange).with("instrument.RM809"));
-            admin.declareBinding(BindingBuilder.bind(marketQ).to(marketExchange).with("instrument.y1809"));
-            admin.declareBinding(BindingBuilder.bind(marketQ).to(marketExchange).with("instrument.p1809"));
-            admin.declareBinding(BindingBuilder.bind(marketQ).to(marketExchange).with("instrument.OI809"));
-            admin.declareBinding(BindingBuilder.bind(marketQ).to(marketExchange).with("instrument.i1809"));
-            admin.declareBinding(BindingBuilder.bind(marketQ).to(marketExchange).with("instrument.j1809"));
-            admin.declareBinding(BindingBuilder.bind(marketQ).to(marketExchange).with("instrument.jm1809"));
-            admin.declareBinding(BindingBuilder.bind(marketQ).to(marketExchange).with("instrument.ZC809"));
-            admin.declareBinding(BindingBuilder.bind(marketQ).to(marketExchange).with("instrument.ni1807"));
-            admin.declareBinding(BindingBuilder.bind(marketQ).to(marketExchange).with("instrument.zn1807"));
-            admin.declareBinding(BindingBuilder.bind(marketQ).to(marketExchange).with("instrument.MA809"));
-            admin.declareBinding(BindingBuilder.bind(marketQ).to(marketExchange).with("instrument.pp1809"));
-            admin.declareBinding(BindingBuilder.bind(marketQ).to(marketExchange).with("instrument.bu1812"));
-            admin.declareBinding(BindingBuilder.bind(marketQ).to(marketExchange).with("instrument.ru1809"));
-            admin.declareBinding(BindingBuilder.bind(marketQ).to(marketExchange).with("instrument.CF901"));
+            admin.declareBinding(BindingBuilder.bind(marketQ).to(marketExchange).with("instrument.i1809"));//铁矿石
+            admin.declareBinding(BindingBuilder.bind(marketQ).to(marketExchange).with("instrument.j1809"));//焦炭
+            admin.declareBinding(BindingBuilder.bind(marketQ).to(marketExchange).with("instrument.jm1809"));//焦煤
+            admin.declareBinding(BindingBuilder.bind(marketQ).to(marketExchange).with("instrument.ZC809"));//动力煤
+            
+            admin.declareBinding(BindingBuilder.bind(marketQ).to(marketExchange).with("instrument.rb1810"));//螺纹
+            admin.declareBinding(BindingBuilder.bind(marketQ).to(marketExchange).with("instrument.cu1808"));//铜
+            admin.declareBinding(BindingBuilder.bind(marketQ).to(marketExchange).with("instrument.ni1809"));//镍
+            admin.declareBinding(BindingBuilder.bind(marketQ).to(marketExchange).with("instrument.zn1808"));//锌
+            admin.declareBinding(BindingBuilder.bind(marketQ).to(marketExchange).with("instrument.ru1809"));//橡胶
+            
+            admin.declareBinding(BindingBuilder.bind(marketQ).to(marketExchange).with("instrument.MA809"));//甲醇
+            admin.declareBinding(BindingBuilder.bind(marketQ).to(marketExchange).with("instrument.l1809"));//塑料
+            admin.declareBinding(BindingBuilder.bind(marketQ).to(marketExchange).with("instrument.bu1812"));//沥青
+
+            admin.declareBinding(BindingBuilder.bind(marketQ).to(marketExchange).with("instrument.CF901"));//棉花
+            admin.declareBinding(BindingBuilder.bind(marketQ).to(marketExchange).with("instrument.SR901"));//白糖
+            admin.declareBinding(BindingBuilder.bind(marketQ).to(marketExchange).with("instrument.m1809"));//豆粕
+            admin.declareBinding(BindingBuilder.bind(marketQ).to(marketExchange).with("instrument.RM809"));//菜粕
+            admin.declareBinding(BindingBuilder.bind(marketQ).to(marketExchange).with("instrument.y1809"));//豆油
+            admin.declareBinding(BindingBuilder.bind(marketQ).to(marketExchange).with("instrument.p1809"));//棕榈油
+            admin.declareBinding(BindingBuilder.bind(marketQ).to(marketExchange).with("instrument.OI809"));//菜油
+            //admin.declareBinding(BindingBuilder.bind(marketQ).to(marketExchange).with("instrument.pp1809"));
         }
         
         {
