@@ -38,6 +38,8 @@ public class OrderBoardTool {
         frame = new JFrame();
         frame.setBounds(100, 100, 214, 300);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        OrderBoard orderBoard = new OrderBoard();
+        frame.getContentPane().add(orderBoard);
     }
 
 }

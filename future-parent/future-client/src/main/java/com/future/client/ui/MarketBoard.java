@@ -1,5 +1,10 @@
 package com.future.client.ui;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
+
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -33,6 +38,7 @@ public class MarketBoard extends JScrollPane {
         MarketBoard marketBoard = new MarketBoard();
         frame.getContentPane().add(marketBoard);
         frame.setVisible(true);
+        
     }
 
 }
