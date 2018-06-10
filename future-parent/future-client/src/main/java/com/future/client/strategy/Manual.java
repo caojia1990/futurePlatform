@@ -21,7 +21,9 @@ import com.future.order.api.vo.TimeCondition;
  */
 public class Manual implements Runnable {
     
-    private static final String ACCOUNT_NO = "00007";
+    static String INVESTOR_ID = "Manual";
+    
+    private static final String ACCOUNT_NO = "unknow";
     
     private static final int STOP_WIN = 1;
     
@@ -50,7 +52,7 @@ public class Manual implements Runnable {
             String instrumentId = marketData.getInstrumentID();
             double tickPrice = this.cacheMap.getTickPrice(instrumentId);
             
-            List<OnRtnTradeVO> list = this.tradeDao.selectByCondition(ClientStarter.INVESTOR_ID, ACCOUNT_NO, instrumentId);
+            List<OnRtnTradeVO> list = this.tradeDao.selectByCondition(INVESTOR_ID, ACCOUNT_NO, instrumentId);
             
             if(list != null && list.size() > 0){
                 for (OnRtnTradeVO tradeVO : list) {
@@ -62,7 +64,7 @@ public class Manual implements Runnable {
                             //止赢
                             ReqOrderInsertVO reqOrderInsertVO = new ReqOrderInsertVO();
                             reqOrderInsertVO.setAccountNo(ACCOUNT_NO);
-                            reqOrderInsertVO.setInvestorId(ClientStarter.INVESTOR_ID);
+                            reqOrderInsertVO.setInvestorId(INVESTOR_ID);
                             reqOrderInsertVO.setInstrumentId(instrumentId);
                             reqOrderInsertVO.setLimitPrice(marketData.getBidPrice1().doubleValue());
                             if(tradeVO.getTradingDay().equals(marketData.getTradingDate())) {
@@ -81,7 +83,7 @@ public class Manual implements Runnable {
                           //止损
                             ReqOrderInsertVO reqOrderInsertVO = new ReqOrderInsertVO();
                             reqOrderInsertVO.setAccountNo(ACCOUNT_NO);
-                            reqOrderInsertVO.setInvestorId(ClientStarter.INVESTOR_ID);
+                            reqOrderInsertVO.setInvestorId(INVESTOR_ID);
                             reqOrderInsertVO.setInstrumentId(instrumentId);
                             reqOrderInsertVO.setLimitPrice(marketData.getBidPrice1().doubleValue());
                             if(tradeVO.getTradingDay().equals(marketData.getTradingDate())) {
@@ -103,7 +105,7 @@ public class Manual implements Runnable {
                             //止赢
                               ReqOrderInsertVO reqOrderInsertVO = new ReqOrderInsertVO();
                               reqOrderInsertVO.setAccountNo(ACCOUNT_NO);
-                              reqOrderInsertVO.setInvestorId(ClientStarter.INVESTOR_ID);
+                              reqOrderInsertVO.setInvestorId(INVESTOR_ID);
                               reqOrderInsertVO.setInstrumentId(instrumentId);
                               reqOrderInsertVO.setLimitPrice(marketData.getAskPrice1().doubleValue());
                               if(tradeVO.getTradingDay().equals(marketData.getTradingDate())) {
@@ -122,7 +124,7 @@ public class Manual implements Runnable {
                             //止损
                               ReqOrderInsertVO reqOrderInsertVO = new ReqOrderInsertVO();
                               reqOrderInsertVO.setAccountNo(ACCOUNT_NO);
-                              reqOrderInsertVO.setInvestorId(ClientStarter.INVESTOR_ID);
+                              reqOrderInsertVO.setInvestorId(INVESTOR_ID);
                               reqOrderInsertVO.setInstrumentId(instrumentId);
                               reqOrderInsertVO.setLimitPrice(marketData.getAskPrice1().doubleValue());
                               if(tradeVO.getTradingDay().equals(marketData.getTradingDate())) {

@@ -36,8 +36,9 @@ public class EMAStarter {
             
             admin.declareBinding(BindingBuilder.bind(marketQ).to(marketExchange).with("instrument.rb1810"));//螺纹
             admin.declareBinding(BindingBuilder.bind(marketQ).to(marketExchange).with("instrument.cu1808"));//铜
+            admin.declareBinding(BindingBuilder.bind(marketQ).to(marketExchange).with("instrument.ni1807"));//镍    还有持仓
             admin.declareBinding(BindingBuilder.bind(marketQ).to(marketExchange).with("instrument.ni1809"));//镍
-            admin.declareBinding(BindingBuilder.bind(marketQ).to(marketExchange).with("instrument.zn1808"));//锌
+            admin.declareBinding(BindingBuilder.bind(marketQ).to(marketExchange).with("instrument.zn1807"));//锌
             admin.declareBinding(BindingBuilder.bind(marketQ).to(marketExchange).with("instrument.ru1809"));//橡胶
             
             admin.declareBinding(BindingBuilder.bind(marketQ).to(marketExchange).with("instrument.MA809"));//甲醇
@@ -51,7 +52,7 @@ public class EMAStarter {
             admin.declareBinding(BindingBuilder.bind(marketQ).to(marketExchange).with("instrument.y1809"));//豆油
             admin.declareBinding(BindingBuilder.bind(marketQ).to(marketExchange).with("instrument.p1809"));//棕榈油
             admin.declareBinding(BindingBuilder.bind(marketQ).to(marketExchange).with("instrument.OI809"));//菜油
-            //admin.declareBinding(BindingBuilder.bind(marketQ).to(marketExchange).with("instrument.pp1809"));
+            admin.declareBinding(BindingBuilder.bind(marketQ).to(marketExchange).with("instrument.pp1809"));
         }
         
         {
