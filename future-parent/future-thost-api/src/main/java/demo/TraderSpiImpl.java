@@ -54,9 +54,19 @@ public class TraderSpiImpl extends CThostFtdcTraderSpi{
             e.printStackTrace();
         }
         
-        {
+        /*{
             CThostFtdcQryInstrumentField pQryInstrument = new  CThostFtdcQryInstrumentField();
             int r= m_traderapi.ReqQryInstrument(pQryInstrument, 2);
+            System.out.println(r);
+        }*/
+        
+        {
+            //查询结算单
+            CThostFtdcQrySettlementInfoField field = new CThostFtdcQrySettlementInfoField();
+            field.setBrokerID(m_BrokerId);
+            field.setInvestorID(m_InvestorId);
+            field.setTradingDay("20180608");
+            int r= m_traderapi.ReqQrySettlementInfo(field, 3);
             System.out.println(r);
         }
     }
@@ -98,7 +108,12 @@ public class TraderSpiImpl extends CThostFtdcTraderSpi{
         {
             System.out.printf("NULL obj\n");
         }
-    }   
+    }
+    
+    @Override
+    public void OnRspQrySettlementInfo(CThostFtdcSettlementInfoField pSettlementInfo, CThostFtdcRspInfoField pRspInfo, int nRequestID, boolean bIsLast){
+        System.out.println(pSettlementInfo.getContent());
+    }
 
     private CThostFtdcTraderApi m_traderapi;
     
@@ -107,7 +122,8 @@ public class TraderSpiImpl extends CThostFtdcTraderSpi{
         static{
             System.load("D:/git/futurePlatform/future-parent/future-thost-api/src/main/resources/win/thostmduserapi.dll");
             System.load("D:/git/futurePlatform/future-parent/future-thost-api/src/main/resources/win/thosttraderapi.dll");
-            System.load("D:/git/futurePlatform/future-parent/future-thost-api/src/main/resources/win/thosttraderapi_wrap.dll");
+            System.load("D:/git/futurePlatform/future-parent/future-thost-api/src/main/resources/win/libiconv.dll");
+            System.load("D:/git/futurePlatform/future-parent/future-thost-api/src/main/resources/win/thosttraderapi_wrap_code.dll");
         }
         final static String ctp1_TradeAddress = "tcp://180.168.146.187:10001";
         public static void main(String[] args) {
