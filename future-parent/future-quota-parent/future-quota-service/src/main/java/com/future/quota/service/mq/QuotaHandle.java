@@ -179,18 +179,6 @@ public class QuotaHandle implements MessageReceive{
             }
             emaMap.put(ema.getInstrumentId(), ema);
         }
-        /*{
-            EMA ema = (EMA) redisTemplate.opsForHash().get("EMA", "ni1807");
-            if(ema == null) {
-                ema = new EMA();
-                ema.setInstrumentId("ni1807");
-	            ema.setPersiod("5m");
-	            ema.setTitle("14:55:00");
-	            ema.setEma5(new BigDecimal("116551.31"));
-	            ema.setEma619(new BigDecimal("113153.92"));
-            }
-            emaMap.put(ema.getInstrumentId(), ema);
-        }*/
         {
             EMA ema = (EMA) redisTemplate.opsForHash().get("EMA", "ni1809");
             if(ema == null) {
@@ -212,6 +200,18 @@ public class QuotaHandle implements MessageReceive{
 	            ema.setTitle("14:55:00");
 	            ema.setEma5(new BigDecimal("24178.41"));
 	            ema.setEma619(new BigDecimal("24064.96"));
+            }
+            emaMap.put(ema.getInstrumentId(), ema);
+        }
+        {
+            EMA ema = (EMA) redisTemplate.opsForHash().get("EMA", "zn1808");
+            if(ema == null) {
+                ema = new EMA();
+                ema.setInstrumentId("zn1808");
+                ema.setPersiod("5m");
+                ema.setTitle("14:55:00");
+                ema.setEma5(new BigDecimal("24364.87"));
+                ema.setEma619(new BigDecimal("24259.71"));
             }
             emaMap.put(ema.getInstrumentId(), ema);
         }

@@ -8,7 +8,4 @@
   <artifactId>future-trade-api</artifactId>
   <description>交易api接口</description>
   
-  <build>
-    <finalName>future-trade-api</finalName>
-  </build>
 </project>
