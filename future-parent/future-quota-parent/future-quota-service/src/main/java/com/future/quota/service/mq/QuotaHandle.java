@@ -192,18 +192,6 @@ public class QuotaHandle implements MessageReceive{
             emaMap.put(ema.getInstrumentId(), ema);
         }
         {
-            EMA ema = (EMA) redisTemplate.opsForHash().get("EMA", "zn1807");
-            if(ema == null) {
-                ema = new EMA();
-	            ema.setInstrumentId("zn1807");
-	            ema.setPersiod("5m");
-	            ema.setTitle("14:55:00");
-	            ema.setEma5(new BigDecimal("24178.41"));
-	            ema.setEma619(new BigDecimal("24064.96"));
-            }
-            emaMap.put(ema.getInstrumentId(), ema);
-        }
-        {
             EMA ema = (EMA) redisTemplate.opsForHash().get("EMA", "zn1808");
             if(ema == null) {
                 ema = new EMA();
