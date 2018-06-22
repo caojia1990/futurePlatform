@@ -1,13 +1,11 @@
 package com.future.trade.api.vo;
 
-import java.io.Serializable;
-
 /**
  * 下单参数
  * @author caojia
  *
  */
-public class ReqOrderInsertVO implements Serializable{
+public class ReqOrderInsertVO extends OnRspInfo{
 
     
     /**

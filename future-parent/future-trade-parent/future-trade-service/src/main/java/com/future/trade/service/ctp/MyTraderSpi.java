@@ -33,11 +33,13 @@ import com.future.trade.api.vo.Direction;
 import com.future.trade.api.vo.ForceCloseReason;
 import com.future.trade.api.vo.HedgeFlag;
 import com.future.trade.api.vo.OffsetFlag;
+import com.future.trade.api.vo.OnRspInfo;
 import com.future.trade.api.vo.OnRtnOrderVO;
 import com.future.trade.api.vo.OnRtnTradeVO;
 import com.future.trade.api.vo.OrderPriceType;
 import com.future.trade.api.vo.OrderStatus;
 import com.future.trade.api.vo.OrderSubmitStatus;
+import com.future.trade.api.vo.ReqOrderInsertVO;
 import com.future.trade.api.vo.TimeCondition;
 import com.future.trade.api.vo.VolumeCondition;
 import com.future.trade.service.TradeMain;
@@ -195,7 +197,38 @@ public class MyTraderSpi extends CThostFtdcTraderSpi {
 	public void OnRspOrderInsert(CThostFtdcInputOrderField pInputOrder,
 			CThostFtdcRspInfoField pRspInfo, int nRequestID, boolean bIsLast) {
 		logger.error("报单失败："+JSON.toJSONString(pRspInfo)+JSON.toJSONString(pInputOrder));
-		//traderMain.onRspOrderInsert(pInputOrder, pRspInfo, nRequestID, bIsLast);
+		
+		ReqOrderInsertVO reqOrderInsertVO = new ReqOrderInsertVO();
+		if(pRspInfo != null){
+		    reqOrderInsertVO.setErrorId(pRspInfo.getErrorID());
+		    reqOrderInsertVO.setErrorMsg(pRspInfo.getErrorMsg());
+		}
+		if(pInputOrder != null){
+		    reqOrderInsertVO.setBusinessUnit(pInputOrder.getBusinessUnit());
+		    reqOrderInsertVO.setCombHedgeFlag(CombHedgeFlag.ofCode(pInputOrder.getCombHedgeFlag()));
+		    reqOrderInsertVO.setCombOffsetFlag(CombOffsetFlag.ofCode(pInputOrder.getCombOffsetFlag()));
+		    reqOrderInsertVO.setContingentCondition(ContingentCondition.ofCode(pInputOrder.getContingentCondition()));
+		    reqOrderInsertVO.setDirection(Direction.ofCode(pInputOrder.getDirection()));
+		    reqOrderInsertVO.setForceCloseReason(ForceCloseReason.ofCode(pInputOrder.getForceCloseReason()));
+		    reqOrderInsertVO.setgTDDate(pInputOrder.getGTDDate());
+		    reqOrderInsertVO.setInstrumentID(pInputOrder.getInstrumentID());
+		    reqOrderInsertVO.setInvestorID(pInputOrder.getInvestorID());
+		    reqOrderInsertVO.setIsAutoSuspend(pInputOrder.getIsAutoSuspend());
+		    reqOrderInsertVO.setLimitPrice(pInputOrder.getLimitPrice());
+		    reqOrderInsertVO.setMinVolume(pInputOrder.getMinVolume());
+		    reqOrderInsertVO.setOrderPriceType(OrderPriceType.ofCode(pInputOrder.getOrderPriceType()));
+		    reqOrderInsertVO.setOrderRef(pInputOrder.getOrderRef());
+		    reqOrderInsertVO.setRequestID(pInputOrder.getRequestID());
+		    reqOrderInsertVO.setStopPrice(pInputOrder.getStopPrice());
+		    reqOrderInsertVO.setTimeCondition(TimeCondition.ofCode(pInputOrder.getTimeCondition()));
+		    reqOrderInsertVO.setUserForceClose(pInputOrder.getUserForceClose());
+		    reqOrderInsertVO.setUserID(pInputOrder.getUserID());
+		    reqOrderInsertVO.setVolumeCondition(VolumeCondition.ofCode(pInputOrder.getVolumeCondition()));
+		    reqOrderInsertVO.setVolumeTotalOriginal(pInputOrder.getVolumeTotalOriginal());
+		    reqOrderInsertVO.setnRequestID(nRequestID);
+		}
+		this.template.convertAndSend("future.trade.direct", ONRSPORDERINSERT_KEY, reqOrderInsertVO);
+		
 	}
 	
 	//撤单
@@ -268,11 +301,49 @@ public class MyTraderSpi extends CThostFtdcTraderSpi {
 	@Override
 	public void OnRspError(CThostFtdcRspInfoField pRspInfo, int nRequestID,
 			boolean bIsLast) {
+	    if(pRspInfo != null){
+	        OnRspInfo rspInfo = new OnRspInfo();
+	        rspInfo.setErrorId(pRspInfo.getErrorID());
+	        rspInfo.setErrorMsg(pRspInfo.getErrorMsg());
+	        rspInfo.setnRequestID(nRequestID);
+	        this.template.convertAndSend("future.trade.direct", ONRSPERROR_KEY, rspInfo);
+	    }
 	    logger.error("错误回调");
 	}
 	@Override
 	public void OnErrRtnOrderInsert(CThostFtdcInputOrderField pInputOrder,
 			CThostFtdcRspInfoField pRspInfo) {
+	    
+	    ReqOrderInsertVO reqOrderInsertVO = new ReqOrderInsertVO();
+        if(pRspInfo != null){
+            reqOrderInsertVO.setErrorId(pRspInfo.getErrorID());
+            reqOrderInsertVO.setErrorMsg(pRspInfo.getErrorMsg());
+        }
+        if(pInputOrder != null){
+            reqOrderInsertVO.setBusinessUnit(pInputOrder.getBusinessUnit());
+            reqOrderInsertVO.setCombHedgeFlag(CombHedgeFlag.ofCode(pInputOrder.getCombHedgeFlag()));
+            reqOrderInsertVO.setCombOffsetFlag(CombOffsetFlag.ofCode(pInputOrder.getCombOffsetFlag()));
+            reqOrderInsertVO.setContingentCondition(ContingentCondition.ofCode(pInputOrder.getContingentCondition()));
+            reqOrderInsertVO.setDirection(Direction.ofCode(pInputOrder.getDirection()));
+            reqOrderInsertVO.setForceCloseReason(ForceCloseReason.ofCode(pInputOrder.getForceCloseReason()));
+            reqOrderInsertVO.setgTDDate(pInputOrder.getGTDDate());
+            reqOrderInsertVO.setInstrumentID(pInputOrder.getInstrumentID());
+            reqOrderInsertVO.setInvestorID(pInputOrder.getInvestorID());
+            reqOrderInsertVO.setIsAutoSuspend(pInputOrder.getIsAutoSuspend());
+            reqOrderInsertVO.setLimitPrice(pInputOrder.getLimitPrice());
+            reqOrderInsertVO.setMinVolume(pInputOrder.getMinVolume());
+            reqOrderInsertVO.setOrderPriceType(OrderPriceType.ofCode(pInputOrder.getOrderPriceType()));
+            reqOrderInsertVO.setOrderRef(pInputOrder.getOrderRef());
+            reqOrderInsertVO.setRequestID(pInputOrder.getRequestID());
+            reqOrderInsertVO.setStopPrice(pInputOrder.getStopPrice());
+            reqOrderInsertVO.setTimeCondition(TimeCondition.ofCode(pInputOrder.getTimeCondition()));
+            reqOrderInsertVO.setUserForceClose(pInputOrder.getUserForceClose());
+            reqOrderInsertVO.setUserID(pInputOrder.getUserID());
+            reqOrderInsertVO.setVolumeCondition(VolumeCondition.ofCode(pInputOrder.getVolumeCondition()));
+            reqOrderInsertVO.setVolumeTotalOriginal(pInputOrder.getVolumeTotalOriginal());
+        }
+        
+        this.template.convertAndSend("future.trade.direct", ONERRRTNORDERINSERT_KEY, reqOrderInsertVO);
 	    logger.error("报单录入错误回调："+JSON.toJSONString(pRspInfo));
 	}
 	
