@@ -60,10 +60,10 @@ public class TradeServiceTest extends AbstractJUnit4SpringContextTests{
             }
             
             ReqOrderInsertVO reqOrderInsertVO = new ReqOrderInsertVO();
-            reqOrderInsertVO.setInstrumentID("cu1805");
+            reqOrderInsertVO.setInstrumentID("cu1808");
             reqOrderInsertVO.setLimitPrice(Double.valueOf(inputStr));
             reqOrderInsertVO.setCombHedgeFlag(CombHedgeFlag.Speculation);
-            reqOrderInsertVO.setCombOffsetFlag(CombOffsetFlag.OPEN);
+            reqOrderInsertVO.setCombOffsetFlag(CombOffsetFlag.CLOSE);
             reqOrderInsertVO.setTimeCondition(TimeCondition.IOC);
             reqOrderInsertVO.setDirection(Direction.BUY);
             reqOrderInsertVO.setVolumeCondition(VolumeCondition.AV);

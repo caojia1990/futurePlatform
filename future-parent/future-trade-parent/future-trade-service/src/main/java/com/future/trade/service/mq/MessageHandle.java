@@ -2,8 +2,11 @@ package com.future.trade.service.mq;
 
 import org.apache.log4j.Logger;
 
+import com.alibaba.fastjson.JSON;
+import com.future.trade.api.vo.OnRspInfo;
 import com.future.trade.api.vo.OnRtnOrderVO;
 import com.future.trade.api.vo.OnRtnTradeVO;
+import com.future.trade.api.vo.ReqOrderInsertVO;
 
 public class MessageHandle {
     
@@ -36,8 +39,8 @@ public class MessageHandle {
     /**
      * 报单错误回报
      */
-    public void onRspOrderInsert(){
-        System.out.println("报单错误回报");
+    public void onRspOrderInsert(ReqOrderInsertVO reqOrderInsertVO){
+        System.out.println("报单错误回报"+JSON.toJSONString(reqOrderInsertVO));
     }
     
     /**
@@ -47,12 +50,12 @@ public class MessageHandle {
         System.out.println("撤单回报");
     }
     
-    public void onRspError(){
-        System.out.println("错误回报");
+    public void onRspError(OnRspInfo onRspInfo){
+        System.out.println("错误回报"+JSON.toJSONString(onRspInfo));
     }
     
-    public void onErrRtnOrderInsert(){
-        System.out.println("错误回报");
+    public void onErrRtnOrderInsert(ReqOrderInsertVO reqOrderInsertVO){
+        System.out.println("错误回报"+JSON.toJSONString(reqOrderInsertVO));
     }
     
 
