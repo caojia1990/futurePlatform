@@ -186,6 +186,7 @@ public class FiveMinutesEMA implements Runnable {
                     reqOrderInsertVO.setVolumeTotalOriginal((int)volume);
                     reqOrderInsertVO.setOrderPriceType(OrderPriceType.LimitPrice);
                     orderService.reqOrderInsert(reqOrderInsertVO);
+                    logger.info(instrumentId+"出现金叉，下多单");
                 }
                 
                 
@@ -210,6 +211,7 @@ public class FiveMinutesEMA implements Runnable {
                         reqOrderInsertVO.setVolumeTotalOriginal(onRtnTradeVO.getVolume());
                         reqOrderInsertVO.setOrderPriceType(OrderPriceType.LimitPrice);
                         orderService.reqOrderInsert(reqOrderInsertVO);
+                        logger.info(instrumentId+"出现金叉，平空单");
                     }
                 }
             }
@@ -236,6 +238,7 @@ public class FiveMinutesEMA implements Runnable {
                     reqOrderInsertVO.setVolumeTotalOriginal((int)volume);
                     reqOrderInsertVO.setOrderPriceType(OrderPriceType.LimitPrice);
                     orderService.reqOrderInsert(reqOrderInsertVO);
+                    logger.info(instrumentId+"出现死叉，下空单");
                 }
                 
                 //查询是否有多单
@@ -259,6 +262,7 @@ public class FiveMinutesEMA implements Runnable {
                         reqOrderInsertVO.setVolumeTotalOriginal(onRtnTradeVO.getVolume());
                         reqOrderInsertVO.setOrderPriceType(OrderPriceType.LimitPrice);
                         orderService.reqOrderInsert(reqOrderInsertVO);
+                        logger.info(instrumentId+"出现金叉，平多单");
                     }
                 }
                 
@@ -463,7 +467,6 @@ public class FiveMinutesEMA implements Runnable {
                             //买开
                             if(tradeVO.getPrice() - tickPrice*targetProfit.getStopLessTick() >= marketData.getLastPrice().doubleValue()) {
                                 //止损
-                                logger.info("触发止损"+instrumentId);
                                 ReqOrderInsertVO reqOrderInsertVO = new ReqOrderInsertVO();
                                 reqOrderInsertVO.setAccountNo(ACCOUNT_NO);
                                 reqOrderInsertVO.setInvestorId(ClientStarter.INVESTOR_ID);
@@ -480,6 +483,7 @@ public class FiveMinutesEMA implements Runnable {
                                 reqOrderInsertVO.setVolumeTotalOriginal(tradeVO.getVolume());
                                 reqOrderInsertVO.setOrderPriceType(OrderPriceType.LimitPrice);
                                 orderService.reqOrderInsert(reqOrderInsertVO);
+                                logger.info("触发止损"+instrumentId);
                             }
                             
                             //判断是否触发止盈
@@ -493,7 +497,6 @@ public class FiveMinutesEMA implements Runnable {
                                 
                                 if(new BigDecimal(marketData.getLastPrice()).compareTo(diff) <= 0){
                                     //止盈
-                                    logger.info("触发止盈"+instrumentId);
                                     ReqOrderInsertVO reqOrderInsertVO = new ReqOrderInsertVO();
                                     reqOrderInsertVO.setAccountNo(ACCOUNT_NO);
                                     reqOrderInsertVO.setInvestorId(ClientStarter.INVESTOR_ID);
@@ -510,6 +513,7 @@ public class FiveMinutesEMA implements Runnable {
                                     reqOrderInsertVO.setVolumeTotalOriginal(tradeVO.getVolume());
                                     reqOrderInsertVO.setOrderPriceType(OrderPriceType.LimitPrice);
                                     orderService.reqOrderInsert(reqOrderInsertVO);
+                                    logger.info("触发止盈"+instrumentId);
                                 }
                             }
                             
@@ -517,7 +521,6 @@ public class FiveMinutesEMA implements Runnable {
                             //卖开
                             if(tradeVO.getPrice() + tickPrice*targetProfit.getStopLessTick() <= marketData.getLastPrice().doubleValue()) {
                               //止损
-                                logger.info("触发止损"+instrumentId);
                                 ReqOrderInsertVO reqOrderInsertVO = new ReqOrderInsertVO();
                                 reqOrderInsertVO.setAccountNo(ACCOUNT_NO);
                                 reqOrderInsertVO.setInvestorId(ClientStarter.INVESTOR_ID);
@@ -534,6 +537,7 @@ public class FiveMinutesEMA implements Runnable {
                                 reqOrderInsertVO.setVolumeTotalOriginal(tradeVO.getVolume());
                                 reqOrderInsertVO.setOrderPriceType(OrderPriceType.LimitPrice);
                                 orderService.reqOrderInsert(reqOrderInsertVO);
+                                logger.info("触发止损"+instrumentId);
                             }
                             
                             //判断是否触发止盈
@@ -546,7 +550,6 @@ public class FiveMinutesEMA implements Runnable {
                                                 .multiply(targetProfit.getBack())).setScale(2, RoundingMode.HALF_UP);
                                 if(new BigDecimal(marketData.getLastPrice()).compareTo(diff) >= 0){
                                     //止盈
-                                    logger.info("触发止盈"+instrumentId);
                                     ReqOrderInsertVO reqOrderInsertVO = new ReqOrderInsertVO();
                                     reqOrderInsertVO.setAccountNo(ACCOUNT_NO);
                                     reqOrderInsertVO.setInvestorId(ClientStarter.INVESTOR_ID);
@@ -563,6 +566,7 @@ public class FiveMinutesEMA implements Runnable {
                                     reqOrderInsertVO.setVolumeTotalOriginal(tradeVO.getVolume());
                                     reqOrderInsertVO.setOrderPriceType(OrderPriceType.LimitPrice);
                                     orderService.reqOrderInsert(reqOrderInsertVO);
+                                    logger.info("触发止盈"+instrumentId);
                                 }
                             }
                         }
