@@ -29,8 +29,10 @@ import com.future.order.service.dao.InvestorPositionDetailDao;
 import com.future.order.service.dao.OrderInputDao;
 import com.future.order.service.entity.OrderInput;
 import com.future.order.service.inner.PositionInnerService;
+import com.future.trade.api.vo.OnRspInfo;
 import com.future.trade.api.vo.OnRtnOrderVO;
 import com.future.trade.api.vo.OnRtnTradeVO;
+import com.future.trade.api.vo.ReqOrderInsertVO;
 
 /**
  * 交易中心消息接收处理
@@ -266,7 +268,7 @@ public class TradeMessageHandle {
     /**
      * 报单错误回报
      */
-    public void onRspOrderInsert(){
+    public void onRspOrderInsert(ReqOrderInsertVO reqOrderInsertVO){
         System.out.println("报单错误回报");
     }
     
@@ -277,11 +279,11 @@ public class TradeMessageHandle {
         System.out.println("撤单回报");
     }
     
-    public void onRspError(){
+    public void onRspError(OnRspInfo onRspInfo){
         System.out.println("错误回报");
     }
     
-    public void onErrRtnOrderInsert(){
+    public void onErrRtnOrderInsert(ReqOrderInsertVO reqOrderInsertVO){
         System.out.println("错误回报");
     }
 }

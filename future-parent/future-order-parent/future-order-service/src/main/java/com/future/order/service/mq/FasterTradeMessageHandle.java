@@ -20,8 +20,10 @@ import com.future.order.api.vo.OrderSubmitStatus;
 import com.future.order.api.vo.TimeCondition;
 import com.future.order.service.dao.OrderInputDao;
 import com.future.order.service.entity.OrderInput;
+import com.future.trade.api.vo.OnRspInfo;
 import com.future.trade.api.vo.OnRtnOrderVO;
 import com.future.trade.api.vo.OnRtnTradeVO;
+import com.future.trade.api.vo.ReqOrderInsertVO;
 
 /**
  * 交易中心消息接收处理
@@ -174,8 +176,22 @@ public class FasterTradeMessageHandle {
     /**
      * 报单错误回报
      */
-    public void onRspOrderInsert(){
-        System.out.println("报单错误回报");
+    public void onRspOrderInsert(ReqOrderInsertVO reqOrderInsertVO){
+        
+        OrderInput input = null;
+        try {
+            input = orderInputDao.selectByOrderRef(reqOrderInsertVO.getOrderRef());
+        } catch (EmptyResultDataAccessException e) {
+            //找不到报单信息，说明是从其他客户端下单
+            return;
+        }
+        
+        com.future.order.api.vo.OnRspInfo onRspInfo = new com.future.order.api.vo.OnRspInfo();
+        onRspInfo.setErrorId(reqOrderInsertVO.getErrorId());
+        onRspInfo.setErrorMsg(reqOrderInsertVO.getErrorMsg());
+        onRspInfo.setnRequestID(reqOrderInsertVO.getnRequestID());
+        rabbitTemplate.convertAndSend(this.onRspOrderInsert, input.getInvestorId(), onRspInfo);
+        System.out.println("onRspOrderInsert报单错误回报");
     }
     
     /**
@@ -185,11 +201,29 @@ public class FasterTradeMessageHandle {
         System.out.println("撤单回报");
     }
     
-    public void onRspError(){
-        System.out.println("错误回报");
+    public void onRspError(OnRspInfo onRspInfo){
+        com.future.order.api.vo.OnRspInfo rsp = new com.future.order.api.vo.OnRspInfo();
+        rsp.setErrorId(onRspInfo.getErrorId());
+        rsp.setErrorMsg(onRspInfo.getErrorMsg());
+        rsp.setnRequestID(onRspInfo.getnRequestID());
+        System.out.println("onRspError错误回报");
     }
     
-    public void onErrRtnOrderInsert(){
-        System.out.println("错误回报");
+    public void onErrRtnOrderInsert(ReqOrderInsertVO reqOrderInsertVO){
+        
+        OrderInput input = null;
+        try {
+            input = orderInputDao.selectByOrderRef(reqOrderInsertVO.getOrderRef());
+        } catch (EmptyResultDataAccessException e) {
+            //找不到报单信息，说明是从其他客户端下单
+            return;
+        }
+        
+        com.future.order.api.vo.OnRspInfo onRspInfo = new com.future.order.api.vo.OnRspInfo();
+        onRspInfo.setErrorId(reqOrderInsertVO.getErrorId());
+        onRspInfo.setErrorMsg(reqOrderInsertVO.getErrorMsg());
+        onRspInfo.setnRequestID(reqOrderInsertVO.getnRequestID());
+        rabbitTemplate.convertAndSend(this.onErrRtnOrderInsert, input.getInvestorId(), onRspInfo);
+        System.out.println("onErrRtnOrderInsert错误回报");
     }
 }
