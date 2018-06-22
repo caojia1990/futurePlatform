@@ -40,7 +40,7 @@ public class MessageHandle {
      * 报单错误回报
      */
     public void onRspOrderInsert(ReqOrderInsertVO reqOrderInsertVO){
-        System.out.println("报单错误回报"+JSON.toJSONString(reqOrderInsertVO));
+        System.out.println("onRspOrderInsert报单错误回报"+JSON.toJSONString(reqOrderInsertVO));
     }
     
     /**
@@ -51,11 +51,11 @@ public class MessageHandle {
     }
     
     public void onRspError(OnRspInfo onRspInfo){
-        System.out.println("错误回报"+JSON.toJSONString(onRspInfo));
+        System.out.println("onRspError错误回报"+JSON.toJSONString(onRspInfo));
     }
     
     public void onErrRtnOrderInsert(ReqOrderInsertVO reqOrderInsertVO){
-        System.out.println("错误回报"+JSON.toJSONString(reqOrderInsertVO));
+        System.out.println("onErrRtnOrderInsert错误回报"+JSON.toJSONString(reqOrderInsertVO));
     }
     
 
