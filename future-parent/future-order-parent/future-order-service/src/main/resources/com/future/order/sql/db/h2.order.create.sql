@@ -50,6 +50,7 @@ create table FUTURE_INVESTOR_POSI_DETAIL(
     OPEN_DATE varchar(8),
     TRADE_ID varchar(16),
     VOLUME int,
+    CLOSE_VOLUME int,
     OPEN_PRICE double,
     TRADING_DAY varchar(8),
     SETTLEMENT_ID varchar(16),

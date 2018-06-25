@@ -56,6 +56,11 @@ public class InvestorPositionDetailVO implements Serializable{
     private int volume;
     
     /**
+     * 平仓手数
+     */
+    private int closeVolume;
+    
+    /**
      * 开仓价
      */
     private BigDecimal openPrice;
@@ -183,6 +188,13 @@ public class InvestorPositionDetailVO implements Serializable{
     public void setCombInstrumentID(String combInstrumentID) {
         this.combInstrumentID = combInstrumentID;
     }
-    
+
+    public int getCloseVolume() {
+        return closeVolume;
+    }
+
+    public void setCloseVolume(int closeVolume) {
+        this.closeVolume = closeVolume;
+    }
 
 }
