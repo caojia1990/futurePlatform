@@ -366,6 +366,22 @@ public class QuotaHandle implements MessageReceive{
                     fiveMinMap.put(instrumentId, kline);
                 }
                 
+                if((marketData.getUpdateTime().equals("10:14:58") || marketData.getUpdateTime().equals("11:29:58") 
+                        || marketData.getUpdateTime().equals("14:59:58")) 
+                        && marketData.getUpdateMillisec() == 500){
+                    //提前一秒计算EMA 防止收盘下不了单
+                    EMA ema = this.calcEMA(instrumentId, fiveMinMap.get(instrumentId).getClosePrice());
+                    if(ema != null){
+                        ema.setTitle(fiveMinMap.get(instrumentId).getTitle());
+                        ema.setTradingDay(marketData.getTradingDate());
+                        ema.setUpperPrice(new BigDecimal(marketData.getUpperLimitPrice()));
+                        ema.setLowerPrice(new BigDecimal(marketData.getLowerLimitPrice()));
+                        ema.setHighestPrice(fiveMinMap.get(instrumentId).getHighestPrice());
+                        ema.setLowestPrice(fiveMinMap.get(instrumentId).getLowestPrice());
+                        ema.setClosePrice(fiveMinMap.get(instrumentId).getClosePrice());
+                        rabbitTemplate.convertAndSend("com.future.quota", "quota."+instrumentId+".EMA.5m", ema);
+                    }
+                }else
                 //如果该跳行情是区间内最后一跳，直接保存
                 if(marketData.getUpdateTime().equals(endTime) && marketData.getUpdateMillisec() == 500){
                     //TODO
