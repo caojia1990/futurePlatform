@@ -46,11 +46,11 @@ public class EMAStarter {
 
             admin.declareBinding(BindingBuilder.bind(marketQ).to(marketExchange).with("instrument.CF901"));//棉花
             admin.declareBinding(BindingBuilder.bind(marketQ).to(marketExchange).with("instrument.SR901"));//白糖
-            admin.declareBinding(BindingBuilder.bind(marketQ).to(marketExchange).with("instrument.m1809"));//豆粕
+            admin.declareBinding(BindingBuilder.bind(marketQ).to(marketExchange).with("instrument.m1901"));//豆粕
             admin.declareBinding(BindingBuilder.bind(marketQ).to(marketExchange).with("instrument.RM809"));//菜粕
-            admin.declareBinding(BindingBuilder.bind(marketQ).to(marketExchange).with("instrument.y1809"));//豆油
-            admin.declareBinding(BindingBuilder.bind(marketQ).to(marketExchange).with("instrument.p1809"));//棕榈油
-            admin.declareBinding(BindingBuilder.bind(marketQ).to(marketExchange).with("instrument.OI809"));//菜油
+            admin.declareBinding(BindingBuilder.bind(marketQ).to(marketExchange).with("instrument.y1901"));//豆油
+            admin.declareBinding(BindingBuilder.bind(marketQ).to(marketExchange).with("instrument.p1901"));//棕榈油
+            admin.declareBinding(BindingBuilder.bind(marketQ).to(marketExchange).with("instrument.OI901"));//菜油
             admin.declareBinding(BindingBuilder.bind(marketQ).to(marketExchange).with("instrument.pp1809"));
         }
         
