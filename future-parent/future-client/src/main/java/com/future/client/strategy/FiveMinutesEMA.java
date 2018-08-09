@@ -593,10 +593,29 @@ public class FiveMinutesEMA implements Runnable {
         static final String ACCOUNT_NO = "00010";
         
         //止盈跳数
-        private static final int STOP_TICK = 1;
+        private static final int STOP_TICK = 2;
         
         public static final LinkedBlockingQueue<DepthMarketData> MARKET_QUEUE = new LinkedBlockingQueue<>();
 
+        final private DepthMarketData marketData;
+        
+        final private OrderService orderService;
+        
+        final private CacheMap cacheMap;
+        
+        final private TradeDao tradeDao;
+        
+        final private StringRedisTemplate redisTemplate;
+        
+        public Hedging(OrderService orderService, CacheMap cacheMap, TradeDao tradeDao, 
+                DepthMarketData marketData, StringRedisTemplate redisTemplate) {
+            this.orderService = orderService;
+            this.cacheMap = cacheMap;
+            this.tradeDao = tradeDao;
+            this.marketData = marketData;
+            this.redisTemplate = redisTemplate;
+        }
+        
         @Override
         public void run() {
 
@@ -609,7 +628,12 @@ public class FiveMinutesEMA implements Runnable {
                     e.printStackTrace();
                 }
                 
-                
+                String instrumentId = marketData.getInstrumentID();
+                List<OnRtnTradeVO> list = this.tradeDao.selectByCondition(ClientStarter.INVESTOR_ID, ACCOUNT_NO, instrumentId);
+                if(list != null && list.size() > 0) {
+                    
+                    
+                }
                 
             }
             
