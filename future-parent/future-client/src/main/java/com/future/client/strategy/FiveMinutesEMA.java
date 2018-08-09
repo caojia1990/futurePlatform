@@ -5,6 +5,7 @@ import java.math.RoundingMode;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.LinkedBlockingQueue;
 
 import org.apache.log4j.Logger;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -579,5 +580,39 @@ public class FiveMinutesEMA implements Runnable {
             
         }
         
+    }
+    
+    /**
+     * 对冲策略
+     * @author caojia
+     *
+     */
+    public static class Hedging implements Runnable {
+        
+        //对冲子账号
+        static final String ACCOUNT_NO = "00010";
+        
+        //止盈跳数
+        private static final int STOP_TICK = 1;
+        
+        public static final LinkedBlockingQueue<DepthMarketData> MARKET_QUEUE = new LinkedBlockingQueue<>();
+
+        @Override
+        public void run() {
+
+            while (true) {
+                DepthMarketData marketData = null;
+                try {
+                    marketData = MARKET_QUEUE.take();
+                } catch (InterruptedException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+                
+                
+                
+            }
+            
+        }
     }
 }
