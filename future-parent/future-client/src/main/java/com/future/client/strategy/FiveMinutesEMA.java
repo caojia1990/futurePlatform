@@ -12,9 +12,11 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 
 import com.alibaba.fastjson.JSON;
 import com.future.client.ClientStarter;
+import com.future.client.EMAStarter;
 import com.future.client.dao.TradeDao;
 import com.future.client.entity.TargetProfit;
 import com.future.client.utils.CacheMap;
+import com.future.client.utils.SpringContextUtil;
 import com.future.common.exception.CommonFutureException;
 import com.future.instrument.api.exception.InstrumentException;
 import com.future.instrument.api.vo.InstrumentVO;
@@ -597,8 +599,6 @@ public class FiveMinutesEMA implements Runnable {
         
         public static final LinkedBlockingQueue<DepthMarketData> MARKET_QUEUE = new LinkedBlockingQueue<>();
 
-        final private DepthMarketData marketData;
-        
         final private OrderService orderService;
         
         final private CacheMap cacheMap;
@@ -607,12 +607,13 @@ public class FiveMinutesEMA implements Runnable {
         
         final private StringRedisTemplate redisTemplate;
         
-        public Hedging(OrderService orderService, CacheMap cacheMap, TradeDao tradeDao, 
-                DepthMarketData marketData, StringRedisTemplate redisTemplate) {
+        private static Hedging hedging;
+        
+        public Hedging(OrderService orderService, CacheMap cacheMap, 
+                TradeDao tradeDao, StringRedisTemplate redisTemplate) {
             this.orderService = orderService;
             this.cacheMap = cacheMap;
             this.tradeDao = tradeDao;
-            this.marketData = marketData;
             this.redisTemplate = redisTemplate;
         }
         
@@ -620,23 +621,87 @@ public class FiveMinutesEMA implements Runnable {
         public void run() {
 
             while (true) {
-                DepthMarketData marketData = null;
                 try {
-                    marketData = MARKET_QUEUE.take();
-                } catch (InterruptedException e) {
+                    DepthMarketData marketData = MARKET_QUEUE.take();
+                
+                
+                    String instrumentId = marketData.getInstrumentID();
+                    double tickPrice = this.cacheMap.getTickPrice(instrumentId);
+                    List<OnRtnTradeVO> list = this.tradeDao.selectByCondition(ClientStarter.INVESTOR_ID, ACCOUNT_NO, instrumentId);
+                    if(list != null && list.size() > 0) {
+                        for (OnRtnTradeVO tradeVO : list) {
+                            
+                            if(tradeVO.getDirection() == Direction.BUY) {
+                                //买开
+                                if(tradeVO.getPrice() + tickPrice*STOP_TICK <= marketData.getBidPrice1().doubleValue()) {
+                                    
+                                    //止赢
+                                    ReqOrderInsertVO reqOrderInsertVO = new ReqOrderInsertVO();
+                                    reqOrderInsertVO.setAccountNo(ACCOUNT_NO);
+                                    reqOrderInsertVO.setInvestorId(EMAStarter.INVESTOR_ID);
+                                    reqOrderInsertVO.setInstrumentId(instrumentId);
+                                    reqOrderInsertVO.setLimitPrice(marketData.getBidPrice1().doubleValue());
+                                    if(tradeVO.getTradingDay().equals(marketData.getTradingDate())) {
+                                        reqOrderInsertVO.setCombOffsetFlag(CombOffsetFlag.CloseToday);
+                                    }else {
+                                        reqOrderInsertVO.setCombOffsetFlag(CombOffsetFlag.CLOSE);
+                                    }
+                                    reqOrderInsertVO.setTimeCondition(TimeCondition.IOC);
+                                    reqOrderInsertVO.setDirection(Direction.SELL);
+                                    reqOrderInsertVO.setMinVolume(1);
+                                    reqOrderInsertVO.setVolumeTotalOriginal(tradeVO.getVolume());
+                                    reqOrderInsertVO.setOrderPriceType(OrderPriceType.LimitPrice);
+                                    orderService.reqOrderInsert(reqOrderInsertVO);
+                                }
+                            }else {
+                                //卖开
+                                if(tradeVO.getPrice() - tickPrice*STOP_TICK >= marketData.getAskPrice1().doubleValue()) {
+                                    
+                                    //止赢
+                                      ReqOrderInsertVO reqOrderInsertVO = new ReqOrderInsertVO();
+                                      reqOrderInsertVO.setAccountNo(ACCOUNT_NO);
+                                      reqOrderInsertVO.setInvestorId(EMAStarter.INVESTOR_ID);
+                                      reqOrderInsertVO.setInstrumentId(instrumentId);
+                                      reqOrderInsertVO.setLimitPrice(marketData.getAskPrice1().doubleValue());
+                                      if(tradeVO.getTradingDay().equals(marketData.getTradingDate())) {
+                                          reqOrderInsertVO.setCombOffsetFlag(CombOffsetFlag.CloseToday);
+                                      }else {
+                                          reqOrderInsertVO.setCombOffsetFlag(CombOffsetFlag.CLOSE);
+                                      }
+                                      reqOrderInsertVO.setTimeCondition(TimeCondition.IOC);
+                                      reqOrderInsertVO.setDirection(Direction.BUY);
+                                      reqOrderInsertVO.setMinVolume(1);
+                                      reqOrderInsertVO.setVolumeTotalOriginal(tradeVO.getVolume());
+                                      reqOrderInsertVO.setOrderPriceType(OrderPriceType.LimitPrice);
+                                      orderService.reqOrderInsert(reqOrderInsertVO);
+                                  }
+                            }
+                        }
+                    }
+                } catch (Exception e) {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
-                
-                String instrumentId = marketData.getInstrumentID();
-                List<OnRtnTradeVO> list = this.tradeDao.selectByCondition(ClientStarter.INVESTOR_ID, ACCOUNT_NO, instrumentId);
-                if(list != null && list.size() > 0) {
-                    
-                    
-                }
-                
             }
-            
         }
+        
+        private Hedging(){
+            this.cacheMap = (CacheMap) SpringContextUtil.getBean("cacheMap");
+            this.orderService = (OrderService) SpringContextUtil.getBean("orderService");
+            this.tradeDao = (TradeDao) SpringContextUtil.getBean("tradeDao");
+            this.redisTemplate = (StringRedisTemplate) SpringContextUtil.getBean("redisTemplate");
+        }
+        
+        public static void START(){
+            if(hedging == null){
+                hedging = new Hedging();
+            }
+            new Thread(hedging).start();
+        }
+        
+        public static void offerMarket(DepthMarketData marketData){
+            MARKET_QUEUE.offer(marketData);
+        }
+        
     }
 }
