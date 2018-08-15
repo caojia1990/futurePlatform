@@ -116,7 +116,7 @@ public class MaHandle implements Runnable {
                         ma.setComplete(true);
                         rabbitTemplate.convertAndSend(EXCHANGE_NAME, "quota."+instrumentId+".MA.1m", ma);
                         //保存收盘价到队列
-                        this.addClosePrice(instrumentId, marketData.getLastPrice());
+                        this.addClosePrice(instrumentId, ma.getLastPrice().doubleValue());
                         //删除缓存的MA数据
                         maMap.remove(instrumentId);
                     }
@@ -124,7 +124,7 @@ public class MaHandle implements Runnable {
                     try {
                         klineRange = this.klineRangeDao.selectByCondition(product, "1m", marketData.getUpdateTime());
                         //把当前坐标放入缓存
-                        rangeMap.put(instrumentId, klineRange);
+                        rangeMap.put(product, klineRange);
                         ma = new MA();
                         ma.setInstrumentId(instrumentId);
                         ma.setPersiod("1m");
