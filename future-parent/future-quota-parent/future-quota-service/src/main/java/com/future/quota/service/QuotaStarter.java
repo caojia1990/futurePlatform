@@ -7,6 +7,8 @@ import org.springframework.amqp.rabbit.core.RabbitAdmin;
 import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import com.future.quota.service.handle.MaHandle;
+
 public class QuotaStarter {
     
     public static void main(String[] args) {
@@ -23,6 +25,7 @@ public class QuotaStarter {
         //admin.declareBinding(BindingBuilder.bind(marketQ).to(topicExchange).with("instrument.cu1806"));
         admin.declareBinding(BindingBuilder.bind(marketQ).to(topicExchange).with("instrument.*"));
         
+        MaHandle.START(context);
     }
 
 }

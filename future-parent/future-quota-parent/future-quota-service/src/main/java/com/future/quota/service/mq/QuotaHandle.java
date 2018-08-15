@@ -20,6 +20,7 @@ import com.future.quota.api.vo.EMA;
 import com.future.quota.api.vo.Kline;
 import com.future.quota.api.vo.KlineRange;
 import com.future.quota.service.dao.KlineRangeDao;
+import com.future.quota.service.handle.MaHandle;
 
 public class QuotaHandle implements MessageReceive{
     
@@ -290,6 +291,8 @@ public class QuotaHandle implements MessageReceive{
     };
     @Override
     public void handleMessage(DepthMarketData marketData) {
+        //MA线程
+        MaHandle.OFFERMARKET(marketData);
         
         String instrumentId = marketData.getInstrumentID();
         
