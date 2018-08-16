@@ -9,6 +9,7 @@ import com.future.client.strategy.FiveMinutesEMA;
 import com.future.client.utils.CacheMap;
 import com.future.order.api.service.OrderService;
 import com.future.quota.api.vo.EMA;
+import com.future.quota.api.vo.MA;
 
 public class QuotaMessageHandle{
     
@@ -31,6 +32,9 @@ public class QuotaMessageHandle{
         
         taskExecutor.execute(new FiveMinutesEMA(orderService,ema,redisTemplate,cacheMap,tradeDao));
         
+    }
+    
+    public void handleMa(MA ma){
     }
 
 }

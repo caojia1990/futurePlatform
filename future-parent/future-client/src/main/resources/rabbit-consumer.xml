@@ -45,6 +45,7 @@
     <rabbit:topic-exchange name="com.future.quota">
     </rabbit:topic-exchange>
     <rabbit:queue id="quotaQ"></rabbit:queue>
+    <rabbit:queue id="maQuotaQ"></rabbit:queue>
     
     <!-- 设置监听 -->
     <rabbit:listener-container connection-factory="connectionFactory" message-converter="messageConverter">
@@ -57,6 +58,7 @@
         <rabbit:listener ref="messageHandle" queues="onErrRtnOrderInsertQ" method="onErrRtnOrderInsert"/>
         <rabbit:listener ref="marketMessageHandle" queues="marketQ" method="handleMessage"/>
         <rabbit:listener ref="quotaMessageHandle" queues="quotaQ" method="handleMessage"/>
+        <rabbit:listener ref="quotaMessageHandle" queues="maQuotaQ" method="handleMa"/>
     </rabbit:listener-container>
     
     <!-- 交易消息处理 -->
