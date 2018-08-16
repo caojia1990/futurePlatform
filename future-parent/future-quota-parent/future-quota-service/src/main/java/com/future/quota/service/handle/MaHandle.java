@@ -180,7 +180,7 @@ public class MaHandle implements Runnable {
             CLOSE_PRICE_LIST.put(instrumentId, list);
         }
         
-        list.addLast(price);
+        list.push(price);
         //队列只保留前4分钟的收盘价
         if(list.size() >= 5){
             list.pollLast();
