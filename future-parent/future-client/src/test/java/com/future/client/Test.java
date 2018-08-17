@@ -13,6 +13,14 @@ public class Test {
     int i;
     
     public static void main(String[] args) throws ParseException {
+        
+        
+        BigDecimal diff1 = new BigDecimal(2856)
+                .add(new BigDecimal(3020).subtract(new BigDecimal(2856))
+                        .multiply(new BigDecimal("0.33"))).setScale(2, RoundingMode.HALF_UP);
+        System.out.println(diff1);
+        
+        
         Test test = new Test();
         System.out.println(test.i);
         long volume = Math.round(250000/new BigDecimal(130000).doubleValue());
