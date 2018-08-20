@@ -28,6 +28,30 @@ public class MarketQuotations implements Serializable{
     
     //跌停价
     private BigDecimal lowerPrice;
+    
+    //买一价
+    private BigDecimal bidPrice1;
+    
+    //卖一价
+    private BigDecimal askPrice1;
+    
+    
+
+    public BigDecimal getBidPrice1() {
+        return bidPrice1;
+    }
+
+    public void setBidPrice1(BigDecimal bidPrice1) {
+        this.bidPrice1 = bidPrice1;
+    }
+
+    public BigDecimal getAskPrice1() {
+        return askPrice1;
+    }
+
+    public void setAskPrice1(BigDecimal askPrice1) {
+        this.askPrice1 = askPrice1;
+    }
 
     public String getInstrumentId() {
         return instrumentId;

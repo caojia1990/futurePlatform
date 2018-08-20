@@ -6,6 +6,7 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import com.future.client.dao.TradeDao;
 import com.future.client.strategy.FiveMinutesEMA;
+import com.future.client.strategy.OneMinutesMA;
 import com.future.client.utils.CacheMap;
 import com.future.order.api.service.OrderService;
 import com.future.quota.api.vo.EMA;
@@ -35,6 +36,7 @@ public class QuotaMessageHandle{
     }
     
     public void handleMa(MA ma){
+        OneMinutesMA.offerQuota(ma);
     }
 
 }

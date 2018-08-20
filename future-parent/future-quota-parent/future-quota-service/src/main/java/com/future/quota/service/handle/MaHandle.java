@@ -94,9 +94,14 @@ public class MaHandle implements Runnable {
                         ma.setComplete(false);
                         ma.setUpperPrice(new BigDecimal(marketData.getUpperLimitPrice()));
                         ma.setLowerPrice(new BigDecimal(marketData.getLowerLimitPrice()));
+                        ma.setBidPrice1(new BigDecimal(marketData.getBidPrice1()));
+                        ma.setAskPrice1(new BigDecimal(marketData.getAskPrice1()));
+                        ma.setTradingDay(marketData.getTradingDate());
                     }
                     ma.setLastPrice(new BigDecimal(marketData.getLastPrice()));
                     ma.setTitle(marketData.getUpdateTime());
+                    ma.setBidPrice1(new BigDecimal(marketData.getBidPrice1()));
+                    ma.setAskPrice1(new BigDecimal(marketData.getAskPrice1()));
                     BigDecimal ma5 = this.calcMA(instrumentId, marketData.getLastPrice());
                     ma.setMa5(ma5);
                     //如果该跳行情是区间内最后一跳，直接保存
@@ -132,7 +137,10 @@ public class MaHandle implements Runnable {
                         ma.setLastPrice(new BigDecimal(marketData.getLastPrice()));
                         ma.setUpperPrice(new BigDecimal(marketData.getUpperLimitPrice()));
                         ma.setLowerPrice(new BigDecimal(marketData.getLowerLimitPrice()));
+                        ma.setBidPrice1(new BigDecimal(marketData.getBidPrice1()));
+                        ma.setAskPrice1(new BigDecimal(marketData.getAskPrice1()));
                         ma.setTitle(marketData.getUpdateTime());
+                        ma.setTradingDay(marketData.getTradingDate());
                         BigDecimal ma5 = this.calcMA(instrumentId, marketData.getLastPrice());
                         ma.setMa5(ma5);
                         rabbitTemplate.convertAndSend(EXCHANGE_NAME, "quota."+instrumentId+".MA.1m", ma);

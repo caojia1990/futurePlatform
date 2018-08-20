@@ -63,7 +63,7 @@ public class TradeServiceTest extends AbstractJUnit4SpringContextTests{
             reqOrderInsertVO.setInstrumentID("cu1808");
             reqOrderInsertVO.setLimitPrice(Double.valueOf(inputStr));
             reqOrderInsertVO.setCombHedgeFlag(CombHedgeFlag.Speculation);
-            reqOrderInsertVO.setCombOffsetFlag(CombOffsetFlag.CLOSE);
+            reqOrderInsertVO.setCombOffsetFlag(CombOffsetFlag.OPEN);
             reqOrderInsertVO.setTimeCondition(TimeCondition.IOC);
             reqOrderInsertVO.setDirection(Direction.BUY);
             reqOrderInsertVO.setVolumeCondition(VolumeCondition.AV);

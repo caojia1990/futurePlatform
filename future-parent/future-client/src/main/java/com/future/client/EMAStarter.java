@@ -7,6 +7,8 @@ import org.springframework.amqp.rabbit.core.RabbitAdmin;
 import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import com.future.client.strategy.OneMinutesMA;
+
 public class EMAStarter {
     
     public static String INVESTOR_ID = "001";
@@ -67,6 +69,8 @@ public class EMAStarter {
             TopicExchange onRtnTradeExchange = (TopicExchange) context.getBean("onRtnTradeExchange");
             admin.declareBinding(BindingBuilder.bind(onRtnTradeQ).to(onRtnTradeExchange).with(INVESTOR_ID));
         }
+        //启动对冲策略
+        OneMinutesMA.START(context);
         
     }
 
