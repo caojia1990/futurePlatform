@@ -23,7 +23,7 @@ public class ClientStarter {
         TopicExchange topicExchange = (TopicExchange) context.getBean("com.future.market");
         Queue marketQ = (Queue) context.getBean("marketQ");
         RabbitAdmin admin = context.getBean(RabbitAdmin.class);
-        admin.declareBinding(BindingBuilder.bind(marketQ).to(topicExchange).with("instrument.cu1807"));
+        admin.declareBinding(BindingBuilder.bind(marketQ).to(topicExchange).with("instrument.cu1808"));
         admin.declareBinding(BindingBuilder.bind(marketQ).to(topicExchange).with("instrument.rb1810"));
         admin.declareBinding(BindingBuilder.bind(marketQ).to(topicExchange).with("instrument.al1807"));
         admin.declareBinding(BindingBuilder.bind(marketQ).to(topicExchange).with("instrument.ru1809"));
@@ -55,7 +55,7 @@ public class ClientStarter {
         TopicExchange onRtnTradeExchange = (TopicExchange) context.getBean("onRtnTradeExchange");
         admin.declareBinding(BindingBuilder.bind(onRtnTradeQ).to(onRtnTradeExchange).with(INVESTOR_ID));
         
-        PriceFollow.START();
+        //PriceFollow.START();
     }
 
 }
