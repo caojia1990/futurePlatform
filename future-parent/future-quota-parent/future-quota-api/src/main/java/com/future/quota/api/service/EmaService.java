@@ -2,6 +2,7 @@ package com.future.quota.api.service;
 
 import java.util.List;
 
+import com.future.quota.api.exception.QuotaException;
 import com.future.quota.api.vo.EMA;
 
 /**
@@ -15,7 +16,20 @@ public interface EmaService {
      * @param tradingDay
      * @return
      */
-    public List<EMA> queryEmaByTradingDay(String tradingDay);
+    public List<EMA> queryEmaByTradingDay(String tradingDay) throws QuotaException;
     
+    /**
+     * 更新或保存EMA
+     * @param ema
+     * @throws QuotaException
+     */
+    public void saveOrUpdateEma(EMA ema) throws QuotaException;
+    
+    /**
+     * 删除EMA
+     * @param instrumentId
+     * @throws QuotaException
+     */
+    public void remove(String instrumentId) throws QuotaException;
     
 }
