@@ -6,37 +6,38 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.future.common.exception.CommonFutureException;
-import com.future.instrument.api.exception.InstrumentException;
 import com.future.instrument.api.service.InstrumentService;
 import com.future.instrument.api.vo.InstrumentVO;
+import com.future.order.api.service.PositionService;
 import com.future.order.api.vo.InvestorPositionDetailVO;
 import com.future.order.api.vo.InvestorPositionVO;
 import com.future.order.api.vo.OnRtnTradeVO;
 import com.future.order.service.dao.InvestorPositionDao;
 import com.future.order.service.dao.InvestorPositionDetailDao;
-import com.future.order.service.inner.PositionInnerService;
 
-@Service("positionInnerService")
-public class PositionInnerServiceImpl implements PositionInnerService {
-	
-	@Autowired
-	private InvestorPositionDetailDao investorPositionDetailDao;
-	
-	@Autowired
-	private InvestorPositionDao investorPositionDao;
-	
-	@Autowired
-	private InstrumentService instrumentService;
+@Service("positionService")
+public class PositionServiceImpl implements PositionService {
+    
+    @Autowired
+    private InvestorPositionDetailDao investorPositionDetailDao;
+    
+    @Autowired
+    private InvestorPositionDao investorPositionDao;
+    
+    @Autowired
+    private InstrumentService instrumentService;
 
-	@Override
-	public void increasePosition(OnRtnTradeVO onRtnTradeVO) throws CommonFutureException {
-		
-	    InstrumentVO instrumentVO = this.instrumentService.queryInstrument(onRtnTradeVO.getInstrumentId());
-	    
-		//保存持仓明细
-		InvestorPositionDetailVO detailVO = new InvestorPositionDetailVO();
+    @Override
+    @Transactional
+    public void increasePosition(OnRtnTradeVO onRtnTradeVO) throws CommonFutureException {
+        
+        InstrumentVO instrumentVO = this.instrumentService.queryInstrument(onRtnTradeVO.getInstrumentId());
+        
+        //保存持仓明细
+        InvestorPositionDetailVO detailVO = new InvestorPositionDetailVO();
         detailVO.setAccountNo(onRtnTradeVO.getAccountNo());
         detailVO.setCombInstrumentID(onRtnTradeVO.getInstrumentId());
         detailVO.setDirection(onRtnTradeVO.getDirection());
@@ -55,8 +56,7 @@ public class PositionInnerServiceImpl implements PositionInnerService {
         try {
             investorPositionVO = this.investorPositionDao.selectByCondition(onRtnTradeVO.getAccountNo(), 
                     onRtnTradeVO.getInstrumentId(), onRtnTradeVO.getDirection());
-            //累计今日持仓
-            investorPositionVO.setPosition(investorPositionVO.getPosition()+onRtnTradeVO.getVolume());
+            
             //开仓金额
             investorPositionVO.setOpenAmount(investorPositionVO.getOpenAmount()
                     .add(new BigDecimal(onRtnTradeVO.getPrice())
@@ -64,7 +64,7 @@ public class PositionInnerServiceImpl implements PositionInnerService {
                             .multiply(new BigDecimal(onRtnTradeVO.getVolume()))
                             )
                     );
-            //持仓金额
+            //TODO 持仓成本 = （（原持仓成本*原持仓手数）+本次成交价格*成交手数）/原持仓手数+成交手数
             investorPositionVO.setPositionCost(investorPositionVO.getPositionCost()
                     .add(new BigDecimal(onRtnTradeVO.getPrice())
                             .multiply(new BigDecimal(instrumentVO.getVolumeMultiple()))
@@ -72,6 +72,8 @@ public class PositionInnerServiceImpl implements PositionInnerService {
                             )
                     );
             
+            //累计今日持仓
+            investorPositionVO.setPosition(investorPositionVO.getPosition()+onRtnTradeVO.getVolume());
             
         } catch (EmptyResultDataAccessException e) {
             investorPositionVO = new InvestorPositionVO();
@@ -89,53 +91,66 @@ public class PositionInnerServiceImpl implements PositionInnerService {
             investorPositionVO.setPositionCost(new BigDecimal(onRtnTradeVO.getPrice())
                     .multiply(new BigDecimal(instrumentVO.getVolumeMultiple()))
                     .multiply(new BigDecimal(onRtnTradeVO.getVolume()))
-                    );//持仓金额
+                    );//TODO 持仓成本 = （（原持仓成本*原持仓手数）+本次成交价格*成交手数）/原持仓手数+成交手数
             investorPositionVO.setTradingDay(onRtnTradeVO.getTradeDate());
             investorPositionVO.setPosition(onRtnTradeVO.getVolume());
             this.investorPositionDao.insert(investorPositionVO);
         }
         
-	}
+    }
 
-	@Override
-	public void reducePosition(OnRtnTradeVO onRtnTradeVO) {
-	    
-		switch (onRtnTradeVO.getOffsetFlag()) {
-		case CLOSE:
-			
-			break;
-		case CloseToday:
-		    //查询持仓明细
-		    List<InvestorPositionDetailVO> list = this.investorPositionDetailDao.selectByCondition(onRtnTradeVO.getAccountNo(), 
+    @Override
+    @Transactional
+    public void reducePosition(OnRtnTradeVO onRtnTradeVO) {
+        
+        //解冻并减少持仓
+        
+        switch (onRtnTradeVO.getOffsetFlag()) {
+        case CLOSE:
+            
+            break;
+        case CloseToday:
+            //查询持仓明细
+            List<InvestorPositionDetailVO> list = this.investorPositionDetailDao.selectByCondition(onRtnTradeVO.getAccountNo(), 
                     onRtnTradeVO.getInstrumentId(), onRtnTradeVO.getDirection(), onRtnTradeVO.getTradeDate());
-		    //平仓手数
-		    int closeVolume = onRtnTradeVO.getVolume();
-		    for (InvestorPositionDetailVO detail : list) {
+            //平仓手数
+            int closeVolume = onRtnTradeVO.getVolume();
+            for (InvestorPositionDetailVO detail : list) {
+                
                 if(closeVolume > detail.getVolume()){
                     closeVolume -= detail.getVolume();
-                    //平仓盈亏 = （卖出价-买入价）*合约乘数*手数
+                    //TODO 平仓明细 单笔明细全平 删除持仓明细
                     
+                }else{
+                    if(closeVolume == detail.getVolume()){
+                      //TODO 平仓明细 单笔明细全平 删除持仓明细
+                    }else {
+                      //TODO 单笔明细分笔平 减少持仓明细持仓手数
+                    }
+                    
+                    break;
                 }
+                
             }
-			break;
-		case CloseYesterday:
-			break;
-		default:
-			break;
-		}
+            break;
+        case CloseYesterday:
+            break;
+        default:
+            break;
+        }
 
-	}
+    }
 
-	@Override
-	public void frozenPosition() {
-		// TODO Auto-generated method stub
+    @Override
+    public void frozenPosition() {
+        // TODO Auto-generated method stub
 
-	}
+    }
 
-	@Override
-	public void releasePosition() {
-		// TODO Auto-generated method stub
+    @Override
+    public void releasePosition() {
+        // TODO Auto-generated method stub
 
-	}
+    }
 
 }

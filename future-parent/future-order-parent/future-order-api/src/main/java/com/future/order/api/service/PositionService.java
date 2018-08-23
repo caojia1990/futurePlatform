@@ -1,4 +1,4 @@
-package com.future.order.service.inner;
+package com.future.order.api.service;
 
 import com.future.common.exception.CommonFutureException;
 import com.future.order.api.vo.OnRtnTradeVO;
@@ -8,7 +8,7 @@ import com.future.order.api.vo.OnRtnTradeVO;
  * @author caojia
  *
  */
-public interface PositionInnerService {
+public interface PositionService {
 	
 	public void increasePosition(OnRtnTradeVO onRtnTradeVO) throws CommonFutureException;
 	

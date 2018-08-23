@@ -15,6 +15,7 @@ import com.future.common.exception.CommonFutureException;
 import com.future.instrument.api.service.CommissionService;
 import com.future.instrument.api.service.MarginService;
 import com.future.instrument.api.vo.InvestorTradeParamVO;
+import com.future.order.api.service.PositionService;
 import com.future.order.api.vo.CombHedgeFlag;
 import com.future.order.api.vo.ContingentCondition;
 import com.future.order.api.vo.Direction;
@@ -25,10 +26,8 @@ import com.future.order.api.vo.OrderPriceType;
 import com.future.order.api.vo.OrderStatus;
 import com.future.order.api.vo.OrderSubmitStatus;
 import com.future.order.api.vo.TimeCondition;
-import com.future.order.service.dao.InvestorPositionDetailDao;
 import com.future.order.service.dao.OrderInputDao;
 import com.future.order.service.entity.OrderInput;
-import com.future.order.service.inner.PositionInnerService;
 import com.future.trade.api.vo.OnRspInfo;
 import com.future.trade.api.vo.OnRtnOrderVO;
 import com.future.trade.api.vo.OnRtnTradeVO;
@@ -62,7 +61,7 @@ public class TradeMessageHandle {
     private OrderInputDao orderInputDao;
     
     @Autowired
-    private PositionInnerService positionInnerService;
+    private PositionService positionService;
     
     @Value("${topicExchange.onRtnOrder}")
     private String onRtnOrder;
@@ -237,10 +236,10 @@ public class TradeMessageHandle {
 			
         if(message.getOffsetFlag() == OffsetFlag.OPEN) {
         //开仓
-	        	positionInnerService.increasePosition(message);
+	        	positionService.increasePosition(message);
         } else {
         //平仓
-			positionInnerService.reducePosition(message);
+			positionService.reducePosition(message);
 		}
         
         BigDecimal thrawCommission = orderInput.getCommissionEachHand().multiply(new BigDecimal(onRtnTrade.getVolume()));
