@@ -5,7 +5,8 @@
   <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>1.5.10.RELEASE</version>
+        <version>1.5.12.RELEASE</version>
+        <!-- <version>2.0.3.RELEASE</version> -->
         <relativePath/> <!-- lookup parent from repository -->
   </parent>
   
@@ -16,14 +17,56 @@
   <url>http://maven.apache.org</url>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <future-order-api.version>0.0.1-SNAPSHOT</future-order-api.version>
+    <future-account-api.version>0.0.1-SNAPSHOT</future-account-api.version>
+    <future-member-api.version>0.0.1-SNAPSHOT</future-member-api.version>
+    <future-instrument-api.version>0.0.1-SNAPSHOT</future-instrument-api.version>
+    <future-market-api.version>0.0.1-SNAPSHOT</future-market-api.version>
+    <future-trade-api.version>0.0.1-SNAPSHOT</future-trade-api.version>
   </properties>
-  <dependencies>
+  
+    <dependencies>
+    <dependency>
+        <artifactId>future-order-api</artifactId>
+        <groupId>com.future.caojia</groupId>
+        <version>${future-order-api.version}</version>
+    </dependency>
+    
+    <dependency>
+        <artifactId>future-instrument-api</artifactId>
+        <groupId>com.future.caojia</groupId>
+        <version>${future-instrument-api.version}</version>
+    </dependency>
+    
+    <dependency>
+        <artifactId>future-trade-api</artifactId>
+        <groupId>com.future.caojia</groupId>
+        <version>${future-trade-api.version}</version>
+    </dependency>
+    
+    <dependency>
+        <artifactId>future-account-api</artifactId>
+        <groupId>com.future.caojia</groupId>
+        <version>${future-account-api.version}</version>
+    </dependency>
+    
+    <dependency>
+        <artifactId>future-market-api</artifactId>
+        <groupId>com.future.caojia</groupId>
+        <version>${future-market-api.version}</version>
+    </dependency>
+    
+    <dependency>
+        <artifactId>future-member-api</artifactId>
+        <groupId>com.future.caojia</groupId>
+        <version>${future-member-api.version}</version>
+    </dependency>
     
     <!-- Spring Boot Dubbo 依赖 -->
-    <dependency>
-        <groupId>io.dubbo.springboot</groupId>
-        <artifactId>spring-boot-starter-dubbo</artifactId>
-        <version>1.0.0</version>
+	<dependency>
+        <groupId>com.alibaba.spring.boot</groupId>
+        <artifactId>dubbo-spring-boot-starter</artifactId>
+        <version>2.0.0</version>
     </dependency>
 
     <!-- Spring Boot Web 依赖 -->
@@ -40,17 +83,14 @@
     </dependency>
 
 
-    <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter</artifactId>
-    </dependency>
-    
-    <!-- Junit -->
-    <dependency>
-        <groupId>junit</groupId>
-        <artifactId>junit</artifactId>
-        <version>4.12</version>
-    </dependency>
-    
   </dependencies>
+  
+  <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
 </project>
