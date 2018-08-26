@@ -114,6 +114,7 @@ public class OneMinutesMA implements Runnable {
                                 reqOrderInsertVO.setVolumeTotalOriginal(1);
                                 reqOrderInsertVO.setOrderPriceType(OrderPriceType.LimitPrice);
                                 try {
+                                    logger.info("1分钟MA死叉，对冲一手");
                                     orderService.reqOrderInsert(reqOrderInsertVO);
                                 } catch (CommonFutureException e) {
                                     logger.error("下单失败",e);
@@ -147,6 +148,7 @@ public class OneMinutesMA implements Runnable {
                                 reqOrderInsertVO.setVolumeTotalOriginal(1);
                                 reqOrderInsertVO.setOrderPriceType(OrderPriceType.LimitPrice);
                                 try {
+                                    logger.info("1分钟MA金叉，对冲一手");
                                     orderService.reqOrderInsert(reqOrderInsertVO);
                                 } catch (CommonFutureException e) {
                                     logger.error("下单失败",e);

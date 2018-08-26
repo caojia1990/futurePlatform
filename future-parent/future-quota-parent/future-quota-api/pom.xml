@@ -8,7 +8,4 @@
   <artifactId>future-quota-api</artifactId>
   <description>指标api</description>
   
-  <build>
-    <finalName>future-quota-api</finalName>
-  </build>
 </project>
