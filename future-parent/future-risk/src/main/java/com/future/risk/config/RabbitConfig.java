@@ -1,10 +1,11 @@
 package com.future.risk.config;
 
-import org.springframework.amqp.core.AnonymousQueue;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.core.TopicExchange;
+import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
+import org.springframework.amqp.support.converter.MessageConverter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -22,11 +23,18 @@ public class RabbitConfig {
 	
 	@Bean
 	Queue marketQueue() {
-		return new AnonymousQueue();
+		return new Queue("marketQ", false, true, true);
 	}
 	
 	@Bean
 	Binding binding(Queue marketQueue, TopicExchange exchange) {
 		return BindingBuilder.bind(marketQueue).to(exchange).with(ROUTER_KEY);
 	}
+	
+	@Bean
+	MessageConverter messageConverter() {
+		return new Jackson2JsonMessageConverter();
+	}
+	
+
 }

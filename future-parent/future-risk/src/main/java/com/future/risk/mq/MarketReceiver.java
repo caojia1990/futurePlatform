@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 import com.future.market.api.vo.DepthMarketData;
 
 @Component
-@RabbitListener
+@RabbitListener(queues="marketQ")
 public class MarketReceiver {
 
 	@RabbitHandler
