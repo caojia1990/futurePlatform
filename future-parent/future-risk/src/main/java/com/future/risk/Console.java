@@ -12,9 +12,9 @@ import com.alibaba.dubbo.spring.boot.annotation.EnableDubboConfiguration;
  */
 @SpringBootApplication
 @EnableDubboConfiguration
-public class App{
+public class Console{
     
     public static void main(String[] args) {
-        SpringApplication.run(App.class,args);
+        SpringApplication.run(Console.class,args);
     }
 }
