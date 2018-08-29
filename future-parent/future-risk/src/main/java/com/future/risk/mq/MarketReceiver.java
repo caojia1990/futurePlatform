@@ -18,7 +18,6 @@ public class MarketReceiver {
 
 	@RabbitHandler
     public void process(DepthMarketData marketData) {
-        System.out.println("Receiver1  : " + marketData.getInstrumentID());
         try {
             handler.sendMessage(JSON.toJSONString(marketData));
         } catch (Exception e) {

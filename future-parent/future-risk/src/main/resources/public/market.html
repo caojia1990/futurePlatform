@@ -20,7 +20,7 @@
             created: function () {
                 // `this` 指向 vm 实例
                 console.log('a is: ' + this.a)
-                this.queryInstrumentNames();
+                //this.queryInstrumentNames();
                 this.websocket();
             },
             methods:{
@@ -108,11 +108,21 @@
                     <tbody id="marketTable">
                         <tr v-for="(value,key) in instruments" :key="key" v-on:dblclick="orderBoard(key)">
                             <td>{{ key }}</td>
-                            <td>{{ value.openPrice }}</td>
+                            <td>{{ value.lastPrice }}</td>
                             <td>{{ value.bidPrice1 }}</td>
                             <td>{{ value.bidVolume1 }}</td>
                             <td>{{ value.askPrice1 }}</td>
                             <td>{{ value.askVolume1 }}</td>
+                            <td>{{ value.lastPrice-value.preSettlementPrice }}</td>
+                            <td>{{ Math.round((value.lastPrice-value.preSettlementPrice)*10000/value.preSettlementPrice ) / 100 }}%</td>
+                            <td>{{ value.upperLimitPrice }}</td>
+                            <td>{{ value.lowerLimitPrice }}</td>
+                            <td>{{ value.volume }}</td>
+                            <td>{{ value.openPrice }}</td>
+                            <td>{{ value.lowestPrice }}</td>
+                            <td>{{ value.highestPrice }}</td>
+                            <td>{{ value.preClosePrice }}</td>
+                            <td>{{ value.preSettlementPrice }}</td>
                         </tr>
                     </tbody>
                 </table>
