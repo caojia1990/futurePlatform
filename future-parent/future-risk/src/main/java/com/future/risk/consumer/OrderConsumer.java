@@ -10,7 +10,7 @@ import com.future.order.api.vo.ReqOrderInsertVO;
 @Component
 public class OrderConsumer {
 	
-	@Reference
+	@Reference(check=false)
 	private OrderService orderService;
 
 	public void reqOrderInsert(ReqOrderInsertVO reqOrderInsertVO) throws CommonFutureException {

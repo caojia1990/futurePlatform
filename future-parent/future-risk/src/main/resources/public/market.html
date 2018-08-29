@@ -11,33 +11,68 @@
 
 <script type="text/javascript">
     window.onload = function(){
-    	
-	    var marketTable = new Vue({
-	        el:'#marketTable',
-	        data:{
-	            instruments:[]
-	        },
-	        created: function () {
-	            // `this` 指向 vm 实例
-	            console.log('a is: ' + this.a)
-	            this.queryInstrumentNames();
-	        },
-	        methods:{
-	            queryInstrumentNames:function(){
-	                // GET /someUrl
-	                this.$http.get('queryInstrumentName').then(response => {
-	                    // success callback
-	                    this.instruments = response.body;
-	                }, response => {
-	                    // error callback
-	                });
-	            },
-	            orderBoard:function(row){
-	                console.log(row);
-	            }
-	        }
-	        
-	    })
+        
+        var marketTable = new Vue({
+            el:'#marketTable',
+            data:{
+                instruments:{}
+            },
+            created: function () {
+                // `this` 指向 vm 实例
+                console.log('a is: ' + this.a)
+                this.queryInstrumentNames();
+                this.websocket();
+            },
+            methods:{
+                queryInstrumentNames:function(){
+                    // GET /someUrl
+                    this.$http.get('queryInstrumentName').then(response => {
+                        // success callback
+                        for(var i=0 ; i< response.body.length ; i++){
+                            var key = response.body[i];
+                            //this.instruments[key] = key;  
+                            //Vue 不能检测对象属性的添加或删除 使用下面的语法
+                            Vue.set(marketTable.instruments, key, {})
+                        }
+                        //this.instruments = response.body;
+                    }, response => {
+                        // error callback
+                    });
+                },
+                orderBoard:function(row){
+                    console.log(row);
+                },
+                websocket:function(){
+                    if ("WebSocket" in window){
+                        // 打开一个 web socket
+                        var ws = new WebSocket("ws://localhost:8090/market/subscribe");
+
+                        ws.onopen = function(){
+                            // Web Socket 已连接上，使用 send() 方法发送数据
+                            //ws.send(shopId);
+                            alert("数据发送中：...");
+                        };
+
+                        ws.onmessage = function (evt){
+                            var received_msg = evt.data;
+                            var marketData =  JSON.parse(received_msg);
+                            //this.instruments[marketData.instrumentID] = marketData;
+                            Vue.set(marketTable.instruments, marketData.instrumentID, marketData)
+                            //alert("数据已接收:"+received_msg);
+                        };
+
+                        ws.onclose = function(){
+                            // 关闭 websocket
+                            alert("连接已关闭...");
+                        };
+                    } else {
+                        // 浏览器不支持 WebSocket
+                        alert("您的浏览器不支持 WebSocket!");
+                    }
+                }
+            }
+            
+        })
     }
 </script>
     
@@ -71,8 +106,13 @@
                         </tr>
                     </thead>
                     <tbody id="marketTable">
-                        <tr v-for="instruemnt in instruments" v-on:dblclick="orderBoard(instruemnt)">
-                            <td>{{instruemnt}}</td>
+                        <tr v-for="(value,key) in instruments" v-on:dblclick="orderBoard(key)">
+                            <td>{{ key }}</td>
+                            <td>{{ value.openPrice }}</td>
+                            <td>{{ value.bidPrice1 }}</td>
+                            <td>{{ value.bidVolume1 }}</td>
+                            <td>{{ value.askPrice1 }}</td>
+                            <td>{{ value.askVolume1 }}</td>
                         </tr>
                     </tbody>
                 </table>
