@@ -50,7 +50,7 @@
                         ws.onopen = function(){
                             // Web Socket 已连接上，使用 send() 方法发送数据
                             //ws.send(shopId);
-                            alert("数据发送中：...");
+                            //alert("数据发送中：...");
                         };
 
                         ws.onmessage = function (evt){
@@ -106,7 +106,7 @@
                         </tr>
                     </thead>
                     <tbody id="marketTable">
-                        <tr v-for="(value,key) in instruments" v-on:dblclick="orderBoard(key)">
+                        <tr v-for="(value,key) in instruments" :key="key" v-on:dblclick="orderBoard(key)">
                             <td>{{ key }}</td>
                             <td>{{ value.openPrice }}</td>
                             <td>{{ value.bidPrice1 }}</td>
