@@ -1,6 +1,7 @@
 package com.future.risk.contorller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,7 +18,7 @@ public class OrderController {
 	private OrderConsumer orderConsumer;
 	
 	@RequestMapping(value="reqOrderInsert", method=RequestMethod.POST)
-	public ResponseHead reqOrderInsert(ReqOrderInsertVO reqOrderInsertVO) throws CommonFutureException {
+	public ResponseHead reqOrderInsert(@RequestBody ReqOrderInsertVO reqOrderInsertVO) throws CommonFutureException {
 		this.orderConsumer.reqOrderInsert(reqOrderInsertVO);
 		return new ResponseHead();
 	}
