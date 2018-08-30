@@ -71,60 +71,110 @@ public class FasterTradeMessageHandle {
             logger.debug("报单回报:"+onRtnOrderVO);
         }
         
-        //根据orderRef查询账户编号
-        OrderInput input = null;
-        try {
-            input = orderInputDao.selectByOrderRef(onRtnOrderVO.getOrderRef());
-        } catch (EmptyResultDataAccessException e) {
-            //找不到报单信息，说明是从其他客户端下单
-            return;
+        if(!"JAVA_API".equals(onRtnOrderVO.getUserProductInfo())){
+            com.future.order.api.vo.OnRtnOrderVO message = 
+                    new com.future.order.api.vo.OnRtnOrderVO();
+            
+            message.setOrderRef(onRtnOrderVO.getOrderRef());
+            //message.setClientRequestId("");
+            message.setAccountNo("unknow");
+            message.setActiveTime(onRtnOrderVO.getActiveTime());
+            message.setCancelTime(onRtnOrderVO.getCancelTime());
+            message.setCombHedgeFlag(CombHedgeFlag.ofCode(
+                    onRtnOrderVO.getCombOffsetFlag().getCode()));
+            message.setCombHedgeFlag(CombHedgeFlag.ofCode(
+                    onRtnOrderVO.getCombHedgeFlag().getCode()));
+            message.setContingentCondition(ContingentCondition.ofCode(
+                    onRtnOrderVO.getContingentCondition().getCode()));
+            message.setDirection(Direction.ofCode(
+                    onRtnOrderVO.getDirection().getCode()));
+            message.setExchangeID(onRtnOrderVO.getExchangeID());
+            message.setExchangeInstID(onRtnOrderVO.getExchangeInstID());
+            message.setForceCloseReason(ForceCloseReason.ofCode(
+                    onRtnOrderVO.getForceCloseReason().getCode()));
+            message.setFrontID(onRtnOrderVO.getFrontID());
+            message.setgTDDate(onRtnOrderVO.getgTDDate());
+            message.setInsertDate(onRtnOrderVO.getInsertDate());
+            message.setInsertTime(onRtnOrderVO.getInsertTime());
+            message.setInstrumentID(onRtnOrderVO.getInstrumentID());
+            message.setInvestorID("001");
+            message.setLimitPrice(onRtnOrderVO.getLimitPrice());
+            message.setMinVolume(onRtnOrderVO.getMinVolume());
+            message.setOrderPriceType(OrderPriceType.ofCode(
+                    onRtnOrderVO.getOrderPriceType().getCode()));
+            message.setOrderSource(onRtnOrderVO.getOrderSource());
+            message.setOrderStatus(OrderStatus.ofCode(
+                    onRtnOrderVO.getOrderStatus().getCode()));
+            message.setOrderSubmitStatus(OrderSubmitStatus.ofCode(
+                    onRtnOrderVO.getOrderSubmitStatus().getCode()));
+            message.setOrderSysID(onRtnOrderVO.getOrderSysID());
+            message.setOrderType(onRtnOrderVO.getOrderType());
+            message.setRequestID(onRtnOrderVO.getRequestID());
+            message.setSessionID(onRtnOrderVO.getSessionID());
+            message.setStatusMsg(onRtnOrderVO.getStatusMsg());
+            message.setStopPrice(onRtnOrderVO.getStopPrice());
+            message.setTimeCondition(TimeCondition.ofCode(
+                    onRtnOrderVO.getTimeCondition().getCode()));
+            //TODO
+            rabbitTemplate.convertAndSend(this.onRtnOrder, "001", message);
+        }else {
+            
+            //根据orderRef查询账户编号
+            OrderInput input = null;
+            try {
+                input = orderInputDao.selectByOrderRef(onRtnOrderVO.getOrderRef());
+            } catch (EmptyResultDataAccessException e) {
+                //找不到报单信息，说明是从其他客户端下单
+                return;
+            }
+            
+            com.future.order.api.vo.OnRtnOrderVO message = 
+                    new com.future.order.api.vo.OnRtnOrderVO();
+            
+            message.setOrderRef(onRtnOrderVO.getOrderRef());
+            message.setClientRequestId(input.getClientRequestId());
+            message.setAccountNo(input.getAccountNo());
+            message.setActiveTime(onRtnOrderVO.getActiveTime());
+            message.setCancelTime(onRtnOrderVO.getCancelTime());
+            message.setCombHedgeFlag(CombHedgeFlag.ofCode(
+                    onRtnOrderVO.getCombOffsetFlag().getCode()));
+            message.setCombHedgeFlag(CombHedgeFlag.ofCode(
+                    onRtnOrderVO.getCombHedgeFlag().getCode()));
+            message.setContingentCondition(ContingentCondition.ofCode(
+                    onRtnOrderVO.getContingentCondition().getCode()));
+            message.setDirection(Direction.ofCode(
+                    onRtnOrderVO.getDirection().getCode()));
+            message.setExchangeID(onRtnOrderVO.getExchangeID());
+            message.setExchangeInstID(onRtnOrderVO.getExchangeInstID());
+            message.setForceCloseReason(ForceCloseReason.ofCode(
+                    onRtnOrderVO.getForceCloseReason().getCode()));
+            message.setFrontID(onRtnOrderVO.getFrontID());
+            message.setgTDDate(onRtnOrderVO.getgTDDate());
+            message.setInsertDate(onRtnOrderVO.getInsertDate());
+            message.setInsertTime(onRtnOrderVO.getInsertTime());
+            message.setInstrumentID(onRtnOrderVO.getInstrumentID());
+            message.setInvestorID(input.getInvestorId());
+            message.setLimitPrice(onRtnOrderVO.getLimitPrice());
+            message.setMinVolume(onRtnOrderVO.getMinVolume());
+            message.setOrderPriceType(OrderPriceType.ofCode(
+                    onRtnOrderVO.getOrderPriceType().getCode()));
+            message.setOrderSource(onRtnOrderVO.getOrderSource());
+            message.setOrderStatus(OrderStatus.ofCode(
+                    onRtnOrderVO.getOrderStatus().getCode()));
+            message.setOrderSubmitStatus(OrderSubmitStatus.ofCode(
+                    onRtnOrderVO.getOrderSubmitStatus().getCode()));
+            message.setOrderSysID(onRtnOrderVO.getOrderSysID());
+            message.setOrderType(onRtnOrderVO.getOrderType());
+            message.setRequestID(onRtnOrderVO.getRequestID());
+            message.setSessionID(onRtnOrderVO.getSessionID());
+            message.setStatusMsg(onRtnOrderVO.getStatusMsg());
+            message.setStopPrice(onRtnOrderVO.getStopPrice());
+            message.setTimeCondition(TimeCondition.ofCode(
+                    onRtnOrderVO.getTimeCondition().getCode()));
+            //TODO
+            rabbitTemplate.convertAndSend(this.onRtnOrder, input.getInvestorId(), message);
         }
         
-        com.future.order.api.vo.OnRtnOrderVO message = 
-                new com.future.order.api.vo.OnRtnOrderVO();
-        
-        message.setOrderRef(onRtnOrderVO.getOrderRef());
-        message.setClientRequestId(input.getClientRequestId());
-        message.setAccountNo(input.getAccountNo());
-        message.setActiveTime(onRtnOrderVO.getActiveTime());
-        message.setCancelTime(onRtnOrderVO.getCancelTime());
-        message.setCombHedgeFlag(CombHedgeFlag.ofCode(
-                onRtnOrderVO.getCombOffsetFlag().getCode()));
-        message.setCombHedgeFlag(CombHedgeFlag.ofCode(
-                onRtnOrderVO.getCombHedgeFlag().getCode()));
-        message.setContingentCondition(ContingentCondition.ofCode(
-                onRtnOrderVO.getContingentCondition().getCode()));
-        message.setDirection(Direction.ofCode(
-                onRtnOrderVO.getDirection().getCode()));
-        message.setExchangeID(onRtnOrderVO.getExchangeID());
-        message.setExchangeInstID(onRtnOrderVO.getExchangeInstID());
-        message.setForceCloseReason(ForceCloseReason.ofCode(
-                onRtnOrderVO.getForceCloseReason().getCode()));
-        message.setFrontID(onRtnOrderVO.getFrontID());
-        message.setgTDDate(onRtnOrderVO.getgTDDate());
-        message.setInsertDate(onRtnOrderVO.getInsertDate());
-        message.setInsertTime(onRtnOrderVO.getInsertTime());
-        message.setInstrumentID(onRtnOrderVO.getInstrumentID());
-        message.setInvestorID(input.getInvestorId());
-        message.setLimitPrice(onRtnOrderVO.getLimitPrice());
-        message.setMinVolume(onRtnOrderVO.getMinVolume());
-        message.setOrderPriceType(OrderPriceType.ofCode(
-                onRtnOrderVO.getOrderPriceType().getCode()));
-        message.setOrderSource(onRtnOrderVO.getOrderSource());
-        message.setOrderStatus(OrderStatus.ofCode(
-                onRtnOrderVO.getOrderStatus().getCode()));
-        message.setOrderSubmitStatus(OrderSubmitStatus.ofCode(
-                onRtnOrderVO.getOrderSubmitStatus().getCode()));
-        message.setOrderSysID(onRtnOrderVO.getOrderSysID());
-        message.setOrderType(onRtnOrderVO.getOrderType());
-        message.setRequestID(onRtnOrderVO.getRequestID());
-        message.setSessionID(onRtnOrderVO.getSessionID());
-        message.setStatusMsg(onRtnOrderVO.getStatusMsg());
-        message.setStopPrice(onRtnOrderVO.getStopPrice());
-        message.setTimeCondition(TimeCondition.ofCode(
-                onRtnOrderVO.getTimeCondition().getCode()));
-        //TODO
-        rabbitTemplate.convertAndSend(this.onRtnOrder, input.getInvestorId(), message);
         
     }
     
@@ -145,6 +195,29 @@ public class FasterTradeMessageHandle {
         try {
             orderInput = this.orderInputDao.selectByOrderRef(orderRef);
         } catch (EmptyResultDataAccessException e) {
+            com.future.order.api.vo.OnRtnTradeVO message = new com.future.order.api.vo.OnRtnTradeVO();
+            message.setClientRequestId("");
+            message.setAccountNo("unknow");
+            message.setDirection(Direction.ofCode(onRtnTrade.getDirection().getCode()));
+            message.setExchangeId(onRtnTrade.getExchangeID());
+            message.setExchangeInstId(onRtnTrade.getExchangeInstID());
+            message.setHedgeFlag(HedgeFlag.ofCode(onRtnTrade.getHedgeFlag().getCode()));
+            message.setInstrumentId(onRtnTrade.getInstrumentID());
+            message.setInvestorId("001");
+            message.setOffsetFlag(OffsetFlag.ofCode(onRtnTrade.getOffsetFlag().getCode()));
+            message.setOrderRef(onRtnTrade.getOrderRef());
+            message.setOrderSysId(onRtnTrade.getOrderSysID());
+            message.setPrice(onRtnTrade.getPrice());
+            message.setSequenceNo(onRtnTrade.getSequenceNo());
+            message.setTradeDate(onRtnTrade.getTradeDate());
+            message.setTradeId(onRtnTrade.getTradeID());
+            message.setTradeTime(onRtnTrade.getTradeTime());
+            message.setTradeType(onRtnTrade.getTradeType());
+            message.setTradingDay(onRtnTrade.getTradingDay());
+            message.setUserId(onRtnTrade.getUserID());
+            message.setVolume(onRtnTrade.getVolume());
+            
+            rabbitTemplate.convertAndSend(this.onRtnTrade, "001", message);
             return;
         }
         
