@@ -21,7 +21,7 @@ import com.future.order.api.vo.TimeCondition;
  */
 public class Manual implements Runnable {
     
-    static String INVESTOR_ID = "Manual";
+    static String INVESTOR_ID = "001";
     
     private static final String ACCOUNT_NO = "unknow";
     

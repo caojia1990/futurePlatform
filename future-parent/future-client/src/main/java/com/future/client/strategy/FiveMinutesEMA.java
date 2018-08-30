@@ -490,12 +490,12 @@ public class FiveMinutesEMA implements Runnable {
                             }
                             
                             //判断是否触发止盈
-                            BigDecimal touch = (oldEma.getHighestPrice().subtract(oldEma.getLowestPrice())).divide(oldEma.getLowestPrice(), 3, RoundingMode.HALF_UP);
+                            BigDecimal touch = (oldEma.getHighestPrice().subtract(new BigDecimal(tradeVO.getPrice()))).divide(new BigDecimal(tradeVO.getPrice()), 3, RoundingMode.HALF_UP);
                             if(touch.compareTo(targetProfit.getTigger()) >= 0){
                                 //判断回撤是否到位
-                                //止盈价位 = 最高价-（最高价-最低价）*回撤比例
+                                //止盈价位 = 最高价-（最高价-成交价）*回撤比例
                                 BigDecimal diff = oldEma.getHighestPrice()
-                                        .subtract(oldEma.getHighestPrice().subtract(oldEma.getLowestPrice())
+                                        .subtract(oldEma.getHighestPrice().subtract(new BigDecimal(tradeVO.getPrice()))
                                                 .multiply(targetProfit.getBack())).setScale(2, RoundingMode.HALF_UP);
                                 
                                 if(new BigDecimal(marketData.getLastPrice()).compareTo(diff) <= 0){
@@ -544,12 +544,12 @@ public class FiveMinutesEMA implements Runnable {
                             }
                             
                             //判断是否触发止盈
-                            BigDecimal touch = (oldEma.getHighestPrice().subtract(oldEma.getLowestPrice())).divide(oldEma.getHighestPrice(), 3, RoundingMode.HALF_UP);
+                            BigDecimal touch = (new BigDecimal(tradeVO.getPrice()).subtract(oldEma.getLowestPrice())).divide(new BigDecimal(tradeVO.getPrice()), 3, RoundingMode.HALF_UP);
                             if(touch.compareTo(targetProfit.getTigger()) >= 0){
                                 //判断回撤是否到位
-                                //止盈价位 = 最低价 +（最高价-最低价）*回撤比例
+                                //止盈价位 = 最低价 +（成交价-最低价）*回撤比例
                                 BigDecimal diff = oldEma.getLowestPrice()
-                                        .add(oldEma.getHighestPrice().subtract(oldEma.getLowestPrice())
+                                        .add(new BigDecimal(tradeVO.getPrice()).subtract(oldEma.getLowestPrice())
                                                 .multiply(targetProfit.getBack())).setScale(2, RoundingMode.HALF_UP);
                                 if(new BigDecimal(marketData.getLastPrice()).compareTo(diff) >= 0){
                                     //止盈

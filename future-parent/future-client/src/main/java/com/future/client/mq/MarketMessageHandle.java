@@ -8,6 +8,7 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import com.future.client.dao.QuotaDao;
 import com.future.client.dao.TradeDao;
 import com.future.client.strategy.FiveMinutesEMA.StopProfit;
+import com.future.client.strategy.Manual;
 import com.future.client.utils.CacheMap;
 import com.future.market.api.mq.MessageReceive;
 import com.future.market.api.vo.DepthMarketData;
@@ -39,6 +40,7 @@ public class MarketMessageHandle implements MessageReceive{
     public void handleMessage(DepthMarketData marketData) {
         
         taskExecutor.execute(new StopProfit(orderService, cacheMap, tradeDao, marketData, redisTemplate));
+        //taskExecutor.execute(new Manual(marketData, cacheMap, orderService,tradeDao));
         
         /*taskExecutor.execute(new FiveSecsFollow(marketData, orderService, redisTemplate, cacheMap,quotaDao));
         if(taskExecutor.getActiveCount() > 50) {

@@ -28,7 +28,7 @@ public class OneMinutesMA implements Runnable {
     static Logger logger = Logger.getLogger(OneMinutesMA.class);
     
     //对冲子账号
-    static final String ACCOUNT_NO = "00010";
+    static final String ACCOUNT_NO = "unknow";
     
     //被对冲的账号
     static final String ORIG_ACCOUNT_NO = "00009";
