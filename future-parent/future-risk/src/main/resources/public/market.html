@@ -9,9 +9,12 @@
 <script src="https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/vue-resource@1.5.1"></script>
 
+<script src="jquery-ui-1.12.1.custom/jquery-ui.js"></script>
+<link rel="stylesheet" href="jquery-ui-1.12.1.custom/jquery-ui.min.css">
+
 <script type="text/javascript">
     window.onload = function(){
-        
+     
         var marketTable = new Vue({
             el:'#marketTable',
             data:{
@@ -41,6 +44,7 @@
                 },
                 orderBoard:function(row){
                     console.log(row);
+                    $( "#orderBoard" ).dialog( "open" );
                 },
                 websocket:function(){
                     if ("WebSocket" in window){
@@ -73,6 +77,13 @@
             }
             
         })
+        
+        /* var orderBoard = new Vue({
+            el:"#orderBoard",
+            data:{
+                requestOrder:{}
+            }
+        }) */
     }
 </script>
     
@@ -127,10 +138,64 @@
                     </tbody>
                 </table>
                 </div>
+                <div id="orderBoard" title="下单板">
+                    <form class="form-horizontal">
+                      <div class="form-group">
+                        <label for="investorNo" class="col-sm-3 control-label">投资者代码</label>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" id="investorNo" >
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label for="accountNo" class="col-sm-3 control-label">账号</label>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" id="accountNo" >
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label for="indetrumentId" class="col-sm-3 control-label">合约</label>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" id="indetrumentId" placeholder="合约" >
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label for="volume" class="col-sm-3 control-label">手数</label>
+                        <div class="col-sm-6">
+                           <input type="number" class="form-control" id="volume" >
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label for="price" class="col-sm-3 control-label">价格</label>
+                        <div class="col-sm-6">
+                            <input type="number" class="form-control" id="price">
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <div class="col-sm-5 col-sm-offset-1">
+                            <button type="button" class="btn btn-danger">买 开</button>
+                        </div>
+                        <div class="col-sm-5">
+                            <button type="button" class="btn btn-success">卖 开</button>
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <div class="col-sm-5 col-sm-offset-1">
+                            <button type="button" class="btn btn-warning">平 仓</button>
+                        </div>
+                        <div class="col-sm-5">
+                            <button type="button" class="btn btn-info">平 今</button>
+                        </div>
+                      </div>
+                    </form>
+                </div>
+                <script>
+                $( "#orderBoard" ).dialog({ autoOpen: false });
+                </script>
             </div>
             <div class="col-md-1 column">
             </div>
         </div>
     </div>
+    
 </body>
 </html>
