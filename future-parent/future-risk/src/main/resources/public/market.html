@@ -83,12 +83,19 @@
            el:"#orderForm",
            data:{
                market:{},
-               requestOrder:{}
+               requestOrder:{
+                   volumeTotalOriginal:1,
+                   minVolume:1,
+                   orderPriceType:"LimitPrice",
+                   investorId:"001",
+                   accountNo:"unknow"
+               }
            },
            methods:{
-               reqOrderInsert:function(){
+               reqOrderInsert:function(combOffsetFlag){
                   this.requestOrder["instrumentId"] = this.market.instrumentID;
-                  this.requestOrder["direction"] = 'BUY';
+                  this.requestOrder["combOffsetFlag"] = combOffsetFlag;
+                  this.requestOrder["limitPrice"] = this.market.lastPrice;
                   this.$http.post('reqOrderInsert',this.requestOrder).then(response => {
                        // success callback
                        
@@ -186,19 +193,24 @@
                         </div>
                       </div>
                       <div class="form-group">
-                        <div class="col-sm-5 col-sm-offset-1">
-                            <button type="button" class="btn btn-danger" v-on:dblclick="reqOrderInsert()">买 开</button>
-                        </div>
-                        <div class="col-sm-5">
-                            <button type="button" class="btn btn-success">卖 开</button>
-                        </div>
+                          <label for="BUG" class="col-sm-2 col-sm-offset-2 control-label">买</label>
+                          <div class="col-sm-2">
+                            <input type="radio" class="form-control" id="BUG" value="BUY" v-model="requestOrder.direction" >
+                          </div>
+                          <label for="SELL" class="col-sm-2 control-label">卖</label>
+                          <div class="col-sm-2">
+                            <input type="radio" class="form-control" id="SELL" value="SELL" v-model="requestOrder.direction" >
+                          </div>
                       </div>
                       <div class="form-group">
-                        <div class="col-sm-5 col-sm-offset-1">
-                            <button type="button" class="btn btn-warning">平 仓</button>
+                        <div class="col-sm-3 col-sm-offset-1">
+                            <button type="button" class="btn btn-success" v-on:click="reqOrderInsert('OPEN')">开 仓</button>
                         </div>
-                        <div class="col-sm-5">
-                            <button type="button" class="btn btn-info">平 今</button>
+                        <div class="col-sm-3">
+                            <button type="button" class="btn btn-danger" v-on:click="reqOrderInsert('CLOSE')">平 仓</button>
+                        </div>
+                        <div class="col-sm-3">
+                            <button type="button" class="btn btn-warning" v-on:click="reqOrderInsert('CloseToday')">平 今</button>
                         </div>
                       </div>
                     </form>

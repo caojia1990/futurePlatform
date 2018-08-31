@@ -96,11 +96,17 @@ public class FasterOrderServiceImpl implements OrderService {
         orderInsertVO.setVolumeTotalOriginal(reqOrderInsertVO.getVolumeTotalOriginal());//手数
         orderInsertVO.setDirection(Direction.ofCode(
                 reqOrderInsertVO.getDirection().getCode()));//买卖方向
-        orderInsertVO.setOrderPriceType(OrderPriceType.ofCode(
-                reqOrderInsertVO.getOrderPriceType().getCode()));//报单价格类型
         orderInsertVO.setCombOffsetFlag(CombOffsetFlag.ofCode(
                 reqOrderInsertVO.getCombOffsetFlag().getCode()));//组合开平标志
         
+      //报单价格类型
+        if(reqOrderInsertVO.getOrderPriceType() == null){
+            //默认限价指令
+            orderInsertVO.setOrderPriceType(OrderPriceType.LimitPrice);
+        }else {
+            orderInsertVO.setOrderPriceType(OrderPriceType.ofCode(
+                    reqOrderInsertVO.getOrderPriceType().getCode()));
+        }
         //投保标志
         if(reqOrderInsertVO.getCombHedgeFlag() == null){
             orderInsertVO.setCombHedgeFlag(CombHedgeFlag.Speculation);
@@ -109,8 +115,12 @@ public class FasterOrderServiceImpl implements OrderService {
                     reqOrderInsertVO.getCombHedgeFlag().getCode()));
         }
         //有效期类型
-        orderInsertVO.setTimeCondition(TimeCondition.ofCode(
-                reqOrderInsertVO.getTimeCondition().getCode()));
+        if(reqOrderInsertVO.getTimeCondition() == null){
+            orderInsertVO.setTimeCondition(TimeCondition.GFD);
+        }else {
+            orderInsertVO.setTimeCondition(TimeCondition.ofCode(
+                    reqOrderInsertVO.getTimeCondition().getCode()));
+        }
         
         //成交量类型
         if(reqOrderInsertVO.getVolumeCondition() == null){
