@@ -344,7 +344,7 @@ public class MyTraderSpi extends CThostFtdcTraderSpi {
         }
         
         this.template.convertAndSend("future.trade.direct", ONERRRTNORDERINSERT_KEY, reqOrderInsertVO);
-	    logger.error("报单录入错误回调："+JSON.toJSONString(pRspInfo));
+	    logger.error("报单录入错误回调："+JSON.toJSONString(reqOrderInsertVO));
 	}
 	
 	/**
