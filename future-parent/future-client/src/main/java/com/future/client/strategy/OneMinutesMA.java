@@ -108,7 +108,7 @@ public class OneMinutesMA implements Runnable {
                                 reqOrderInsertVO.setInstrumentId(instrumentId);
                                 reqOrderInsertVO.setLimitPrice(ma.getLowerPrice().doubleValue());
                                 reqOrderInsertVO.setCombOffsetFlag(CombOffsetFlag.OPEN);
-                                reqOrderInsertVO.setTimeCondition(TimeCondition.GFD);
+                                reqOrderInsertVO.setTimeCondition(TimeCondition.IOC);
                                 reqOrderInsertVO.setDirection(Direction.SELL);
                                 reqOrderInsertVO.setMinVolume(1);
                                 reqOrderInsertVO.setVolumeTotalOriginal(1);
@@ -140,9 +140,9 @@ public class OneMinutesMA implements Runnable {
                                 reqOrderInsertVO.setAccountNo(ACCOUNT_NO);
                                 reqOrderInsertVO.setInvestorId(ClientStarter.INVESTOR_ID);
                                 reqOrderInsertVO.setInstrumentId(instrumentId);
-                                reqOrderInsertVO.setLimitPrice(ma.getLowerPrice().doubleValue());
+                                reqOrderInsertVO.setLimitPrice(ma.getUpperPrice().doubleValue());
                                 reqOrderInsertVO.setCombOffsetFlag(CombOffsetFlag.OPEN);
-                                reqOrderInsertVO.setTimeCondition(TimeCondition.GFD);
+                                reqOrderInsertVO.setTimeCondition(TimeCondition.IOC);
                                 reqOrderInsertVO.setDirection(Direction.BUY);
                                 reqOrderInsertVO.setMinVolume(1);
                                 reqOrderInsertVO.setVolumeTotalOriginal(1);
