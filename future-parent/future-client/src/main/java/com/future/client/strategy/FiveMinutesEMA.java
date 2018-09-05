@@ -397,6 +397,8 @@ public class FiveMinutesEMA implements Runnable {
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
+            //缓存本次EMA
+            this.redisTemplate.opsForHash().put(ema.getInstrumentId(), "EMA5", ema);
         }
         
     }
