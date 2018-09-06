@@ -1,5 +1,7 @@
 package com.future.instrument.api.service;
 
+import java.util.List;
+
 import com.future.instrument.api.exception.InstrumentException;
 import com.future.instrument.api.vo.InvestorInstrumentVO;
 
@@ -13,6 +15,14 @@ public interface InvestorInstrumentService {
      * @throws InstrumentException
      */
     public InvestorInstrumentVO queryInvestorInstrument(String investorNo, String instrumentId) throws InstrumentException;
+    
+    /**
+     * 查询投资者合约列表
+     * @param investorNo
+     * @return
+     * @throws InstrumentException
+     */
+    public List<InvestorInstrumentVO> queryInvestorInstrumentList(String investorNo) throws InstrumentException;
     
     /**
      * 添加用户合约
