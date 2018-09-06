@@ -19,6 +19,13 @@ public interface EmaService {
     public List<EMA> queryEmaByTradingDay(String tradingDay) throws QuotaException;
     
     /**
+     * 查询最新EMA指标
+     * @return
+     * @throws QuotaException
+     */
+    public List<EMA> queryEmaList() throws QuotaException;
+    
+    /**
      * 更新或保存EMA
      * @param ema
      * @throws QuotaException
