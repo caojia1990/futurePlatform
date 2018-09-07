@@ -1,5 +1,6 @@
 package com.future.quota.api.vo;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 /**
@@ -7,7 +8,12 @@ import java.math.BigDecimal;
  * @author caojia
  *
  */
-public class EMA {
+public class EMA implements Serializable{
+
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -1973357561470774731L;
 
     private String instrumentId;
     

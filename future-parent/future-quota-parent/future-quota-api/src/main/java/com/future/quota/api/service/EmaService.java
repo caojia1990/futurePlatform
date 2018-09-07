@@ -12,13 +12,6 @@ import com.future.quota.api.vo.EMA;
 public interface EmaService {
 
     /**
-     * 根据交易日查询ema均线
-     * @param tradingDay
-     * @return
-     */
-    public List<EMA> queryEmaByTradingDay(String tradingDay) throws QuotaException;
-    
-    /**
      * 查询最新EMA指标
      * @return
      * @throws QuotaException

@@ -2,7 +2,13 @@ package com.future.quota.api.exception;
 
 public enum QuotaError {
     
-    Success("00000", "成功");
+    Success("00000", "成功"),
+    
+    GET_EMA_FAILED("Q00001", "获取EMA指标异常"),
+    
+    SAVE_EMA_FAILED("Q00002", "保存EMA指标异常"),
+    
+    REMOVE_EMA_FAILED("Q00003", "删除EMA指标异常");
     
     final String errorCode;
     
