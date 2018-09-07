@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Insert title here</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js" />
+<script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>
+<link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+<script src="https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue-resource@1.5.1"></script>
+
+<script type="text/javascript">
+    window.onload = function(){
+        var emaTable = new Vue({
+            el:'#emaTable',
+            data:{
+                items:[]
+            },
+            created: function () {
+                this.queryEmaList();
+            },
+            methods:{
+                queryEmaList:function(){
+                    this.$http.get('queryEmaList').then(response => {
+                        this.items = response.body.data;
+                    }, response => {
+                        // error callback
+                    });
+                }
+            }
+        });
+    }
+</script>
+
+</head>
+<body>
+
+
+<div class="container-fluid">
+    <div class="row-fluid">
+        <div class="col-md-1 column">
+        </div>
+        <div class="col-md-10 column">
+            <div class="navbar navbar-inverse">
+                <div class="navbar-inner">
+                    <div class="container-fluid">
+                         <a data-target=".navbar-responsive-collapse" data-toggle="collapse" class="btn btn-navbar"><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></a> <a href="#" class="brand">网站名</a>
+                        <div class="nav-collapse collapse navbar-responsive-collapse">
+                            <ul class="nav">
+                                <li class="active">
+                                    <a href="#">主页</a>
+                                </li>
+                                <li>
+                                    <a href="#">链接</a>
+                                </li>
+                                <li>
+                                    <a href="#">链接</a>
+                                </li>
+                            </ul>
+                            <ul class="nav pull-right">
+                                <li>
+                                    <a href="#">右边链接</a>
+                                </li>
+                                <li class="divider-vertical">
+                                </li>
+                            </ul>
+                        </div>
+                        
+                    </div>
+                </div>
+                
+            </div>
+            <table id="emaTable" class="table table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th>合约</th>
+                        <th>时间</th>
+                        <th>周期</th>
+                        <th>ema5</th>
+                        <th>ema619</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="(item in items" v-on:dblclick="">
+                        <td>{{item.instrumentId}}</td>
+                        <td>{{item.title}}</td>
+                        <td>{{item.persiod}}</td>
+                        <td>{{item.ema5}}</td>
+                        <td>{{item.ema619}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-1 column">
+        </div>
+    </div>
+</div>
+</body>
+</html>

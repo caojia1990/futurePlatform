@@ -23,6 +23,7 @@
     <future-instrument-api.version>0.0.1-SNAPSHOT</future-instrument-api.version>
     <future-market-api.version>0.0.1-SNAPSHOT</future-market-api.version>
     <future-trade-api.version>0.0.1-SNAPSHOT</future-trade-api.version>
+    <future-quota-api.version>0.0.1-SNAPSHOT</future-quota-api.version>
   </properties>
   
     <dependencies>
@@ -60,6 +61,12 @@
         <artifactId>future-member-api</artifactId>
         <groupId>com.future.caojia</groupId>
         <version>${future-member-api.version}</version>
+    </dependency>
+    
+    <dependency>
+        <artifactId>future-quota-api</artifactId>
+        <groupId>com.future.caojia</groupId>
+        <version>${future-quota-api.version}</version>
     </dependency>
     
     <!-- Spring Boot Dubbo 依赖 -->
