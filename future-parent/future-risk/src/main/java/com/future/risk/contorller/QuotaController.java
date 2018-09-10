@@ -3,6 +3,7 @@ package com.future.risk.contorller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -31,6 +32,12 @@ public class QuotaController {
     @RequestMapping(value="saveEma", method=RequestMethod.POST)
     public ResponseHead saveEma(@RequestBody EMA ema) throws QuotaException{
         this.emaConsumer.saveEma(ema);
+        return new ResponseHead();
+    }
+    
+    @RequestMapping(value="removeEma/{instrumentId}", method=RequestMethod.DELETE)
+    public ResponseHead removeEma(@PathVariable String instrumentId) throws QuotaException{
+        this.emaConsumer.removeEma(instrumentId);
         return new ResponseHead();
     }
 }

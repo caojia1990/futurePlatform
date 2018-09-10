@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-<title>指标管理</title>
+<title>合约管理</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js" />
 <script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>
@@ -20,20 +20,22 @@
 
     toastr.options.positionClass = 'toast-bottom-left';
     window.onload = function(){
-        var emaTable = new Vue({
-            el:'#emaTable',
+        var instrumentTable = new Vue({
+            el:'#investorInstrument',
             data:{
+                param:{},
                 items:[]
             },
             created: function () {
-                this.queryEmaList();
+                
             },
             methods:{
-                queryEmaList:function(){
-                    this.$http.get('queryEmaList').then(response => {
+                queryInvestorInstrument:function(){
+                    this.$http.get('queryInvestorInstrument/'+this.param.investorNo).then(response => {
                         this.items = response.body.data;
                     }, response => {
                         // error callback
+                        toastr.error('查询失败'+response.body.errorMsg);
                     });
                 },
                 quotaDetail:function(row){
@@ -41,11 +43,11 @@
                     $( "#quotaDetail" ).dialog( "open" );
                 },
                 remove:function(row){
-                    this.$http.delete('removeEma/'+row.instrumentId).then(response => {
+                    this.$http.post('removeInvestorInstrument',row).then(response => {
                         // success callback
                         if(response.body.rspCode == '00000'){
                             toastr.success('删除成功');
-                            this.queryEmaList();
+                            this.queryInvestorInstrument();
                         }
                     }, response => {
                         toastr.error('删除失败'+response.body.errorMsg);
@@ -85,15 +87,15 @@
         <div class="col-md-10 column">
             <nav class="navbar navbar-default navbar-inverse" role="navigation">
                 <div class="navbar-header">
-                     <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1"> <span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button> <a class="navbar-brand" href="#">指标管理</a>
+                     <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1"> <span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button> <a class="navbar-brand" href="#">合约管理</a>
                 </div>
                 
                 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                     <ul class="nav navbar-nav">
-                        <li class="active">
+                        <li>
                              <a href="market.html">行情</a>
                         </li>
-                        <li>
+                        <li class="active">
                              <a href="instrument.html">合约</a>
                         </li>
                         <li>
@@ -156,36 +158,76 @@
                 </div>
                 
             </nav>
-            <table id="emaTable" class="table table-bordered table-hover">
-                <thead>
-                    <tr>
-                        <th>合约</th>
-                        <th>时间</th>
-                        <th>周期</th>
-                        <th>ema5</th>
-                        <th>ema619</th>
-                        <th>操作</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="(item in items" v-on:dblclick="">
-                        <td>{{item.instrumentId}}</td>
-                        <td>{{item.title}}</td>
-                        <td>{{item.period}}</td>
-                        <td>{{item.ema5}}</td>
-                        <td>{{item.ema619}}</td>
-                        <td>
-                            <button type="button" class="btn btn-default btn-sm" v-on:click="quotaDetail(item)">
-                                <i class="glyphicon glyphicon-cog"></i>
-                            </button>
-                            &nbsp;
-                            <button type="button" class="btn btn-default btn-sm" v-on:click="remove(item)">
-                                <i class="glyphicon glyphicon-trash"></i>
-                            </button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+            
+            
+            <!-- 查询条件 -->
+            <div id="investorInstrument">
+                <div class="row placeholders">
+                    <form class="form-horizontal" id="queryInstrumentForm">
+                      <div class="form-group">
+                        <label for="investorNo" class="col-sm-1 control-label">投资者编号</label>
+                        <div class="col-sm-2">
+                            <input type="text" class="form-control" id="investorNo" v-model="param.investorNo">
+                        </div>
+                        
+                        <label for="instrumentId" class="col-sm-1 control-label">合约</label>
+                        <div class="col-sm-2">
+                            <input type="text" class="form-control" id="instrumentId" v-model="param.instrumentId">
+                        </div>
+                        
+                        <div class="col-sm-3 col-sm-offset-1">
+                            <button type="button" class="btn btn-info" v-on:click="queryInvestorInstrument()">查询</button>
+                        </div>
+                      </div>
+                    </form>
+                </div>
+                
+                
+                <table id="investorInstrumentTable" class="table table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th>投资者</th>
+                            <th>合约</th>
+                            <th>运行状态</th>
+                            <th>止盈跳数</th>
+                            <th>止损跳数</th>
+                            <th>止盈幅度</th>
+                            <th>止盈回撤幅度</th>
+                            <th>对冲触发类型</th>
+                            <th>触发对冲比例</th>
+                            <th>对冲手数</th>
+                            <th>对冲止盈跳数</th>
+                            <th>对冲止损跳数</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="(item in items" v-on:dblclick="">
+                            <td>{{item.investorNo}}</td>
+                            <td>{{item.instrumentId}}</td>
+                            <td>{{item.status}}</td>
+                            <td>{{item.stopWin}}</td>
+                            <td>{{item.stopLoss}}</td>
+                            <td>{{item.target}}</td>
+                            <td>{{item.retracement}}</td>
+                            <td>{{item.hedgingType}}</td>
+                            <td>{{item.hedgingTigger}}</td>
+                            <td>{{item.hedgingVolume}}</td>
+                            <td>{{item.hedgingStopWin}}</td>
+                            <td>{{item.hedgingStopLoss}}</td>
+                            <td>
+                                <button type="button" class="btn btn-default btn-sm" v-on:click="">
+                                    <i class="glyphicon glyphicon-cog"></i>
+                                </button>
+                                &nbsp;
+                                <button type="button" class="btn btn-default btn-sm" v-on:click="remove(item)">
+                                    <i class="glyphicon glyphicon-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
         <div class="col-md-1 column">
         </div>
@@ -194,31 +236,31 @@
 <div id="quotaDetail" title="EMA详情">
     <form class="form-horizontal" id="quotaForm">
       <div class="form-group">
-        <label for="investorNo" class="col-sm-4 control-label">合约</label>
+        <label for="instrumentId" class="col-sm-4 control-label">合约</label>
         <div class="col-sm-6">
             <input type="text" class="form-control" id="instrumentId" v-model="EMA.instrumentId">
         </div>
       </div>
       <div class="form-group">
-        <label for="accountNo" class="col-sm-4 control-label">时间</label>
+        <label for="title" class="col-sm-4 control-label">时间</label>
         <div class="col-sm-6">
             <input type="text" class="form-control" id="title" v-model="EMA.title">
         </div>
       </div>
       <div class="form-group">
-        <label for="indetrumentId" class="col-sm-4 control-label">周期</label>
+        <label for="period" class="col-sm-4 control-label">周期</label>
         <div class="col-sm-6">
             <input type="text" class="form-control" id="period" v-model="EMA.period" >
         </div>
       </div>
       <div class="form-group">
-        <label for="volume" class="col-sm-4 control-label">ema5</label>
+        <label for="ema5" class="col-sm-4 control-label">ema5</label>
         <div class="col-sm-6">
            <input type="text" class="form-control" id="ema5" v-model="EMA.ema5">
         </div>
       </div>
       <div class="form-group">
-        <label for="price" class="col-sm-4 control-label">ema619</label>
+        <label for="ema619" class="col-sm-4 control-label">ema619</label>
         <div class="col-sm-6">
             <input type="text" class="form-control" id="ema619" v-model="EMA.ema619">
         </div>

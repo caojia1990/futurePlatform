@@ -2,7 +2,7 @@ package com.future.risk.vo;
 
 public class ResponseHead {
     
-    private String rspCode;
+    private String rspCode = "00000";
     
     private String errorMsg;
 
