@@ -21,7 +21,7 @@ public class EMA implements Serializable{
     
     private String title;
     
-    private String persiod;
+    private String period;
     
     private BigDecimal ema5;
     
@@ -69,12 +69,12 @@ public class EMA implements Serializable{
         this.title = title;
     }
 
-    public String getPersiod() {
-        return persiod;
+    public String getPeriod() {
+        return period;
     }
 
-    public void setPersiod(String persiod) {
-        this.persiod = persiod;
+    public void setPeriod(String period) {
+        this.period = period;
     }
 
     public BigDecimal getEma5() {

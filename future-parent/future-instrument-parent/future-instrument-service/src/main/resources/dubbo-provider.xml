@@ -29,5 +29,5 @@
 	
 	<!-- 投资者合约接口 -->
     <dubbo:service interface="com.future.instrument.api.service.InvestorInstrumentService" ref="investorInstrumentService" retries="0"/>
-    <bean id="marginService" class="com.future.instrument.service.impl.InvestorInstrumentServiceImpl"/>
+    <bean id="investorInstrumentService" class="com.future.instrument.service.impl.InvestorInstrumentServiceImpl"/>
 </beans>

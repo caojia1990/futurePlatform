@@ -50,7 +50,7 @@ public class QuotaHandle implements MessageReceive{
             	if(ema == null) {
             		ema = new EMA();
                 ema.setInstrumentId("rb1901");
-                ema.setPersiod("5m");
+                ema.setPeriod("5m");
                 ema.setTitle("14:55:00");
                 ema.setEma5(new BigDecimal("4172.52"));
                 ema.setEma619(new BigDecimal("4249.59"));
@@ -64,7 +64,7 @@ public class QuotaHandle implements MessageReceive{
             	if(ema == null) {
             		ema = new EMA();
             		ema.setInstrumentId("cu1810");
-            		ema.setPersiod("5m");
+            		ema.setPeriod("5m");
             		ema.setTitle("14:55:00");
             		ema.setEma5(new BigDecimal("48810.18"));
             		ema.setEma619(new BigDecimal("48675.99"));
@@ -76,7 +76,7 @@ public class QuotaHandle implements MessageReceive{
             if(ema == null) {
                 ema = new EMA();
 	            ema.setInstrumentId("m1901");
-	            ema.setPersiod("5m");
+	            ema.setPeriod("5m");
 	            ema.setTitle("14:55:00");
 	            ema.setEma5(new BigDecimal("3066.63"));
 	            ema.setEma619(new BigDecimal("3124.48"));
@@ -88,7 +88,7 @@ public class QuotaHandle implements MessageReceive{
             if(ema == null) {
                 ema = new EMA();
 	            ema.setInstrumentId("RM901");
-	            ema.setPersiod("5m");
+	            ema.setPeriod("5m");
 	            ema.setTitle("14:55:00");
 	            ema.setEma5(new BigDecimal("2358.94"));
 	            ema.setEma619(new BigDecimal("2416.10"));
@@ -100,7 +100,7 @@ public class QuotaHandle implements MessageReceive{
             if(ema == null) {
                 ema = new EMA();
 	            ema.setInstrumentId("y1901");
-	            ema.setPersiod("5m");
+	            ema.setPeriod("5m");
 	            ema.setTitle("14:55:00");
 	            ema.setEma5(new BigDecimal("5782.20"));
 	            ema.setEma619(new BigDecimal("5842.61"));
@@ -113,7 +113,7 @@ public class QuotaHandle implements MessageReceive{
             if(ema == null) {
                 ema = new EMA();
 	            ema.setInstrumentId("p1901");
-	            ema.setPersiod("5m");
+	            ema.setPeriod("5m");
 	            ema.setTitle("14:55:00");
 	            ema.setEma5(new BigDecimal("4861.40"));
 	            ema.setEma619(new BigDecimal("4902.73"));
@@ -125,7 +125,7 @@ public class QuotaHandle implements MessageReceive{
             if(ema == null) {
                 ema = new EMA();
                 ema.setInstrumentId("OI901");
-	            ema.setPersiod("5m");
+	            ema.setPeriod("5m");
 	            ema.setTitle("14:55:00");
 	            ema.setEma5(new BigDecimal("6604.92"));
 	            ema.setEma619(new BigDecimal("6687.66"));
@@ -137,7 +137,7 @@ public class QuotaHandle implements MessageReceive{
             if(ema == null) {
                 ema = new EMA();
                 ema.setInstrumentId("i1901");
-	            ema.setPersiod("5m");
+	            ema.setPeriod("5m");
 	            ema.setTitle("14:55:00");
 	            ema.setEma5(new BigDecimal("480.77"));
 	            ema.setEma619(new BigDecimal("489.72"));
@@ -149,7 +149,7 @@ public class QuotaHandle implements MessageReceive{
             if(ema == null) {
                 ema = new EMA();
                 ema.setInstrumentId("j1901");
-	            ema.setPersiod("5m");
+	            ema.setPeriod("5m");
 	            ema.setTitle("14:55:00");
 	            ema.setEma5(new BigDecimal("2576.25"));
 	            ema.setEma619(new BigDecimal("2552.07"));
@@ -161,7 +161,7 @@ public class QuotaHandle implements MessageReceive{
             if(ema == null) {
                 ema = new EMA();
                 ema.setInstrumentId("jm1901");
-	            ema.setPersiod("5m");
+	            ema.setPeriod("5m");
 	            ema.setTitle("14:55:00");
 	            ema.setEma5(new BigDecimal("1246.77"));
 	            ema.setEma619(new BigDecimal("1280.45"));
@@ -173,7 +173,7 @@ public class QuotaHandle implements MessageReceive{
             if(ema == null) {
                 ema = new EMA();
                 ema.setInstrumentId("ZC901");
-	            ema.setPersiod("5m");
+	            ema.setPeriod("5m");
 	            ema.setTitle("14:55:00");
 	            ema.setEma5(new BigDecimal("620.26"));
 	            ema.setEma619(new BigDecimal("615.19"));
@@ -185,7 +185,7 @@ public class QuotaHandle implements MessageReceive{
             if(ema == null) {
                 ema = new EMA();
                 ema.setInstrumentId("ni1811");
-                ema.setPersiod("5m");
+                ema.setPeriod("5m");
                 ema.setTitle("14:55:00");
                 ema.setEma5(new BigDecimal("109964.62"));
                 ema.setEma619(new BigDecimal("110169.19"));
@@ -197,7 +197,7 @@ public class QuotaHandle implements MessageReceive{
             if(ema == null) {
                 ema = new EMA();
                 ema.setInstrumentId("zn1810");
-                ema.setPersiod("5m");
+                ema.setPeriod("5m");
                 ema.setTitle("14:55:00");
                 ema.setEma5(new BigDecimal("21076.77"));
                 ema.setEma619(new BigDecimal("20973.80"));
@@ -209,7 +209,7 @@ public class QuotaHandle implements MessageReceive{
             if(ema == null) {
                 ema = new EMA();
                 ema.setInstrumentId("MA901");
-	            ema.setPersiod("5m");
+	            ema.setPeriod("5m");
 	            ema.setTitle("14:55:00");
 	            ema.setEma5(new BigDecimal("3281.43"));
 	            ema.setEma619(new BigDecimal("3315.18"));
@@ -221,7 +221,7 @@ public class QuotaHandle implements MessageReceive{
             if(ema == null) {
                 ema = new EMA();
                 ema.setInstrumentId("pp1901");
-	            ema.setPersiod("5m");
+	            ema.setPeriod("5m");
 	            ema.setTitle("14:55:00");
 	            ema.setEma5(new BigDecimal("9775.36"));
 	            ema.setEma619(new BigDecimal("9876.21"));
@@ -233,7 +233,7 @@ public class QuotaHandle implements MessageReceive{
             if(ema == null) {
                 ema = new EMA();
                 ema.setInstrumentId("l1901");
-                ema.setPersiod("5m");
+                ema.setPeriod("5m");
                 ema.setTitle("14:55:00");
                 ema.setEma5(new BigDecimal("9502.15"));
                 ema.setEma619(new BigDecimal("9611.45"));
@@ -245,7 +245,7 @@ public class QuotaHandle implements MessageReceive{
             if(ema == null) {
                 ema = new EMA();
                 ema.setInstrumentId("bu1812");
-	            ema.setPersiod("5m");
+	            ema.setPeriod("5m");
 	            ema.setTitle("14:55:00");
 	            ema.setEma5(new BigDecimal("3366.25"));
 	            ema.setEma619(new BigDecimal("3328.60"));
@@ -257,7 +257,7 @@ public class QuotaHandle implements MessageReceive{
             if(ema == null) {
                 ema = new EMA();
                 ema.setInstrumentId("ru1901");
-	            ema.setPersiod("5m");
+	            ema.setPeriod("5m");
 	            ema.setTitle("14:55:00");
 	            ema.setEma5(new BigDecimal("12342.17"));
 	            ema.setEma619(new BigDecimal("12365.62"));
@@ -269,7 +269,7 @@ public class QuotaHandle implements MessageReceive{
             if(ema == null) {
                 ema = new EMA();
                 ema.setInstrumentId("CF901");
-	            ema.setPersiod("5m");
+	            ema.setPeriod("5m");
 	            ema.setTitle("14:55:00");
 	            ema.setEma5(new BigDecimal("16823.02"));
 	            ema.setEma619(new BigDecimal("16936.35"));
@@ -281,7 +281,7 @@ public class QuotaHandle implements MessageReceive{
             if(ema == null) {
                 ema = new EMA();
                 ema.setInstrumentId("SR901");
-                ema.setPersiod("5m");
+                ema.setPeriod("5m");
                 ema.setTitle("14:55:00");
                 ema.setEma5(new BigDecimal("4994.67"));
                 ema.setEma619(new BigDecimal("5040.65"));
@@ -470,7 +470,7 @@ public class QuotaHandle implements MessageReceive{
         if(lastEMA != null){
             ema = new EMA();
             ema.setInstrumentId(instrument);
-            ema.setPersiod("5m");
+            ema.setPeriod("5m");
             double ema5 = 2.0/(5+1)*price.doubleValue() + (5-1.0)/(5+1)*lastEMA.getEma5().doubleValue();
             ema.setEma5(new BigDecimal(ema5).setScale(2, RoundingMode.HALF_UP));
             

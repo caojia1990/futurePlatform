@@ -1,13 +1,16 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-<title>Insert title here</title>
+<title>指标管理</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js" />
 <script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>
 <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
 <script src="https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/vue-resource@1.5.1"></script>
+
+<script src="jquery-ui-1.12.1.custom/jquery-ui.js"></script>
+<link rel="stylesheet" href="jquery-ui-1.12.1.custom/jquery-ui.min.css">
 
 <script type="text/javascript">
     window.onload = function(){
@@ -26,6 +29,24 @@
                     }, response => {
                         // error callback
                     });
+                },
+                quotaDetail:function(row){
+                    Vue.set(quotaForm,"EMA",row);
+                    $( "#quotaDetail" ).dialog( "open" );
+                }
+            }
+        });
+        
+        var quotaForm = new Vue({
+            el:'#quotaForm',
+            data:{EMA:{}},
+            methods:{
+                save:function(){
+                    this.$http.post('save',this.EMA).then(response => {
+                        // success callback
+                    }, response => {
+                        // error callback
+                    });
                 }
             }
         });
@@ -41,35 +62,76 @@
         <div class="col-md-1 column">
         </div>
         <div class="col-md-10 column">
-            <div class="navbar navbar-inverse">
-                <div class="navbar-inner">
-                    <div class="container-fluid">
-                         <a data-target=".navbar-responsive-collapse" data-toggle="collapse" class="btn btn-navbar"><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></a> <a href="#" class="brand">网站名</a>
-                        <div class="nav-collapse collapse navbar-responsive-collapse">
-                            <ul class="nav">
-                                <li class="active">
-                                    <a href="#">主页</a>
-                                </li>
-                                <li>
-                                    <a href="#">链接</a>
-                                </li>
-                                <li>
-                                    <a href="#">链接</a>
-                                </li>
-                            </ul>
-                            <ul class="nav pull-right">
-                                <li>
-                                    <a href="#">右边链接</a>
-                                </li>
-                                <li class="divider-vertical">
-                                </li>
-                            </ul>
-                        </div>
-                        
-                    </div>
+            <nav class="navbar navbar-default navbar-inverse" role="navigation">
+                <div class="navbar-header">
+                     <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1"> <span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button> <a class="navbar-brand" href="#">指标管理</a>
                 </div>
                 
-            </div>
+                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                    <ul class="nav navbar-nav">
+                        <li class="active">
+                             <a href="market.html">行情</a>
+                        </li>
+                        <li>
+                             <a href="#">合约</a>
+                        </li>
+                        <li class="dropdown">
+                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown<strong class="caret"></strong></a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                     <a href="#">Action</a>
+                                </li>
+                                <li>
+                                     <a href="#">Another action</a>
+                                </li>
+                                <li>
+                                     <a href="#">Something else here</a>
+                                </li>
+                                <li class="divider">
+                                </li>
+                                <li>
+                                     <a href="#">Separated link</a>
+                                </li>
+                                <li class="divider">
+                                </li>
+                                <li>
+                                     <a href="#">One more separated link</a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <form class="navbar-form navbar-left" role="search">
+                        <div class="form-group">
+                            <input type="text" class="form-control" />
+                        </div> <button type="submit" class="btn btn-default">Submit</button>
+                    </form>
+                    <ul class="nav navbar-nav navbar-right">
+                        <li>
+                             <a href="#">Link</a>
+                        </li>
+                        <li class="dropdown">
+                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown<strong class="caret"></strong></a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                     <a href="#">Action</a>
+                                </li>
+                                <li>
+                                     <a href="#">Another action</a>
+                                </li>
+                                <li>
+                                     <a href="#">Something else here</a>
+                                </li>
+                                <li class="divider">
+                                </li>
+                                <li>
+                                     <a href="#">Separated link</a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+                
+            </nav>
             <table id="emaTable" class="table table-bordered table-hover">
                 <thead>
                     <tr>
@@ -78,15 +140,25 @@
                         <th>周期</th>
                         <th>ema5</th>
                         <th>ema619</th>
+                        <th>操作</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr v-for="(item in items" v-on:dblclick="">
                         <td>{{item.instrumentId}}</td>
                         <td>{{item.title}}</td>
-                        <td>{{item.persiod}}</td>
+                        <td>{{item.period}}</td>
                         <td>{{item.ema5}}</td>
                         <td>{{item.ema619}}</td>
+                        <td>
+                            <button type="button" class="btn btn-default btn-sm" v-on:click="quotaDetail(item)">
+                                <i class="glyphicon glyphicon-cog"></i>
+                            </button>
+                            &nbsp;
+                            <button type="button" class="btn btn-default btn-sm">
+                                <i class="glyphicon glyphicon-trash"></i>
+                            </button>
+                        </td>
                     </tr>
                 </tbody>
             </table>
@@ -95,5 +167,47 @@
         </div>
     </div>
 </div>
+<div id="quotaDetail" title="EMA详情">
+    <form class="form-horizontal" id="quotaForm">
+      <div class="form-group">
+        <label for="investorNo" class="col-sm-4 control-label">合约</label>
+        <div class="col-sm-6">
+            <input type="text" class="form-control" id="instrumentId" v-model="EMA.instrumentId">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="accountNo" class="col-sm-4 control-label">时间</label>
+        <div class="col-sm-6">
+            <input type="text" class="form-control" id="title" v-model="EMA.title">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="indetrumentId" class="col-sm-4 control-label">周期</label>
+        <div class="col-sm-6">
+            <input type="text" class="form-control" id="period" v-model="EMA.period" >
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="volume" class="col-sm-4 control-label">ema5</label>
+        <div class="col-sm-6">
+           <input type="text" class="form-control" id="ema5" v-model="EMA.ema5">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="price" class="col-sm-4 control-label">ema619</label>
+        <div class="col-sm-6">
+            <input type="text" class="form-control" id="ema619" v-model="EMA.ema619">
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="col-sm-3 col-sm-offset-1">
+            <button type="button" class="btn btn-success" v-on:click="save()">保存</button>
+        </div>
+      </div>
+    </form>
+</div>
+<script>
+    $( "#quotaDetail" ).dialog({ autoOpen: false });
+    </script>
 </body>
 </html>

@@ -22,4 +22,5 @@
     
     <import resource="spring-redis.xml"/>
 	<import resource="dubbo-provider.xml" />
+	<import resource="spring-jdbc.xml" />
 </beans>
