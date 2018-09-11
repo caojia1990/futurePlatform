@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 
@@ -20,6 +21,9 @@ public class InvestorInstrumentServiceImpl implements InvestorInstrumentService 
     
     @Autowired
     private InvestorInstrumentDao investorInstrumentDao;
+    
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
 
     @Override
     public InvestorInstrumentVO queryInvestorInstrument(String investorNo, String instrumentId) throws InstrumentException {
@@ -103,6 +107,8 @@ public class InvestorInstrumentServiceImpl implements InvestorInstrumentService 
             logger.error("保存合约信息失败",e);
             throw new InstrumentException(InstrumentError.DATABASE_FAILED,e);
         }
+        
+        rabbitTemplate.convertAndSend(investorInstrumentVO.getInvestorNo(), investorInstrumentVO);
     }
 
     @Override

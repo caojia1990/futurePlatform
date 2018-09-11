@@ -10,6 +10,7 @@ import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.future.client.strategy.OneMinutesMA;
+import com.future.client.utils.CacheMap;
 import com.future.instrument.api.exception.InstrumentException;
 import com.future.instrument.api.service.InvestorInstrumentService;
 import com.future.instrument.api.vo.InvestorInstrumentVO;
@@ -40,15 +41,16 @@ public class EMAStarter {
             TopicExchange marketExchange = (TopicExchange) context.getBean("com.future.market");
             Queue marketQ = (Queue) context.getBean("marketQ");
             
-            /*
-            InvestorInstrumentService investorInstrumentService = context.getBean(InvestorInstrumentService.class);
+            
+            /*InvestorInstrumentService investorInstrumentService = context.getBean(InvestorInstrumentService.class);
             List<InvestorInstrumentVO> list = investorInstrumentService.queryInvestorInstrumentList(INVESTOR_ID);
             if(list != null){
                 for (InvestorInstrumentVO investorInstrumentVO : list) {
+                    CacheMap.INVESTOR_INSTRUMENT.put(investorInstrumentVO.getInstrumentId(), investorInstrumentVO);
                     admin.declareBinding(BindingBuilder.bind(marketQ).to(marketExchange).with("instrument."+investorInstrumentVO.getInstrumentId()));
                 }
-            }
-            */
+            }*/
+            
             
             admin.declareBinding(BindingBuilder.bind(marketQ).to(marketExchange).with("instrument.j1901"));//焦炭
             admin.declareBinding(BindingBuilder.bind(marketQ).to(marketExchange).with("instrument.jm1901"));//焦煤
@@ -87,6 +89,12 @@ public class EMAStarter {
             Queue onRtnTradeQ = (Queue) context.getBean("onRtnTradeQ");
             TopicExchange onRtnTradeExchange = (TopicExchange) context.getBean("onRtnTradeExchange");
             admin.declareBinding(BindingBuilder.bind(onRtnTradeQ).to(onRtnTradeExchange).with(INVESTOR_ID));
+        }
+        
+        {
+            Queue queue = (Queue) context.getBean("instrumentQ");
+            TopicExchange exchange = (TopicExchange) context.getBean("com.future.instrument");
+            admin.declareBinding(BindingBuilder.bind(queue).to(exchange).with(INVESTOR_ID));
         }
         //启动对冲策略
         OneMinutesMA.START(context);
