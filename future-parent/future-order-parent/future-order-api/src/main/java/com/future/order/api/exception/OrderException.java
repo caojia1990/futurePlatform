@@ -15,32 +15,24 @@ public class OrderException extends CommonFutureException{
     
     static final String SERVICE_NAME = "order-service";
     
-    final String errorCode;
-    
-    final String errorMsg;
+    public OrderException(){
+        super();
+    }
     
     public OrderException(String errorCode, String errorMsg){
         super(SERVICE_NAME, errorCode, errorMsg);
-        this.errorCode = errorCode;
-        this.errorMsg = errorMsg;
     }
     
     public OrderException(String errorCode, String errorMsg, Throwable cause){
-    		super(SERVICE_NAME, errorCode, errorMsg, cause);
-        this.errorCode = errorCode;
-        this.errorMsg = errorMsg;
+        super(SERVICE_NAME, errorCode, errorMsg, cause);
     }
     
     public OrderException(OrderError orderError){
-    		super(SERVICE_NAME, orderError.errorCode, orderError.errorMsg);
-        this.errorCode = orderError.errorCode;
-        this.errorMsg = orderError.errorMsg;
+        super(SERVICE_NAME, orderError.errorCode, orderError.errorMsg);
     }
     
     public OrderException(OrderError orderError, Throwable cause){
         super(SERVICE_NAME, orderError.errorCode, orderError.errorMsg, cause);
-    this.errorCode = orderError.errorCode;
-    this.errorMsg = orderError.errorMsg;
 }
 
 }

@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.future.instrument.api.exception.InstrumentException;
@@ -50,4 +49,16 @@ public class InstrumentController {
 	    this.investorInstrumentConsumer.removeInvestorInstrument(paramVo.getInvestorNo(), paramVo.getInstrumentId());
 	    return new ResponseHead();
 	}
+	
+	@RequestMapping(value="saveInvestorInstrument", method=RequestMethod.POST)
+	public ResponseHead saveInvestorInstrument(@RequestBody InvestorInstrumentVO paramVo) throws InstrumentException{
+	    this.investorInstrumentConsumer.saveInvestorInstrument(paramVo);
+	    return new ResponseHead();
+	}
+	
+	@RequestMapping(value="updateInvestorInstrument", method=RequestMethod.POST)
+	public ResponseHead updateInvestorInstrument(@RequestBody InvestorInstrumentVO paramVo) throws InstrumentException{
+        this.investorInstrumentConsumer.updateInvestorInstrument(paramVo);
+        return new ResponseHead();
+    }
 }

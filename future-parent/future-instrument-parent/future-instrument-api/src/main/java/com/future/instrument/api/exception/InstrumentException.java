@@ -16,32 +16,24 @@ public class InstrumentException extends CommonFutureException{
     
     static final String SERVICE_NAME = "instrument-service";
 
-    final String errorCode;
-    
-    final String errorMsg;
+    public InstrumentException(){
+        super();
+    }
     
     public InstrumentException(String errorCode, String errorMsg){
         super(SERVICE_NAME, errorCode, errorMsg);
-        this.errorCode = errorCode;
-        this.errorMsg = errorMsg;
     }
     
     public InstrumentException(String errorCode, String errorMsg, Throwable cause){
         super(SERVICE_NAME, errorCode, errorMsg, cause);
-        this.errorCode = errorCode;
-        this.errorMsg = errorMsg;
     }
     
     public InstrumentException(InstrumentError error){
         super(SERVICE_NAME, error.errorCode, error.errorMsg);
-        this.errorCode = error.errorCode;
-        this.errorMsg = error.errorMsg;
     }
     
     public InstrumentException(InstrumentError error, Throwable cause){
         super(SERVICE_NAME, error.errorCode, error.errorMsg, cause);
-        this.errorCode = error.errorCode;
-        this.errorMsg = error.errorMsg;
     }
 
 }

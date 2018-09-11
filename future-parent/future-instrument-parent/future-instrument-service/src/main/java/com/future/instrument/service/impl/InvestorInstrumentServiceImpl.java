@@ -49,6 +49,10 @@ public class InvestorInstrumentServiceImpl implements InvestorInstrumentService 
             throw new InstrumentException(InstrumentError.INSTRUMENT_ID_REQUIRED);
         }
         
+        if(investorInstrumentVO.getVolume() == null || investorInstrumentVO.getVolume() < 1){
+            throw new InstrumentException(InstrumentError.VOLUME_ILLEGAL);
+        }
+        
         if(StringUtils.isBlank(investorInstrumentVO.getStatus())){
             throw new InstrumentException(InstrumentError.STATUS_REQUIRED);
         }
@@ -103,6 +107,46 @@ public class InvestorInstrumentServiceImpl implements InvestorInstrumentService 
 
     @Override
     public void updateInvestorInstrument(InvestorInstrumentVO investorInstrumentVO) throws InstrumentException {
+        
+        if(StringUtils.isBlank(investorInstrumentVO.getInvestorNo())){
+            throw new InstrumentException(InstrumentError.INVESTOR_NO_REQUIRED);
+        }
+        
+        if(StringUtils.isBlank(investorInstrumentVO.getInstrumentId())){
+            throw new InstrumentException(InstrumentError.INSTRUMENT_ID_REQUIRED);
+        }
+        
+        if(investorInstrumentVO.getVolume() == null || investorInstrumentVO.getVolume() < 1){
+            throw new InstrumentException(InstrumentError.VOLUME_ILLEGAL);
+        }
+        
+        if(StringUtils.isBlank(investorInstrumentVO.getStatus())){
+            throw new InstrumentException(InstrumentError.STATUS_REQUIRED);
+        }
+        
+        if(investorInstrumentVO.getTarget() == null){
+            throw new InstrumentException(InstrumentError.TARGET_REQUIRED);
+        }
+        
+        if(investorInstrumentVO.getRetracement() == null){
+            throw new InstrumentException(InstrumentError.RETRACEMENT_REQUIRED);
+        }
+        
+        if(StringUtils.isBlank(investorInstrumentVO.getHedgingType())){
+            throw new InstrumentException(InstrumentError.HEDGING_TYPE_REQUIRED);
+        }
+        
+        if(investorInstrumentVO.getHedgingTigger() == null || investorInstrumentVO.getHedgingTigger().compareTo(BigDecimal.ZERO) < 0){
+            throw new InstrumentException(InstrumentError.HEDGING_TIGGER_ILLEGAL);
+        }
+        
+        if(investorInstrumentVO.getHedgingVolume() == null || investorInstrumentVO.getHedgingVolume() < 1){
+            throw new InstrumentException(InstrumentError.HEDGING_VOLUME_ILLEGAL);
+        }
+        
+        if(investorInstrumentVO.getHedgingStopWin() == null || investorInstrumentVO.getHedgingStopWin() < 1){
+            throw new InstrumentException(InstrumentError.HEDGING_STOP_WIN_ILLEGAL);
+        }
         
         try {
             this.investorInstrumentDao.update(investorInstrumentVO);

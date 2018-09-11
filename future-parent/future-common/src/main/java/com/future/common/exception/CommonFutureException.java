@@ -15,17 +15,21 @@ public class CommonFutureException extends Exception {
 	/**
 	 * 系统名
 	 */
-	final String serviceName;
+	String serviceName;
 	
 	/**
 	 * 错误码
 	 */
-	final String errorCode;
+	String errorCode;
 	
 	/**
 	 * 错误信息
 	 */
-	final String errorMsg;
+	String errorMsg;
+	
+	public CommonFutureException(){
+	    super();
+	}
 	
 	public CommonFutureException(String serviceName, String errorCode, String errorMsg) {
 		super(errorMsg);

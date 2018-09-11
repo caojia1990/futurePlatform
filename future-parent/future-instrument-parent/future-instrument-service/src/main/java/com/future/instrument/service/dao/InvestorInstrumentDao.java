@@ -16,9 +16,10 @@ public class InvestorInstrumentDao {
     private JdbcTemplate jdbcTemplate;
     
     public int  insert(InvestorInstrumentVO investorInstrumentVO){
-        return this.jdbcTemplate.update("INSERT INTO INVESTOR_INSTRUMENT VALUES (?,?,?,?,?,?,?,?,?,?,?)", 
+        return this.jdbcTemplate.update("INSERT INTO INVESTOR_INSTRUMENT VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)", 
                 investorInstrumentVO.getInvestorNo(),
                 investorInstrumentVO.getInstrumentId(),
+                investorInstrumentVO.getVolume(),
                 investorInstrumentVO.getStopWin(),
                 investorInstrumentVO.getStopLoss(),
                 investorInstrumentVO.getStatus(),
@@ -26,6 +27,7 @@ public class InvestorInstrumentDao {
                 investorInstrumentVO.getRetracement(),
                 investorInstrumentVO.getHedgingType(),
                 investorInstrumentVO.getHedgingTigger(),
+                investorInstrumentVO.getHedgingVolume(),
                 investorInstrumentVO.getHedgingStopWin(),
                 investorInstrumentVO.getHedgingStopLoss()
                 
@@ -34,6 +36,7 @@ public class InvestorInstrumentDao {
     
     public int update(InvestorInstrumentVO investorInstrumentVO){
         return this.jdbcTemplate.update("UPDATE INVESTOR_INSTRUMENT SET "
+                + "VOLUME = ?,"
                 + "STOP_WIN = ?,"
                 + "STOP_LOSS = ?,"
                 + "STATUS = ?,"
@@ -41,10 +44,11 @@ public class InvestorInstrumentDao {
                 + "RETRACEMENT = ?,"
                 + "HEDGING_TYPE = ?,"
                 + "HEDGING_TIGGER = ?,"
+                + "HEDGING_VOLUME = ?,"
                 + "HEDGING_STOP_WIN = ?,"
                 + "HEDGING_STOP_LOSS = ?"
                 + "WHERE INVESTOR_NO = ? AND INSTRUMENT_ID = ?", 
-                
+                investorInstrumentVO.getVolume(),
                 investorInstrumentVO.getStopWin(),
                 investorInstrumentVO.getStopLoss(),
                 investorInstrumentVO.getStatus(),
@@ -52,6 +56,7 @@ public class InvestorInstrumentDao {
                 investorInstrumentVO.getRetracement(),
                 investorInstrumentVO.getHedgingType(),
                 investorInstrumentVO.getHedgingTigger(),
+                investorInstrumentVO.getHedgingVolume(),
                 investorInstrumentVO.getHedgingStopWin(),
                 investorInstrumentVO.getHedgingStopLoss(),
                 investorInstrumentVO.getInvestorNo(),

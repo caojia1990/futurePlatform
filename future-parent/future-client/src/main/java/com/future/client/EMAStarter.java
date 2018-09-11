@@ -1,5 +1,7 @@
 package com.future.client;
 
+import java.util.List;
+
 import org.springframework.amqp.core.BindingBuilder;
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.core.TopicExchange;
@@ -8,12 +10,15 @@ import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.future.client.strategy.OneMinutesMA;
+import com.future.instrument.api.exception.InstrumentException;
+import com.future.instrument.api.service.InvestorInstrumentService;
+import com.future.instrument.api.vo.InvestorInstrumentVO;
 
 public class EMAStarter {
     
     public static String INVESTOR_ID = "001";
     
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InstrumentException {
         
         AbstractApplicationContext context =
                 new ClassPathXmlApplicationContext("applicationContext.xml");
@@ -34,7 +39,17 @@ public class EMAStarter {
             //订阅行情
             TopicExchange marketExchange = (TopicExchange) context.getBean("com.future.market");
             Queue marketQ = (Queue) context.getBean("marketQ");
-            admin.declareBinding(BindingBuilder.bind(marketQ).to(marketExchange).with("instrument.i1901"));//铁矿石
+            
+            /*
+            InvestorInstrumentService investorInstrumentService = context.getBean(InvestorInstrumentService.class);
+            List<InvestorInstrumentVO> list = investorInstrumentService.queryInvestorInstrumentList(INVESTOR_ID);
+            if(list != null){
+                for (InvestorInstrumentVO investorInstrumentVO : list) {
+                    admin.declareBinding(BindingBuilder.bind(marketQ).to(marketExchange).with("instrument."+investorInstrumentVO.getInstrumentId()));
+                }
+            }
+            */
+            
             admin.declareBinding(BindingBuilder.bind(marketQ).to(marketExchange).with("instrument.j1901"));//焦炭
             admin.declareBinding(BindingBuilder.bind(marketQ).to(marketExchange).with("instrument.jm1901"));//焦煤
             admin.declareBinding(BindingBuilder.bind(marketQ).to(marketExchange).with("instrument.ZC901"));//动力煤（主力）
@@ -57,6 +72,7 @@ public class EMAStarter {
             admin.declareBinding(BindingBuilder.bind(marketQ).to(marketExchange).with("instrument.p1901"));//棕榈油
             admin.declareBinding(BindingBuilder.bind(marketQ).to(marketExchange).with("instrument.OI901"));//菜油
             admin.declareBinding(BindingBuilder.bind(marketQ).to(marketExchange).with("instrument.pp1901"));//（主力）
+            
         }
         
         {

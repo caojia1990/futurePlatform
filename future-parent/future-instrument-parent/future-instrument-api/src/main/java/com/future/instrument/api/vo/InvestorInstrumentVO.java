@@ -21,6 +21,9 @@ public class InvestorInstrumentVO implements Serializable{
     //合约代码
     private String instrumentId;
     
+    //开仓手数
+    private Integer volume;
+    
     //止盈跳数
     private Integer stopWin;
     
@@ -146,6 +149,14 @@ public class InvestorInstrumentVO implements Serializable{
 
     public void setHedgingVolume(Integer hedgingVolume) {
         this.hedgingVolume = hedgingVolume;
+    }
+
+    public Integer getVolume() {
+        return volume;
+    }
+
+    public void setVolume(Integer volume) {
+        this.volume = volume;
     }
     
 }
