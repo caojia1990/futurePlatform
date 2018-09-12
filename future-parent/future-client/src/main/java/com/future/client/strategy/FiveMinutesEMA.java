@@ -270,7 +270,7 @@ public class FiveMinutesEMA implements Runnable {
                         reqOrderInsertVO.setVolumeTotalOriginal(onRtnTradeVO.getVolume());
                         reqOrderInsertVO.setOrderPriceType(OrderPriceType.LimitPrice);
                         orderService.reqOrderInsert(reqOrderInsertVO);
-                        logger.info(instrumentId+"出现金叉，平多单");
+                        logger.info(instrumentId+"出现死叉，平多单");
                     }
                 }
                 

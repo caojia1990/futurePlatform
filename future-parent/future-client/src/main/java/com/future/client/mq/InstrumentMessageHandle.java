@@ -35,20 +35,20 @@ public class InstrumentMessageHandle {
         if("0".equals(message.getMessageType())){
             if(logger.isDebugEnabled()){
                 logger.debug("接收到新合约"+JSON.toJSONString(message));
-                rabbitAdmin.declareBinding(BindingBuilder.bind(queue).to(topicExchange).with("instrument."+instrumentId));
-                CacheMap.INVESTOR_INSTRUMENT.put(instrumentId, message.getMessage());
             }
+            rabbitAdmin.declareBinding(BindingBuilder.bind(queue).to(topicExchange).with("instrument."+instrumentId));
+            CacheMap.INVESTOR_INSTRUMENT.put(instrumentId, message.getMessage());
         }else if ("1".equals(message.getMessageType())) {
             if(logger.isDebugEnabled()){
                 logger.debug("接收到合约变化"+JSON.toJSONString(message));
-                CacheMap.INVESTOR_INSTRUMENT.put(instrumentId, message.getMessage());
             }
+            CacheMap.INVESTOR_INSTRUMENT.put(instrumentId, message.getMessage());
         }else if ("2".equals(message.getMessageType())) {
             if(logger.isDebugEnabled()){
                 logger.debug("接收到删除合约"+JSON.toJSONString(message));
-                rabbitAdmin.removeBinding(BindingBuilder.bind(queue).to(topicExchange).with("instrument."+instrumentId));
-                CacheMap.INVESTOR_INSTRUMENT.remove(instrumentId);
             }
+            rabbitAdmin.removeBinding(BindingBuilder.bind(queue).to(topicExchange).with("instrument."+instrumentId));
+            CacheMap.INVESTOR_INSTRUMENT.remove(instrumentId);
         }
     }
 }

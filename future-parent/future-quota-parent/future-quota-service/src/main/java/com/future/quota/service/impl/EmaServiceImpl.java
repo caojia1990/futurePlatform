@@ -12,6 +12,7 @@ import com.future.quota.api.exception.QuotaError;
 import com.future.quota.api.exception.QuotaException;
 import com.future.quota.api.service.EmaService;
 import com.future.quota.api.vo.EMA;
+import com.future.quota.service.mq.QuotaHandle;
 
 public class EmaServiceImpl implements EmaService {
     
@@ -43,6 +44,7 @@ public class EmaServiceImpl implements EmaService {
             logger.error("保存EMA指标异常",e);
             throw new QuotaException(QuotaError.SAVE_EMA_FAILED, e);
         }
+        QuotaHandle.emaMap.put(ema.getInstrumentId(), ema);
 
     }
 
@@ -55,7 +57,7 @@ public class EmaServiceImpl implements EmaService {
             logger.error("删除EMA指标异常",e);
             throw new QuotaException(QuotaError.REMOVE_EMA_FAILED, e);
         }
-        
+        QuotaHandle.emaMap.remove(instrumentId);
     }
 
 }

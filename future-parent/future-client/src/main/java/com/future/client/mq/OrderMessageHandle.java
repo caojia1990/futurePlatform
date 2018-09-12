@@ -56,20 +56,26 @@ public class OrderMessageHandle {
             logger.debug("成交回报"+onRtnTrade);
         }
         
-        if(onRtnTrade.getOffsetFlag() == OffsetFlag.OPEN) {
-            hashOperations.put(onRtnTrade.getAccountNo(), onRtnTrade.getInstrumentId(), onRtnTrade);
-            //保存数据
-            tradeDao.insert(onRtnTrade);
-            //更新最大最小价格
-            EMA ema = (EMA) this.redisTemplate.opsForHash().get(onRtnTrade.getInstrumentId(), "EMA5");
-            ema.setHighestPrice(new BigDecimal(onRtnTrade.getPrice()));
-            ema.setLowestPrice(new BigDecimal(onRtnTrade.getPrice()));
-            this.redisTemplate.opsForHash().put(onRtnTrade.getInstrumentId(), "EMA5", ema);
-        }else {
-            hashOperations.delete(onRtnTrade.getAccountNo(), onRtnTrade.getInstrumentId());
-            //删除持仓
-            tradeDao.deleteByCondition(onRtnTrade.getInvestorId(), onRtnTrade.getAccountNo(), 
-                    onRtnTrade.getInstrumentId(), String.valueOf(onRtnTrade.getDirection().getCode()));
+        try {
+            if(onRtnTrade.getOffsetFlag() == OffsetFlag.OPEN) {
+                hashOperations.put(onRtnTrade.getAccountNo(), onRtnTrade.getInstrumentId(), onRtnTrade);
+                //保存数据
+                tradeDao.insert(onRtnTrade);
+                //更新最大最小价格
+                EMA ema = (EMA) this.redisTemplate.opsForHash().get(onRtnTrade.getInstrumentId(), "EMA5");
+                if(ema != null){
+                    ema.setHighestPrice(new BigDecimal(onRtnTrade.getPrice()));
+                    ema.setLowestPrice(new BigDecimal(onRtnTrade.getPrice()));
+                    this.redisTemplate.opsForHash().put(onRtnTrade.getInstrumentId(), "EMA5", ema);
+                }
+            }else {
+                hashOperations.delete(onRtnTrade.getAccountNo(), onRtnTrade.getInstrumentId());
+                //删除持仓
+                tradeDao.deleteByCondition(onRtnTrade.getInvestorId(), onRtnTrade.getAccountNo(), 
+                        onRtnTrade.getInstrumentId(), String.valueOf(onRtnTrade.getDirection().getCode()));
+            }
+        } catch (Exception e) {
+            logger.error("处理成交回报失败",e);
         }
         
         
