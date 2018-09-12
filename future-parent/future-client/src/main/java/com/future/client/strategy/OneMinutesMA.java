@@ -14,6 +14,7 @@ import com.future.client.EMAStarter;
 import com.future.client.dao.TradeDao;
 import com.future.client.utils.CacheMap;
 import com.future.common.exception.CommonFutureException;
+import com.future.instrument.api.vo.InvestorInstrumentVO;
 import com.future.order.api.service.OrderService;
 import com.future.order.api.vo.CombOffsetFlag;
 import com.future.order.api.vo.Direction;
@@ -34,7 +35,7 @@ public class OneMinutesMA implements Runnable {
     static final String ORIG_ACCOUNT_NO = "00009";
     
     //止盈跳数
-    private static final int STOP_TICK = 1;
+    private static final int DEFAULT_STOP_TICK = 1;
     
     private static OneMinutesMA oneMinutesMA;
     
@@ -89,11 +90,53 @@ public class OneMinutesMA implements Runnable {
                 continue;
             }
             
+            InvestorInstrumentVO vo = CacheMap.INVESTOR_INSTRUMENT.get(instrumentId);
+            if(vo == null || "2".equals(vo.getHedgingType())){
+                if(ma.getLastPrice().compareTo(ma.getMa5())!=0){
+                    maMap.put(instrumentId, ma);
+                }
+                continue;
+            }
+            
+            
             for (OnRtnTradeVO onRtnTradeVO : list) {
                 if(onRtnTradeVO.getDirection() == Direction.BUY){
-                    //买开 涨幅超过3% 一手对冲
-                    double touch = (ma.getLastPrice().doubleValue()-onRtnTradeVO.getPrice())/onRtnTradeVO.getPrice();
-                    if(touch > 0.03){
+                    //按比例触发
+                    if("0".equals(vo.getHedgingType())){
+                        double touch = (ma.getLastPrice().doubleValue()-onRtnTradeVO.getPrice())/onRtnTradeVO.getPrice();
+                        if(touch > vo.getHedgingTigger().doubleValue()){
+                            //查询对冲账户是否有对冲持仓
+                            List<OnRtnTradeVO> hedgingList = this.tradeDao.selectByCondition(ClientStarter.INVESTOR_ID, ACCOUNT_NO, instrumentId,"1");
+                            if(hedgingList == null || hedgingList.size() < 1 ){
+                                //判断是否死叉
+                                BigDecimal o = oldMA.getLastPrice().subtract(oldMA.getMa5());
+                                BigDecimal n = ma.getLastPrice().subtract(ma.getMa5());
+                                //死叉 对冲一手
+                                if(o.compareTo(BigDecimal.ZERO) > 0 && n.compareTo(BigDecimal.ZERO) < 0){
+                                    ReqOrderInsertVO reqOrderInsertVO = new ReqOrderInsertVO();
+                                    reqOrderInsertVO.setAccountNo(ACCOUNT_NO);
+                                    reqOrderInsertVO.setInvestorId(ClientStarter.INVESTOR_ID);
+                                    reqOrderInsertVO.setInstrumentId(instrumentId);
+                                    reqOrderInsertVO.setLimitPrice(ma.getLowerPrice().doubleValue());
+                                    reqOrderInsertVO.setCombOffsetFlag(CombOffsetFlag.OPEN);
+                                    reqOrderInsertVO.setTimeCondition(TimeCondition.IOC);
+                                    reqOrderInsertVO.setDirection(Direction.SELL);
+                                    reqOrderInsertVO.setMinVolume(1);
+                                    reqOrderInsertVO.setVolumeTotalOriginal(vo.getHedgingVolume());
+                                    reqOrderInsertVO.setOrderPriceType(OrderPriceType.LimitPrice);
+                                    try {
+                                        logger.info("1分钟MA死叉，对冲一手");
+                                        orderService.reqOrderInsert(reqOrderInsertVO);
+                                    } catch (CommonFutureException e) {
+                                        logger.error("下单失败",e);
+                                    }
+                                    //记录下单缓存
+                                    orderMap.put(instrumentId, reqOrderInsertVO);
+                                }
+                            }
+                        }
+                    }else if ("1".equals(vo.getHedgingType())) {
+                        //立即触发
                         //查询对冲账户是否有对冲持仓
                         List<OnRtnTradeVO> hedgingList = this.tradeDao.selectByCondition(ClientStarter.INVESTOR_ID, ACCOUNT_NO, instrumentId,"1");
                         if(hedgingList == null || hedgingList.size() < 1 ){
@@ -111,7 +154,7 @@ public class OneMinutesMA implements Runnable {
                                 reqOrderInsertVO.setTimeCondition(TimeCondition.IOC);
                                 reqOrderInsertVO.setDirection(Direction.SELL);
                                 reqOrderInsertVO.setMinVolume(1);
-                                reqOrderInsertVO.setVolumeTotalOriginal(1);
+                                reqOrderInsertVO.setVolumeTotalOriginal(vo.getHedgingVolume());
                                 reqOrderInsertVO.setOrderPriceType(OrderPriceType.LimitPrice);
                                 try {
                                     logger.info("1分钟MA死叉，对冲一手");
@@ -126,8 +169,42 @@ public class OneMinutesMA implements Runnable {
                     }
                 }else {
                     //卖开
-                    double touch = (onRtnTradeVO.getPrice()-ma.getLastPrice().doubleValue())/onRtnTradeVO.getPrice();
-                    if(touch > 0.03){
+                    
+                  //按比例触发
+                    if("0".equals(vo.getHedgingType())){
+                        double touch = (onRtnTradeVO.getPrice()-ma.getLastPrice().doubleValue())/onRtnTradeVO.getPrice();
+                        if(touch > vo.getHedgingTigger().doubleValue()){
+                            //查询对冲账户是否有对冲持仓
+                            List<OnRtnTradeVO> hedgingList = this.tradeDao.selectByCondition(ClientStarter.INVESTOR_ID, ACCOUNT_NO, instrumentId,"0");
+                            if(hedgingList == null || hedgingList.size() < 1 ){
+                                //判断是否金叉
+                                BigDecimal o = oldMA.getLastPrice().subtract(oldMA.getMa5());
+                                BigDecimal n = ma.getLastPrice().subtract(ma.getMa5());
+                                //金叉 对冲一手
+                                if(o.compareTo(BigDecimal.ZERO) < 0 && n.compareTo(BigDecimal.ZERO) > 0){
+                                    ReqOrderInsertVO reqOrderInsertVO = new ReqOrderInsertVO();
+                                    reqOrderInsertVO.setAccountNo(ACCOUNT_NO);
+                                    reqOrderInsertVO.setInvestorId(ClientStarter.INVESTOR_ID);
+                                    reqOrderInsertVO.setInstrumentId(instrumentId);
+                                    reqOrderInsertVO.setLimitPrice(ma.getUpperPrice().doubleValue());
+                                    reqOrderInsertVO.setCombOffsetFlag(CombOffsetFlag.OPEN);
+                                    reqOrderInsertVO.setTimeCondition(TimeCondition.IOC);
+                                    reqOrderInsertVO.setDirection(Direction.BUY);
+                                    reqOrderInsertVO.setMinVolume(1);
+                                    reqOrderInsertVO.setVolumeTotalOriginal(vo.getHedgingVolume());
+                                    reqOrderInsertVO.setOrderPriceType(OrderPriceType.LimitPrice);
+                                    try {
+                                        logger.info("1分钟MA金叉，对冲一手");
+                                        orderService.reqOrderInsert(reqOrderInsertVO);
+                                    } catch (CommonFutureException e) {
+                                        logger.error("下单失败",e);
+                                    }
+                                    //记录下单缓存
+                                    orderMap.put(instrumentId, reqOrderInsertVO);
+                                }
+                            }
+                        }
+                    }else if ("1".equals(vo.getHedgingType())) {
                       //查询对冲账户是否有对冲持仓
                         List<OnRtnTradeVO> hedgingList = this.tradeDao.selectByCondition(ClientStarter.INVESTOR_ID, ACCOUNT_NO, instrumentId,"0");
                         if(hedgingList == null || hedgingList.size() < 1 ){
@@ -145,7 +222,7 @@ public class OneMinutesMA implements Runnable {
                                 reqOrderInsertVO.setTimeCondition(TimeCondition.IOC);
                                 reqOrderInsertVO.setDirection(Direction.BUY);
                                 reqOrderInsertVO.setMinVolume(1);
-                                reqOrderInsertVO.setVolumeTotalOriginal(1);
+                                reqOrderInsertVO.setVolumeTotalOriginal(vo.getHedgingVolume());
                                 reqOrderInsertVO.setOrderPriceType(OrderPriceType.LimitPrice);
                                 try {
                                     logger.info("1分钟MA金叉，对冲一手");
@@ -197,12 +274,19 @@ public class OneMinutesMA implements Runnable {
         String instrumentId = ma.getInstrumentId();
         double tickPrice = this.cacheMap.getTickPrice(instrumentId);
         List<OnRtnTradeVO> list = this.tradeDao.selectByCondition(ClientStarter.INVESTOR_ID, ACCOUNT_NO, instrumentId);
+        
+        InvestorInstrumentVO vo = CacheMap.INVESTOR_INSTRUMENT.get(instrumentId);
+        if(vo == null){
+            vo = new InvestorInstrumentVO();
+            vo.setHedgingStopWin(DEFAULT_STOP_TICK);
+        }
+        
         if(list != null && list.size() > 0) {
             for (OnRtnTradeVO tradeVO : list) {
                 
                 if(tradeVO.getDirection() == Direction.BUY) {
                     //买开
-                    if(tradeVO.getPrice() + tickPrice*STOP_TICK <= ma.getBidPrice1().doubleValue()) {
+                    if(tradeVO.getPrice() + tickPrice*vo.getHedgingStopWin() <= ma.getBidPrice1().doubleValue()) {
                         
                         //止赢
                         ReqOrderInsertVO reqOrderInsertVO = new ReqOrderInsertVO();
@@ -224,7 +308,7 @@ public class OneMinutesMA implements Runnable {
                     }
                 }else {
                     //卖开
-                    if(tradeVO.getPrice() - tickPrice*STOP_TICK >= ma.getAskPrice1().doubleValue()) {
+                    if(tradeVO.getPrice() - tickPrice*vo.getHedgingStopWin() >= ma.getAskPrice1().doubleValue()) {
                         
                         //止赢
                           ReqOrderInsertVO reqOrderInsertVO = new ReqOrderInsertVO();

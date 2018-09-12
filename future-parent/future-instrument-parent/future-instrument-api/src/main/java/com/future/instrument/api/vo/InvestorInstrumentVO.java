@@ -42,8 +42,8 @@ public class InvestorInstrumentVO implements Serializable{
     //对冲触发类型  0:按比例触发（默认） 1：立即触发   2：不触发
     private String hedgingType = "0";
     
-    //触发对冲比例    默认3%
-    private BigDecimal hedgingTigger = new BigDecimal("0.03");
+    //触发对冲比例    默认2%
+    private BigDecimal hedgingTigger = new BigDecimal("0.02");
     
     //对冲手数  默认1
     private Integer hedgingVolume = 1;
@@ -87,6 +87,10 @@ public class InvestorInstrumentVO implements Serializable{
         this.stopLoss = stopLoss;
     }
 
+    /**
+     * 运行状态 
+     * @return 0：正常（默认）   1：暂停
+     */
     public String getStatus() {
         return status;
     }
@@ -95,6 +99,10 @@ public class InvestorInstrumentVO implements Serializable{
         this.status = status;
     }
 
+    /**
+     * 止盈幅度
+     * @return 到达该比例触发回撤止盈
+     */
     public BigDecimal getTarget() {
         return target;
     }
@@ -111,6 +119,10 @@ public class InvestorInstrumentVO implements Serializable{
         this.retracement = retracement;
     }
 
+    /**
+     * 对冲触发类型  
+     * @return 0:按比例触发（默认） 1：立即触发   2：不触发
+     */
     public String getHedgingType() {
         return hedgingType;
     }

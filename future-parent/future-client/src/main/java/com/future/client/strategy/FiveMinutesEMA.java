@@ -2,24 +2,17 @@ package com.future.client.strategy;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.LinkedBlockingQueue;
 
 import org.apache.log4j.Logger;
 import org.springframework.data.redis.core.StringRedisTemplate;
 
 import com.alibaba.fastjson.JSON;
 import com.future.client.ClientStarter;
-import com.future.client.EMAStarter;
 import com.future.client.dao.TradeDao;
-import com.future.client.entity.TargetProfit;
 import com.future.client.utils.CacheMap;
-import com.future.client.utils.SpringContextUtil;
-import com.future.common.exception.CommonFutureException;
-import com.future.instrument.api.exception.InstrumentException;
 import com.future.instrument.api.vo.InstrumentVO;
+import com.future.instrument.api.vo.InvestorInstrumentVO;
 import com.future.market.api.vo.DepthMarketData;
 import com.future.order.api.service.OrderService;
 import com.future.order.api.vo.CombOffsetFlag;
@@ -51,7 +44,7 @@ public class FiveMinutesEMA implements Runnable {
     
     final private TradeDao tradeDao;
     
-    private static final Map<String, TargetProfit> targetMap = new HashMap<String, TargetProfit>(){
+    /*private static final Map<String, TargetProfit> targetMap = new HashMap<String, TargetProfit>(){
         {
             TargetProfit targetProfit = new TargetProfit();
             targetProfit.setProduct("m");
@@ -124,7 +117,7 @@ public class FiveMinutesEMA implements Runnable {
             targetProfit.setBack(new BigDecimal("0.4"));
             put(targetProfit.getProduct(), targetProfit);
         }
-    };
+    };*/
     
     public FiveMinutesEMA(OrderService orderService, EMA ema, StringRedisTemplate redisTemplate, CacheMap cacheMap,TradeDao tradeDao) {
         this.orderService = orderService;
@@ -164,6 +157,18 @@ public class FiveMinutesEMA implements Runnable {
             }
             if(oldEma.getLowestPrice().compareTo(ema.getLowestPrice()) < 0){
                 ema.setLowestPrice(oldEma.getLowestPrice());
+            }
+            
+            //获取合约运行状态
+            InvestorInstrumentVO vo = CacheMap.INVESTOR_INSTRUMENT.get(instrumentId);
+            if(vo == null || "1".equals(vo.getStatus())){
+                //缓存本次EMA
+                this.redisTemplate.opsForHash().put(instrumentId, "EMA5", ema);
+                return;
+            }
+            
+            if(vo.getVolume() != null){
+                volume = vo.getVolume();
             }
             
             //金叉
@@ -274,129 +279,8 @@ public class FiveMinutesEMA implements Runnable {
             //缓存本次EMA
             this.redisTemplate.opsForHash().put(instrumentId, "EMA5", ema);
             
-          /*//先判断是否有持仓
-            List<OnRtnTradeVO> list = this.tradeDao.selectByCondition(ClientStarter.INVESTOR_ID, ACCOUNT_NO, instrumentId);
-            if(list != null && list.size() > 0){
-                for (OnRtnTradeVO tradeVO : list) {
-                  //判断是否需要止损  20点止损
-                    String product = instrumentId.replaceAll("[^a-z^A-Z]", "");
-                    //止盈止损参数
-                    TargetProfit targetProfit = targetMap.get(product);
-                    
-                    double tickPrice = this.cacheMap.getTickPrice(instrumentId);
-                    if(tradeVO.getDirection() == Direction.BUY) {
-                        //买开
-                        if(tradeVO.getPrice() - tickPrice*targetProfit.getStopLessTick() >= ema.getClosePrice().doubleValue()) {
-                            //止损
-                            logger.info("触发止损"+instrumentId);
-                            ReqOrderInsertVO reqOrderInsertVO = new ReqOrderInsertVO();
-                            reqOrderInsertVO.setAccountNo(ACCOUNT_NO);
-                            reqOrderInsertVO.setInvestorID(ClientStarter.INVESTOR_ID);
-                            reqOrderInsertVO.setInstrumentID(instrumentId);
-                            reqOrderInsertVO.setLimitPrice(ema.getLowerPrice().doubleValue());
-                            if(tradeVO.getTradingDay().equals(ema.getTradingDay())) {
-                                reqOrderInsertVO.setCombOffsetFlag(CombOffsetFlag.CloseToday);
-                            }else {
-                                reqOrderInsertVO.setCombOffsetFlag(CombOffsetFlag.CLOSE);
-                            }
-                            reqOrderInsertVO.setTimeCondition(TimeCondition.GFD);
-                            reqOrderInsertVO.setDirection(Direction.SELL);
-                            reqOrderInsertVO.setMinVolume(1);
-                            reqOrderInsertVO.setVolumeTotalOriginal(tradeVO.getVolume());
-                            reqOrderInsertVO.setOrderPriceType(OrderPriceType.LimitPrice);
-                            orderService.reqOrderInsert(reqOrderInsertVO);
-                        }
-                        
-                        //判断是否触发止盈
-                        BigDecimal touch = (ema.getHighestPrice().subtract(ema.getLowestPrice())).divide(ema.getLowestPrice(), 2, RoundingMode.HALF_UP);
-                        if(touch.compareTo(targetProfit.getTigger()) >= 0){
-                            //判断回撤是否到位
-                            //止盈价位 = 最高价-（最高价-最低价）*回撤比例
-                            BigDecimal diff = ema.getHighestPrice()
-                                    .subtract(ema.getHighestPrice().subtract(ema.getLowestPrice())
-                                            .multiply(targetProfit.getBack())).setScale(2, RoundingMode.HALF_UP);
-                            
-                            if(ema.getClosePrice().compareTo(diff) <= 0){
-                                //止盈
-                                logger.info("触发止盈"+instrumentId);
-                                ReqOrderInsertVO reqOrderInsertVO = new ReqOrderInsertVO();
-                                reqOrderInsertVO.setAccountNo(ACCOUNT_NO);
-                                reqOrderInsertVO.setInvestorID(ClientStarter.INVESTOR_ID);
-                                reqOrderInsertVO.setInstrumentID(instrumentId);
-                                reqOrderInsertVO.setLimitPrice(ema.getLowerPrice().doubleValue());
-                                if(tradeVO.getTradingDay().equals(ema.getTradingDay())) {
-                                    reqOrderInsertVO.setCombOffsetFlag(CombOffsetFlag.CloseToday);
-                                }else {
-                                    reqOrderInsertVO.setCombOffsetFlag(CombOffsetFlag.CLOSE);
-                                }
-                                reqOrderInsertVO.setTimeCondition(TimeCondition.GFD);
-                                reqOrderInsertVO.setDirection(Direction.SELL);
-                                reqOrderInsertVO.setMinVolume(1);
-                                reqOrderInsertVO.setVolumeTotalOriginal(tradeVO.getVolume());
-                                reqOrderInsertVO.setOrderPriceType(OrderPriceType.LimitPrice);
-                                orderService.reqOrderInsert(reqOrderInsertVO);
-                            }
-                        }
-                        
-                    }else {
-                        //卖开
-                        if(tradeVO.getPrice() + tickPrice*targetProfit.getStopLessTick() <= ema.getClosePrice().doubleValue()) {
-                          //止损
-                            logger.info("触发止损"+instrumentId);
-                            ReqOrderInsertVO reqOrderInsertVO = new ReqOrderInsertVO();
-                            reqOrderInsertVO.setAccountNo(ACCOUNT_NO);
-                            reqOrderInsertVO.setInvestorID(ClientStarter.INVESTOR_ID);
-                            reqOrderInsertVO.setInstrumentID(instrumentId);
-                            reqOrderInsertVO.setLimitPrice(ema.getUpperPrice().doubleValue());
-                            if(tradeVO.getTradingDay().equals(ema.getTradingDay())) {
-                                reqOrderInsertVO.setCombOffsetFlag(CombOffsetFlag.CloseToday);
-                            }else {
-                                reqOrderInsertVO.setCombOffsetFlag(CombOffsetFlag.CLOSE);
-                            }
-                            reqOrderInsertVO.setTimeCondition(TimeCondition.GFD);
-                            reqOrderInsertVO.setDirection(Direction.BUY);
-                            reqOrderInsertVO.setMinVolume(1);
-                            reqOrderInsertVO.setVolumeTotalOriginal(tradeVO.getVolume());
-                            reqOrderInsertVO.setOrderPriceType(OrderPriceType.LimitPrice);
-                            orderService.reqOrderInsert(reqOrderInsertVO);
-                        }
-                        
-                        //判断是否触发止盈
-                        BigDecimal touch = (ema.getHighestPrice().subtract(ema.getLowestPrice())).divide(ema.getHighestPrice(), 2, RoundingMode.HALF_UP);
-                        if(touch.compareTo(targetProfit.getTigger()) >= 0){
-                            //判断回撤是否到位
-                            //止盈价位 = 最低价 +（最高价-最低价）*回撤比例
-                            BigDecimal diff = ema.getLowestPrice()
-                                    .add(ema.getHighestPrice().subtract(ema.getLowestPrice())
-                                            .multiply(targetProfit.getBack())).setScale(2, RoundingMode.HALF_UP);
-                            if(ema.getClosePrice().compareTo(diff) >= 0){
-                                //止盈
-                                logger.info("触发止盈"+instrumentId);
-                                ReqOrderInsertVO reqOrderInsertVO = new ReqOrderInsertVO();
-                                reqOrderInsertVO.setAccountNo(ACCOUNT_NO);
-                                reqOrderInsertVO.setInvestorID(ClientStarter.INVESTOR_ID);
-                                reqOrderInsertVO.setInstrumentID(instrumentId);
-                                reqOrderInsertVO.setLimitPrice(ema.getUpperPrice().doubleValue());
-                                if(tradeVO.getTradingDay().equals(ema.getTradingDay())) {
-                                    reqOrderInsertVO.setCombOffsetFlag(CombOffsetFlag.CloseToday);
-                                }else {
-                                    reqOrderInsertVO.setCombOffsetFlag(CombOffsetFlag.CLOSE);
-                                }
-                                reqOrderInsertVO.setTimeCondition(TimeCondition.GFD);
-                                reqOrderInsertVO.setDirection(Direction.BUY);
-                                reqOrderInsertVO.setMinVolume(1);
-                                reqOrderInsertVO.setVolumeTotalOriginal(tradeVO.getVolume());
-                                reqOrderInsertVO.setOrderPriceType(OrderPriceType.LimitPrice);
-                                orderService.reqOrderInsert(reqOrderInsertVO);
-                            }
-                        }
-                    }
-                }
-            }*/
-            
         } catch (Exception e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            logger.error("5分钟EMA策略异常",e);
             //缓存本次EMA
             this.redisTemplate.opsForHash().put(ema.getInstrumentId(), "EMA5", ema);
         }
@@ -465,12 +349,21 @@ public class FiveMinutesEMA implements Runnable {
                       //判断是否需要止损  20点止损
                         String product = instrumentId.replaceAll("[^a-z^A-Z]", "");
                         //止盈止损参数
-                        TargetProfit targetProfit = targetMap.get(product);
+                        //TargetProfit targetProfit = targetMap.get(product);
+                        
+                        //获取合约运行参数
+                        InvestorInstrumentVO vo = CacheMap.INVESTOR_INSTRUMENT.get(instrumentId);
+                        if(vo == null){
+                            vo = new InvestorInstrumentVO();
+                            vo.setTarget(new BigDecimal("0.02"));
+                            vo.setRetracement(new BigDecimal("0.33"));
+                            vo.setStopLoss(20);
+                        }
                         
                         double tickPrice = this.cacheMap.getTickPrice(instrumentId);
                         if(tradeVO.getDirection() == Direction.BUY) {
                             //买开
-                            if(tradeVO.getPrice() - tickPrice*targetProfit.getStopLessTick() >= marketData.getLastPrice().doubleValue()) {
+                            if(tradeVO.getPrice() - tickPrice*vo.getStopLoss() >= marketData.getLastPrice().doubleValue()) {
                                 //止损
                                 ReqOrderInsertVO reqOrderInsertVO = new ReqOrderInsertVO();
                                 reqOrderInsertVO.setAccountNo(ACCOUNT_NO);
@@ -493,12 +386,12 @@ public class FiveMinutesEMA implements Runnable {
                             
                             //判断是否触发止盈
                             BigDecimal touch = (oldEma.getHighestPrice().subtract(new BigDecimal(tradeVO.getPrice()))).divide(new BigDecimal(tradeVO.getPrice()), 3, RoundingMode.HALF_UP);
-                            if(touch.compareTo(targetProfit.getTigger()) >= 0){
+                            if(touch.compareTo(vo.getTarget()) >= 0){
                                 //判断回撤是否到位
                                 //止盈价位 = 最高价-（最高价-成交价）*回撤比例
                                 BigDecimal diff = oldEma.getHighestPrice()
                                         .subtract(oldEma.getHighestPrice().subtract(new BigDecimal(tradeVO.getPrice()))
-                                                .multiply(targetProfit.getBack())).setScale(2, RoundingMode.HALF_UP);
+                                                .multiply(vo.getRetracement())).setScale(2, RoundingMode.HALF_UP);
                                 
                                 if(new BigDecimal(marketData.getLastPrice()).compareTo(diff) <= 0){
                                     //止盈
@@ -524,7 +417,7 @@ public class FiveMinutesEMA implements Runnable {
                             
                         }else {
                             //卖开
-                            if(tradeVO.getPrice() + tickPrice*targetProfit.getStopLessTick() <= marketData.getLastPrice().doubleValue()) {
+                            if(tradeVO.getPrice() + tickPrice*vo.getStopLoss() <= marketData.getLastPrice().doubleValue()) {
                               //止损
                                 ReqOrderInsertVO reqOrderInsertVO = new ReqOrderInsertVO();
                                 reqOrderInsertVO.setAccountNo(ACCOUNT_NO);
@@ -547,12 +440,12 @@ public class FiveMinutesEMA implements Runnable {
                             
                             //判断是否触发止盈
                             BigDecimal touch = (new BigDecimal(tradeVO.getPrice()).subtract(oldEma.getLowestPrice())).divide(new BigDecimal(tradeVO.getPrice()), 3, RoundingMode.HALF_UP);
-                            if(touch.compareTo(targetProfit.getTigger()) >= 0){
+                            if(touch.compareTo(vo.getTarget()) >= 0){
                                 //判断回撤是否到位
                                 //止盈价位 = 最低价 +（成交价-最低价）*回撤比例
                                 BigDecimal diff = oldEma.getLowestPrice()
                                         .add(new BigDecimal(tradeVO.getPrice()).subtract(oldEma.getLowestPrice())
-                                                .multiply(targetProfit.getBack())).setScale(2, RoundingMode.HALF_UP);
+                                                .multiply(vo.getRetracement())).setScale(2, RoundingMode.HALF_UP);
                                 if(new BigDecimal(marketData.getLastPrice()).compareTo(diff) >= 0){
                                     //止盈
                                     ReqOrderInsertVO reqOrderInsertVO = new ReqOrderInsertVO();
@@ -578,8 +471,7 @@ public class FiveMinutesEMA implements Runnable {
                     }
                 }
             } catch (Exception e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+                logger.error("止盈止损策略异常",e);
             }
             
         }

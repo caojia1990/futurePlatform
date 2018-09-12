@@ -12,6 +12,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import com.future.instrument.api.exception.InstrumentError;
 import com.future.instrument.api.exception.InstrumentException;
 import com.future.instrument.api.service.InvestorInstrumentService;
+import com.future.instrument.api.vo.InstrumentMessage;
 import com.future.instrument.api.vo.InvestorInstrumentVO;
 import com.future.instrument.service.dao.InvestorInstrumentDao;
 
@@ -108,7 +109,10 @@ public class InvestorInstrumentServiceImpl implements InvestorInstrumentService 
             throw new InstrumentException(InstrumentError.DATABASE_FAILED,e);
         }
         
-        rabbitTemplate.convertAndSend(investorInstrumentVO.getInvestorNo(), investorInstrumentVO);
+        InstrumentMessage message = new InstrumentMessage();
+        message.setMessageType("0");
+        message.setMessage(investorInstrumentVO);
+        rabbitTemplate.convertAndSend(investorInstrumentVO.getInvestorNo(), message);
     }
 
     @Override
@@ -160,6 +164,11 @@ public class InvestorInstrumentServiceImpl implements InvestorInstrumentService 
             logger.error("更新合约信息失败",e);
             throw new InstrumentException(InstrumentError.DATABASE_FAILED,e);
         }
+        
+        InstrumentMessage message = new InstrumentMessage();
+        message.setMessageType("1");
+        message.setMessage(investorInstrumentVO);
+        rabbitTemplate.convertAndSend(investorInstrumentVO.getInvestorNo(), message);
 
     }
 
@@ -172,6 +181,14 @@ public class InvestorInstrumentServiceImpl implements InvestorInstrumentService 
             logger.error("删除合约信息失败",e);
             throw new InstrumentException(InstrumentError.DATABASE_FAILED,e);
         }
+        
+        InstrumentMessage message = new InstrumentMessage();
+        message.setMessageType("2");
+        InvestorInstrumentVO investorInstrumentVO = new InvestorInstrumentVO();
+        investorInstrumentVO.setInvestorNo(investorNo);
+        investorInstrumentVO.setInstrumentId(instrumentId);
+        message.setMessage(investorInstrumentVO);
+        rabbitTemplate.convertAndSend(investorNo, message);
 
     }
 

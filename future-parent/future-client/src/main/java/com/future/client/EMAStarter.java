@@ -42,16 +42,16 @@ public class EMAStarter {
             Queue marketQ = (Queue) context.getBean("marketQ");
             
             
-            /*InvestorInstrumentService investorInstrumentService = context.getBean(InvestorInstrumentService.class);
+            InvestorInstrumentService investorInstrumentService = context.getBean(InvestorInstrumentService.class);
             List<InvestorInstrumentVO> list = investorInstrumentService.queryInvestorInstrumentList(INVESTOR_ID);
             if(list != null){
                 for (InvestorInstrumentVO investorInstrumentVO : list) {
                     CacheMap.INVESTOR_INSTRUMENT.put(investorInstrumentVO.getInstrumentId(), investorInstrumentVO);
                     admin.declareBinding(BindingBuilder.bind(marketQ).to(marketExchange).with("instrument."+investorInstrumentVO.getInstrumentId()));
                 }
-            }*/
+            }
             
-            
+            /*
             admin.declareBinding(BindingBuilder.bind(marketQ).to(marketExchange).with("instrument.j1901"));//焦炭
             admin.declareBinding(BindingBuilder.bind(marketQ).to(marketExchange).with("instrument.jm1901"));//焦煤
             admin.declareBinding(BindingBuilder.bind(marketQ).to(marketExchange).with("instrument.ZC901"));//动力煤（主力）
@@ -74,7 +74,7 @@ public class EMAStarter {
             admin.declareBinding(BindingBuilder.bind(marketQ).to(marketExchange).with("instrument.p1901"));//棕榈油
             admin.declareBinding(BindingBuilder.bind(marketQ).to(marketExchange).with("instrument.OI901"));//菜油
             admin.declareBinding(BindingBuilder.bind(marketQ).to(marketExchange).with("instrument.pp1901"));//（主力）
-            
+            */
         }
         
         {

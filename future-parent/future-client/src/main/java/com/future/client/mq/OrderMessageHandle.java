@@ -1,16 +1,20 @@
 package com.future.client.mq;
 
+import java.math.BigDecimal;
+
 import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.HashOperations;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 
 import com.future.client.dao.TradeDao;
 import com.future.order.api.vo.OffsetFlag;
 import com.future.order.api.vo.OnRtnOrderVO;
 import com.future.order.api.vo.OnRtnTradeVO;
+import com.future.quota.api.vo.EMA;
 
 public class OrderMessageHandle {
 	
@@ -21,6 +25,9 @@ public class OrderMessageHandle {
 	
 	@Resource(name="redisTemplate")
 	private HashOperations<String, String, OnRtnTradeVO> hashOperations;
+	
+	@Autowired
+	private StringRedisTemplate redisTemplate;
 	
 	@Autowired
 	private TradeDao tradeDao;
@@ -53,6 +60,11 @@ public class OrderMessageHandle {
             hashOperations.put(onRtnTrade.getAccountNo(), onRtnTrade.getInstrumentId(), onRtnTrade);
             //保存数据
             tradeDao.insert(onRtnTrade);
+            //更新最大最小价格
+            EMA ema = (EMA) this.redisTemplate.opsForHash().get(onRtnTrade.getInstrumentId(), "EMA5");
+            ema.setHighestPrice(new BigDecimal(onRtnTrade.getPrice()));
+            ema.setLowestPrice(new BigDecimal(onRtnTrade.getPrice()));
+            this.redisTemplate.opsForHash().put(onRtnTrade.getInstrumentId(), "EMA5", ema);
         }else {
             hashOperations.delete(onRtnTrade.getAccountNo(), onRtnTrade.getInstrumentId());
             //删除持仓
