@@ -38,10 +38,6 @@
                         toastr.error('查询失败'+response.body.errorMsg);
                     });
                 },
-                quotaDetail:function(row){
-                    Vue.set(quotaForm,"EMA",row);
-                    $( "#quotaDetail" ).dialog( "open" );
-                },
                 remove:function(row){
                     this.$http.post('removeInvestorInstrument',row).then(response => {
                         // success callback
@@ -60,6 +56,7 @@
                 },
                 openUpdateDialog:function(row){
                     updateForm.item = row;
+                    //Vue.set(updateForm,"item",row);
                     $( "#updateDialog" ).dialog( "open" );
                 }
             }
