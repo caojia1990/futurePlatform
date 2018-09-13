@@ -34,7 +34,7 @@ public class MATest extends AbstractJUnit4SpringContextTests{
     public void consumer() throws IOException{
         
         
-        admin.declareBinding(BindingBuilder.bind(quotaQ).to(topicExchange).with("quota.cu1810.MA.1m"));
+        admin.declareBinding(BindingBuilder.bind(quotaQ).to(topicExchange).with("quota.cu1811.MA.1m"));
         
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
         while (true) {

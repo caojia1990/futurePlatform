@@ -64,6 +64,7 @@
                         if(response.body.rspCode == '00000'){
                             $( "#quotaDetail" ).dialog( "close" );
                             toastr.success('保存成功');
+                            emaTable.queryEmaList();
                         }
                     }, response => {
                         toastr.error('保存失败'+response.body.errorMsg);
@@ -164,6 +165,8 @@
                         <th>周期</th>
                         <th>ema5</th>
                         <th>ema619</th>
+                        <th>偏差值</th>
+                        <th>偏差</th>
                         <th>操作</th>
                     </tr>
                 </thead>
@@ -174,6 +177,8 @@
                         <td>{{item.period}}</td>
                         <td>{{item.ema5}}</td>
                         <td>{{item.ema619}}</td>
+                        <td>{{ item.ema5 - item.ema619 }}</td>
+                        <td>{{ (item.ema5 - item.ema619)*100/item.ema5 }}%</td>
                         <td>
                             <button type="button" class="btn btn-default btn-sm" v-on:click="quotaDetail(item)">
                                 <i class="glyphicon glyphicon-cog"></i>
