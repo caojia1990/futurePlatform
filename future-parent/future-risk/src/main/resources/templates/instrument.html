@@ -4,17 +4,17 @@
 <title>合约管理</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js" />
-<script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>
-<link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resources/bootstrap/js/bootstrap.min.js"></script>
+<link href="resources/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
 <script src="https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/vue-resource@1.5.1"></script>
 
-<script src="jquery-ui-1.12.1.custom/jquery-ui.js"></script>
-<link rel="stylesheet" href="jquery-ui-1.12.1.custom/jquery-ui.min.css">
+<script src="resources/jquery-ui-1.12.1.custom/jquery-ui.js"></script>
+<link rel="stylesheet" href="resources/jquery-ui-1.12.1.custom/jquery-ui.min.css" />
 
 <!-- 操作完成提示插件 -->
 <script src="https://cdn.bootcss.com/toastr.js/latest/js/toastr.min.js"></script>
-<link href="https://cdn.bootcss.com/toastr.js/latest/css/toastr.min.css" rel="stylesheet">
+<link href="https://cdn.bootcss.com/toastr.js/latest/css/toastr.min.css" rel="stylesheet" />
 
 <script type="text/javascript">
 
@@ -122,80 +122,8 @@
         <div class="col-md-1 column">
         </div>
         <div class="col-md-10 column">
-            <nav class="navbar navbar-default navbar-inverse" role="navigation">
-                <div class="navbar-header">
-                     <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1"> <span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button> <a class="navbar-brand" href="#">合约管理</a>
-                </div>
-                
-                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                    <ul class="nav navbar-nav">
-                        <li>
-                             <a href="market.html">行情</a>
-                        </li>
-                        <li class="active">
-                             <a href="instrument.html">合约</a>
-                        </li>
-                        <li>
-                             <a href="quota.html">指标</a>
-                        </li>
-                        <li class="dropdown">
-                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown<strong class="caret"></strong></a>
-                            <ul class="dropdown-menu">
-                                <li>
-                                     <a href="#">Action</a>
-                                </li>
-                                <li>
-                                     <a href="#">Another action</a>
-                                </li>
-                                <li>
-                                     <a href="#">Something else here</a>
-                                </li>
-                                <li class="divider">
-                                </li>
-                                <li>
-                                     <a href="#">Separated link</a>
-                                </li>
-                                <li class="divider">
-                                </li>
-                                <li>
-                                     <a href="#">One more separated link</a>
-                                </li>
-                            </ul>
-                        </li>
-                    </ul>
-                    <form class="navbar-form navbar-left" role="search">
-                        <div class="form-group">
-                            <input type="text" class="form-control" />
-                        </div> <button type="submit" class="btn btn-default">Submit</button>
-                    </form>
-                    <ul class="nav navbar-nav navbar-right">
-                        <li>
-                             <a href="#">Link</a>
-                        </li>
-                        <li class="dropdown">
-                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown<strong class="caret"></strong></a>
-                            <ul class="dropdown-menu">
-                                <li>
-                                     <a href="#">Action</a>
-                                </li>
-                                <li>
-                                     <a href="#">Another action</a>
-                                </li>
-                                <li>
-                                     <a href="#">Something else here</a>
-                                </li>
-                                <li class="divider">
-                                </li>
-                                <li>
-                                     <a href="#">Separated link</a>
-                                </li>
-                            </ul>
-                        </li>
-                    </ul>
-                </div>
-                
-            </nav>
             
+            <div th:include="head :: header"></div> 
             
             <!-- 查询条件 -->
             <div id="investorInstrument">
@@ -204,12 +132,12 @@
                       <div class="form-group">
                         <label for="investorNo" class="col-sm-1 control-label">投资者编号</label>
                         <div class="col-sm-2">
-                            <input type="text" class="form-control" id="investorNo" v-model="param.investorNo">
+                            <input type="text" class="form-control" id="investorNo" v-model="param.investorNo" />
                         </div>
                         
                         <label for="instrumentId" class="col-sm-1 control-label">合约</label>
                         <div class="col-sm-2">
-                            <input type="text" class="form-control" id="instrumentId" v-model="param.instrumentId">
+                            <input type="text" class="form-control" id="instrumentId" v-model="param.instrumentId" />
                         </div>
                         
                         <div class="col-sm-1 col-sm-offset-1">
@@ -281,13 +209,13 @@
       <div class="form-group">
         <label for="investorNo" class="col-sm-4 control-label">投资者</label>
         <div class="col-sm-6">
-            <input type="text" class="form-control" id="investorNo" v-model="item.investorNo">
+            <input type="text" class="form-control" id="investorNo" v-model="item.investorNo" />
         </div>
       </div>
       <div class="form-group">
         <label for="instrumentId" class="col-sm-4 control-label">合约</label>
         <div class="col-sm-6">
-            <input type="text" class="form-control" id="instrumentId" v-model="item.instrumentId">
+            <input type="text" class="form-control" id="instrumentId" v-model="item.instrumentId" />
         </div>
       </div>
       <div class="form-group">
@@ -302,31 +230,31 @@
       <div class="form-group">
         <label for="volume" class="col-sm-4 control-label">开仓手数</label>
         <div class="col-sm-6">
-            <input type="text" class="form-control" id="volume" v-model="item.volume" >
+            <input type="text" class="form-control" id="volume" v-model="item.volume" />
         </div>
       </div>
       <div class="form-group">
         <label for="stopWin" class="col-sm-4 control-label">止盈跳数</label>
         <div class="col-sm-6">
-           <input type="text" class="form-control" id="stopWin" v-model="item.stopWin">
+           <input type="text" class="form-control" id="stopWin" v-model="item.stopWin" />
         </div>
       </div>
       <div class="form-group">
         <label for="stopLoss" class="col-sm-4 control-label">止损跳数</label>
         <div class="col-sm-6">
-            <input type="text" class="form-control" id="stopLoss" v-model="item.stopLoss">
+            <input type="text" class="form-control" id="stopLoss" v-model="item.stopLoss" />
         </div>
       </div>
       <div class="form-group">
         <label for="target" class="col-sm-4 control-label">止盈幅度</label>
         <div class="col-sm-6">
-            <input type="text" class="form-control" id="target" v-model="item.target">
+            <input type="text" class="form-control" id="target" v-model="item.target" />
         </div>
       </div>
       <div class="form-group">
         <label for="retracement" class="col-sm-4 control-label">回撤止盈幅度</label>
         <div class="col-sm-6">
-            <input type="text" class="form-control" id="retracement" v-model="item.retracement">
+            <input type="text" class="form-control" id="retracement" v-model="item.retracement" />
         </div>
       </div>
       <div class="form-group">
@@ -342,25 +270,25 @@
       <div class="form-group">
         <label for="hedgingTigger" class="col-sm-4 control-label">触发对冲比例 </label>
         <div class="col-sm-6">
-            <input type="text" class="form-control" id="hedgingTigger" v-model="item.hedgingTigger">
+            <input type="text" class="form-control" id="hedgingTigger" v-model="item.hedgingTigger" />
         </div>
       </div>
       <div class="form-group">
         <label for="hedgingVolume" class="col-sm-4 control-label">对冲手数 </label>
         <div class="col-sm-6">
-            <input type="text" class="form-control" id="hedgingVolume" v-model="item.hedgingVolume">
+            <input type="text" class="form-control" id="hedgingVolume" v-model="item.hedgingVolume" />
         </div>
       </div>
       <div class="form-group">
         <label for="hedgingStopWin" class="col-sm-4 control-label">对冲止盈跳数 </label>
         <div class="col-sm-6">
-            <input type="text" class="form-control" id="hedgingStopWin" v-model="item.hedgingStopWin">
+            <input type="text" class="form-control" id="hedgingStopWin" v-model="item.hedgingStopWin" />
         </div>
       </div>
       <div class="form-group">
         <label for="hedgingStopLoss" class="col-sm-4 control-label">对冲止损跳数 </label>
         <div class="col-sm-6">
-            <input type="text" class="form-control" id="hedgingStopLoss" v-model="item.hedgingStopLoss">
+            <input type="text" class="form-control" id="hedgingStopLoss" v-model="item.hedgingStopLoss" />
         </div>
       </div>
       <div class="form-group">
@@ -378,13 +306,13 @@
       <div class="form-group">
         <label class="col-sm-4 control-label">投资者</label>
         <div class="col-sm-6">
-            <input type="text" class="form-control" v-model="item.investorNo" readonly="readonly">
+            <input type="text" class="form-control" v-model="item.investorNo" readonly="readonly" />
         </div>
       </div>
       <div class="form-group">
         <label class="col-sm-4 control-label">合约</label>
         <div class="col-sm-6">
-            <input type="text" class="form-control" v-model="item.instrumentId" readonly="readonly">
+            <input type="text" class="form-control" v-model="item.instrumentId" readonly="readonly" />
         </div>
       </div>
       <div class="form-group">
@@ -399,31 +327,31 @@
       <div class="form-group">
         <label class="col-sm-4 control-label">开仓手数</label>
         <div class="col-sm-6">
-            <input type="text" class="form-control" v-model="item.volume" >
+            <input type="text" class="form-control" v-model="item.volume" />
         </div>
       </div>
       <div class="form-group">
         <label class="col-sm-4 control-label">止盈跳数</label>
         <div class="col-sm-6">
-           <input type="text" class="form-control" v-model="item.stopWin">
+           <input type="text" class="form-control" v-model="item.stopWin" />
         </div>
       </div>
       <div class="form-group">
         <label class="col-sm-4 control-label">止损跳数</label>
         <div class="col-sm-6">
-            <input type="text" class="form-control" v-model="item.stopLoss">
+            <input type="text" class="form-control" v-model="item.stopLoss" />
         </div>
       </div>
       <div class="form-group">
         <label class="col-sm-4 control-label">止盈幅度</label>
         <div class="col-sm-6">
-            <input type="text" class="form-control" v-model="item.target">
+            <input type="text" class="form-control" v-model="item.target" />
         </div>
       </div>
       <div class="form-group">
         <label class="col-sm-4 control-label">回撤止盈幅度</label>
         <div class="col-sm-6">
-            <input type="text" class="form-control" v-model="item.retracement">
+            <input type="text" class="form-control" v-model="item.retracement" />
         </div>
       </div>
       <div class="form-group">
@@ -439,25 +367,25 @@
       <div class="form-group">
         <label class="col-sm-4 control-label">触发对冲比例 </label>
         <div class="col-sm-6">
-            <input type="text" class="form-control" v-model="item.hedgingTigger">
+            <input type="text" class="form-control" v-model="item.hedgingTigger" />
         </div>
       </div>
       <div class="form-group">
         <label class="col-sm-4 control-label">对冲手数 </label>
         <div class="col-sm-6">
-            <input type="text" class="form-control" v-model="item.hedgingVolume">
+            <input type="text" class="form-control" v-model="item.hedgingVolume" />
         </div>
       </div>
       <div class="form-group">
         <label class="col-sm-4 control-label">对冲止盈跳数 </label>
         <div class="col-sm-6">
-            <input type="text" class="form-control" v-model="item.hedgingStopWin">
+            <input type="text" class="form-control" v-model="item.hedgingStopWin" />
         </div>
       </div>
       <div class="form-group">
         <label class="col-sm-4 control-label">对冲止损跳数 </label>
         <div class="col-sm-6">
-            <input type="text" class="form-control" v-model="item.hedgingStopLoss">
+            <input type="text" class="form-control" v-model="item.hedgingStopLoss" />
         </div>
       </div>
       <div class="form-group">
