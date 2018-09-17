@@ -79,7 +79,7 @@ public class InvestorInstrumentDao {
     
     public List<InvestorInstrumentVO> selectList(String investorNo){
         
-        String sql = "SELECT * FROM INVESTOR_INSTRUMENT WHERE INVESTOR_NO = ?";
+        String sql = "SELECT * FROM INVESTOR_INSTRUMENT WHERE INVESTOR_NO = ? ORDER BY INSTRUMENT_ID";
         return this.jdbcTemplate.query(sql, 
                 BeanPropertyRowMapper.newInstance(InvestorInstrumentVO.class), 
                 investorNo);
