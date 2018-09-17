@@ -31,19 +31,7 @@
                 this.websocket();
             },
             methods:{
-                queryInstrumentNames:function(){
-                    this.$http.get('queryInstrumentName').then(response => {
-                        // success callback
-                        for(var i=0 ; i< response.body.length ; i++){
-                            var key = response.body[i];
-                            //this.instruments[key] = key;  
-                            //Vue 不能检测对象属性的添加或删除 使用下面的语法
-                            Vue.set(marketTable.instruments, key, {});
-                        }
-                    }, response => {
-                        // error callback
-                    });
-                },
+                
                 orderBoard:function(row){
                     console.log(row);
                     Vue.set(orderForm,"market",row);
@@ -119,7 +107,7 @@
             <div class="col-md-1 column"></div>
             <div class="col-md-10 column">
 
-                <div th:include="head :: header"></div>
+                <div th:include="common :: header"></div>
 
                 <div class="row pre-scrollable">
                     <table class="table">
