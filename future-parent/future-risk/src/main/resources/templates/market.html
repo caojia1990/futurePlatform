@@ -69,34 +69,6 @@
             
         });
         
-        var orderForm = new Vue({
-           el:"#orderForm",
-           data:{
-               market:{},
-               requestOrder:{
-                   volumeTotalOriginal:1,
-                   minVolume:1,
-                   orderPriceType:"LimitPrice",
-                   investorId:"001",
-                   accountNo:"unknow",
-                   direction:"BUY"
-               }
-           },
-           methods:{
-               reqOrderInsert:function(combOffsetFlag){
-                  this.requestOrder["instrumentId"] = this.market.instrumentID;
-                  this.requestOrder["combOffsetFlag"] = combOffsetFlag;
-                  this.requestOrder["limitPrice"] = this.market.lastPrice;
-                  this.$http.post('reqOrderInsert',this.requestOrder).then(response => {
-                       // success callback
-                       
-                       //this.instruments = response.body;
-                   }, response => {
-                       // error callback
-                   });
-               }
-           }
-       });
     }
 </script>
 
@@ -108,7 +80,6 @@
             <div class="col-md-10 column">
 
                 <div th:include="common :: header"></div>
-
                 <div class="row pre-scrollable">
                     <table class="table">
                         <thead>
@@ -156,74 +127,6 @@
                         </tbody>
                     </table>
                 </div>
-                <div id="orderBoard" title="下单板">
-                    <form class="form-horizontal" id="orderForm">
-                        <div class="form-group">
-                            <label for="investorNo" class="col-sm-4 control-label">投资者</label>
-                            <div class="col-sm-6">
-                                <input type="text" class="form-control" id="investorNo"
-                                    v-model="requestOrder.investorId" />
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="accountNo" class="col-sm-4 control-label">账号</label>
-                            <div class="col-sm-6">
-                                <input type="text" class="form-control" id="accountNo"
-                                    v-model="requestOrder.accountNo" />
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="indetrumentId" class="col-sm-4 control-label">合约</label>
-                            <div class="col-sm-6">
-                                <input type="text" class="form-control" id="indetrumentId"
-                                    v-model="market.instrumentID" />
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="volume" class="col-sm-4 control-label">手数</label>
-                            <div class="col-sm-6">
-                                <input type="number" class="form-control" id="volume"
-                                    v-model="requestOrder.volumeTotalOriginal" />
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="price" class="col-sm-4 control-label">价格</label>
-                            <div class="col-sm-6">
-                                <input type="number" class="form-control" id="price"
-                                    v-model="market.lastPrice" />
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="BUG" class="col-sm-2 col-sm-offset-2 control-label">买</label>
-                            <div class="col-sm-2">
-                                <input type="radio" class="form-control" id="BUG" value="BUY"
-                                    v-model="requestOrder.direction" />
-                            </div>
-                            <label for="SELL" class="col-sm-2 control-label">卖</label>
-                            <div class="col-sm-2">
-                                <input type="radio" class="form-control" id="SELL" value="SELL"
-                                    v-model="requestOrder.direction" />
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-sm-3 col-sm-offset-1">
-                                <button type="button" class="btn btn-success"
-                                    v-on:click="reqOrderInsert('OPEN')">开 仓</button>
-                            </div>
-                            <div class="col-sm-3">
-                                <button type="button" class="btn btn-danger"
-                                    v-on:click="reqOrderInsert('CLOSE')">平 仓</button>
-                            </div>
-                            <div class="col-sm-3">
-                                <button type="button" class="btn btn-warning"
-                                    v-on:click="reqOrderInsert('CloseToday')">平 今</button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-                <script>
-                $( "#orderBoard" ).dialog({ autoOpen: false });
-                </script>
             </div>
             <div class="col-md-1 column"></div>
         </div>
