@@ -12,7 +12,7 @@ import com.future.instrument.api.vo.InstrumentVO;
 @Component
 public class InstrumentConsumer {
 
-    @Reference
+    @Reference(check=false)
     private InstrumentService instrumentService;
     
     public InstrumentVO queryInstrument(String instrumentId) throws InstrumentException{

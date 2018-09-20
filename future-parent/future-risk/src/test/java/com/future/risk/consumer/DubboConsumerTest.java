@@ -15,7 +15,7 @@ import com.future.instrument.api.service.InstrumentService;
 @SpringBootTest
 public class DubboConsumerTest {
 
-    @Reference(url="")
+    @Reference
     private InstrumentService instrumentService;
     
     @Test
