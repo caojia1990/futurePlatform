@@ -61,12 +61,14 @@ public class OrderMessageHandle {
                 hashOperations.put(onRtnTrade.getAccountNo(), onRtnTrade.getInstrumentId(), onRtnTrade);
                 //保存数据
                 tradeDao.insert(onRtnTrade);
-                //更新最大最小价格
-                EMA ema = (EMA) this.redisTemplate.opsForHash().get(onRtnTrade.getInstrumentId(), "EMA5");
-                if(ema != null){
-                    ema.setHighestPrice(new BigDecimal(onRtnTrade.getPrice()));
-                    ema.setLowestPrice(new BigDecimal(onRtnTrade.getPrice()));
-                    this.redisTemplate.opsForHash().put(onRtnTrade.getInstrumentId(), "EMA5", ema);
+                //如果是趋势策略成交 更新最大最小价格
+                if(onRtnTrade.getAccountNo().equals("00009")){
+                    EMA ema = (EMA) this.redisTemplate.opsForHash().get(onRtnTrade.getInstrumentId(), "EMA5");
+                    if(ema != null){
+                        ema.setHighestPrice(new BigDecimal(onRtnTrade.getPrice()));
+                        ema.setLowestPrice(new BigDecimal(onRtnTrade.getPrice()));
+                        this.redisTemplate.opsForHash().put(onRtnTrade.getInstrumentId(), "EMA5", ema);
+                    }
                 }
             }else {
                 hashOperations.delete(onRtnTrade.getAccountNo(), onRtnTrade.getInstrumentId());
