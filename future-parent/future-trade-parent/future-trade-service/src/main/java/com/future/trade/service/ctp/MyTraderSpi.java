@@ -127,6 +127,8 @@ public class MyTraderSpi extends CThostFtdcTraderSpi {
 		confirmField.setInvestorID(TradeMain.USER_ID);
 		traderApi.ReqSettlementInfoConfirm(confirmField, ++nRequestID);
 		
+		this.instrumentService.removeInstrument();
+		
 		//查询合约信息
 		CThostFtdcQryInstrumentField pQryInstrument = new CThostFtdcQryInstrumentField();
 		traderApi.ReqQryInstrument(pQryInstrument, ++nRequestID);
@@ -308,7 +310,7 @@ public class MyTraderSpi extends CThostFtdcTraderSpi {
 	        rspInfo.setnRequestID(nRequestID);
 	        this.template.convertAndSend("future.trade.direct", ONRSPERROR_KEY, rspInfo);
 	    }
-	    logger.error("错误回调");
+	    logger.error("错误回调"+JSON.toJSONString(pRspInfo));
 	}
 	@Override
 	public void OnErrRtnOrderInsert(CThostFtdcInputOrderField pInputOrder,
@@ -405,12 +407,12 @@ public class MyTraderSpi extends CThostFtdcTraderSpi {
 	    }
 	    
 	    
-	  /*//查询合约手续费
-        CThostFtdcQryInstrumentCommissionRateField pQryInstrumentCommissionRate = new CThostFtdcQryInstrumentCommissionRateField();
-        pQryInstrumentCommissionRate.setBrokerID(brokerId);
-        pQryInstrumentCommissionRate.setInvestorID(userId);
-        pQryInstrumentCommissionRate.setInstrumentID(pInstrument.getProductID());
-        traderApi.reqQryInstrumentCommissionRate(pQryInstrumentCommissionRate, ++nRequestID);*/
+	  //查询合约手续费
+        /*CThostFtdcQryInstrumentCommissionRateField pQryInstrumentCommissionRate = new CThostFtdcQryInstrumentCommissionRateField();
+        pQryInstrumentCommissionRate.setBrokerID(TradeMain.BROKER_ID);
+        pQryInstrumentCommissionRate.setInvestorID(TradeMain.USER_ID);
+        pQryInstrumentCommissionRate.setInstrumentID(pInstrument.getInstrumentID());
+        logger.info("查询手续费："+traderApi.ReqQryInstrumentCommissionRate(pQryInstrumentCommissionRate, ++nRequestID));*/
 	}
 	
 	   /**
@@ -433,6 +435,7 @@ public class MyTraderSpi extends CThostFtdcTraderSpi {
         info.setCloseRatioByVolume(pInstrumentCommissionRate.getCloseRatioByVolume());
         info.setCloseTodayRatioByMoney(pInstrumentCommissionRate.getCloseTodayRatioByMoney());
         info.setCloseTodayRatioByVolume(pInstrumentCommissionRate.getCloseTodayRatioByVolume());
+        logger.info("手续费回报："+JSON.toJSONString(pInstrumentCommissionRate));
         //instrumentInfoRedisDao.saveInstrumentCommision(info);
     }
     

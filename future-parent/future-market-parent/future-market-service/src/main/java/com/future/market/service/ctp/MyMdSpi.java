@@ -2,6 +2,7 @@ package com.future.market.service.ctp;
 
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 
+import com.alibaba.fastjson.JSON;
 import com.future.instrument.api.service.InstrumentService;
 import com.future.market.api.vo.DepthMarketData;
 import com.future.market.service.MarketMain;
@@ -32,22 +33,21 @@ public class MyMdSpi extends CThostFtdcMdSpi {
 	
 	@Override
 	public void OnFrontConnected() {
-		System.out.println("准备登陆");
+		
 		//登陆
 		CThostFtdcReqUserLoginField userLoginField = new CThostFtdcReqUserLoginField();
 		userLoginField.setBrokerID(MarketMain.BROKER_ID);
 		userLoginField.setUserID(MarketMain.USER_ID);
 		userLoginField.setPassword(MarketMain.PASSWORD);
 		
+		System.out.println("准备登陆"+JSON.toJSONString(userLoginField));
 		mdApi.ReqUserLogin(userLoginField, 112);
-		System.out.println("登陆完成");
 	}
 	
 	@Override
 	public void OnRspUserLogin(CThostFtdcRspUserLoginField pRspUserLogin, CThostFtdcRspInfoField pRspInfo, int nRequestID,
 			boolean bIsLast) {
-		System.out.println("登录回调");
-		System.out.println(pRspUserLogin.getLoginTime());
+		System.out.println("登录完成"+JSON.toJSONString(pRspUserLogin));
 		//订阅
 		int subResult = -1;
 		

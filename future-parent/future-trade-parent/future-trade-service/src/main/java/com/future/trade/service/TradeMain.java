@@ -15,11 +15,11 @@ import com.future.trade.service.ctp.MyTraderSpi;
 
 public class TradeMain {
     
-    public static String BROKER_ID = "9999";
-    public static String USER_ID = "105839";
-    public static String PASSWORD = "caojiactp1";
+    public static String BROKER_ID = System.getProperty("brokerId","9999");
+    public static String USER_ID = System.getProperty("userId","105839");
+    public static String PASSWORD = System.getProperty("password","caojiactp1");
     
-    public static String tradeFront = "tcp://180.168.146.187:10001";
+    public static String tradeFront = System.getProperty("address","tcp://180.168.146.187:10001");
     public static CThostFtdcTraderApi traderApi;
     static CThostFtdcTraderSpi traderSpi;
     
