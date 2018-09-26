@@ -14,12 +14,12 @@ import com.future.thost.util.LibLoader;
 
 public class MarketMain {
     
-    public static String BROKER_ID = "9999";
-    public static String USER_ID = "105839";
-    public static String PASSWORD = "caojiactp1";
+    public static String BROKER_ID = System.getProperty("brokerId","9999");
+    public static String USER_ID = System.getProperty("userId","105839");
+    public static String PASSWORD = System.getProperty("password","caojiactp1");
     
   //行情地址
-    public static String marketFront = "tcp://180.168.146.187:10010";
+    public static String marketFront = System.getProperty("address","tcp://180.168.146.187:10010");
     /** 行情API **/
     public static CThostFtdcMdApi mdApi;
     static CThostFtdcMdSpi mdSpi;
