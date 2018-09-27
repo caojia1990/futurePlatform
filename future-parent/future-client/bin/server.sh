@@ -1,6 +1,4 @@
 #!/bin/bash
-. /etc/profile
-. ~/.bash_profile
 cd `dirname $0`
 cd ..
 DEPLOY_DIR=`pwd`
