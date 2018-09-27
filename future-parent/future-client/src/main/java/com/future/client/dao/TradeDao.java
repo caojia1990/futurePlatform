@@ -96,4 +96,20 @@ public class TradeDao {
         return this.jdbcTemplate.update(sql, 
                 investorId,accountNo,instrumentId,direction);
     }
+    
+    public int deleteByCondition(String tradingDay, String tradeId, String instrumentId){
+        String sql = "delete from FUTURE_TRADE where TRADING_DAY = ?"
+                + "and TRADE_ID = ?"
+                + "and INSTRUMENT_ID = ?";
+        return this.jdbcTemplate.update(sql, tradingDay,tradeId,instrumentId);
+    }
+    
+    public int updatePosition(String tradingDay, String tradeId, String instrumentId, int volume){
+        String sql = "update FUTURE_TRADE "
+                + "set VOLUME = VOLUME - ?"
+                + "where TRADING_DAY = ?"
+                + "and TRADE_ID = ?"
+                + "and INSTRUMENT_ID = ?";
+        return this.jdbcTemplate.update(sql, volume, tradingDay, tradeId, instrumentId);
+    }
 }

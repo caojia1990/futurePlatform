@@ -55,8 +55,9 @@ public class TradeDaoTest extends AbstractJUnit4SpringContextTests{
         tradeVO.setInstrumentId("cu1807");
         tradeVO.setOrderRef("001");
         tradeVO.setOrderSysId("956321");
+        tradeVO.setTradeId("1698752");
         tradeVO.setPrice(51420);
-        tradeVO.setVolume(1);
+        tradeVO.setVolume(6);
         tradeVO.setTradingDay("20180605");
         StopWatch stopWatch = StopWatch.createStarted();
         this.tradeDao.insert(tradeVO);
@@ -67,5 +68,15 @@ public class TradeDaoTest extends AbstractJUnit4SpringContextTests{
         this.tradeDao.selectByCondition("123", "123456", "cu1807", "0");
         stopWatch.stop();
         System.out.println("耗时："+stopWatch.getTime());
+    }
+    
+    @Test
+    public void deleteByCondition(){
+        this.tradeDao.deleteByCondition("20180605", "1698752", "cu1807");
+    }
+    
+    @Test
+    public void update(){
+        this.tradeDao.updatePosition("20180605", "1698752", "cu1807", 2);
     }
 }

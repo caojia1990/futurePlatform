@@ -11,6 +11,7 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 
 import com.future.client.dao.TradeDao;
+import com.future.client.service.CloseService;
 import com.future.order.api.vo.OffsetFlag;
 import com.future.order.api.vo.OnRtnOrderVO;
 import com.future.order.api.vo.OnRtnTradeVO;
@@ -31,6 +32,9 @@ public class OrderMessageHandle {
 	
 	@Autowired
 	private TradeDao tradeDao;
+	
+	@Autowired
+	private CloseService closeService;
 	
 	/**
      * 报单回报
@@ -73,8 +77,9 @@ public class OrderMessageHandle {
             }else {
                 hashOperations.delete(onRtnTrade.getAccountNo(), onRtnTrade.getInstrumentId());
                 //删除持仓
-                tradeDao.deleteByCondition(onRtnTrade.getInvestorId(), onRtnTrade.getAccountNo(), 
-                        onRtnTrade.getInstrumentId(), String.valueOf(onRtnTrade.getDirection().getCode()));
+                /*tradeDao.deleteByCondition(onRtnTrade.getInvestorId(), onRtnTrade.getAccountNo(), 
+                        onRtnTrade.getInstrumentId(), String.valueOf(onRtnTrade.getDirection().getCode()));*/
+                this.closeService.reducePosition(onRtnTrade);
             }
         } catch (Exception e) {
             logger.error("处理成交回报失败",e);

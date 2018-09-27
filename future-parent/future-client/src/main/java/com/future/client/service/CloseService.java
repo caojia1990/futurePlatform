@@ -34,12 +34,12 @@ public class CloseService {
             int volume = onRtnTrade.getVolume();
             for (OnRtnTradeVO onRtnTradeVO : list) {
                 if(onRtnTradeVO.getVolume() <= volume){
-                    //TODO 删除该笔持仓明细
-                    
+                    //删除该笔持仓明细
+                    this.tradeDao.deleteByCondition(onRtnTradeVO.getTradingDay(), onRtnTradeVO.getTradeId(), onRtnTradeVO.getInstrumentId());
                     volume -= onRtnTradeVO.getVolume();
                 }else {
-                    //TODO 更新该笔持仓明细    剩余持仓为   onRtnTradeVO.getVolume-volume
-                    
+                    //更新该笔持仓明细    剩余持仓为   onRtnTradeVO.getVolume-volume
+                    this.tradeDao.updatePosition(onRtnTradeVO.getTradingDay(), onRtnTradeVO.getTradeId(), onRtnTradeVO.getInstrumentId(), onRtnTradeVO.getVolume());
                     volume = 0;
                 }
                 
