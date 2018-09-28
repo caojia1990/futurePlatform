@@ -59,14 +59,14 @@ public class QuotaHandle implements MessageReceive{
     };
     @Override
     public void handleMessage(DepthMarketData marketData) {
-        //MA线程
-        MaHandle.OFFERMARKET(marketData);
         
         String instrumentId = marketData.getInstrumentID();
         
         if(emaMap.get(instrumentId) == null) {
             return;
         }
+        //MA线程
+        MaHandle.OFFERMARKET(marketData);
         
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
         LocalTime time = LocalTime.parse(marketData.getUpdateTime(), formatter);
