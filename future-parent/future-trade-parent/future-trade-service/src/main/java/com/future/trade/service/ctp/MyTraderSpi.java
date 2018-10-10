@@ -17,6 +17,7 @@ import com.future.thost.api.CThostFtdcInvestorPositionDetailField;
 import com.future.thost.api.CThostFtdcInvestorPositionField;
 import com.future.thost.api.CThostFtdcOrderField;
 import com.future.thost.api.CThostFtdcQryInstrumentField;
+import com.future.thost.api.CThostFtdcQryInstrumentMarginRateField;
 import com.future.thost.api.CThostFtdcQryInvestorPositionDetailField;
 import com.future.thost.api.CThostFtdcQryOrderField;
 import com.future.thost.api.CThostFtdcReqUserLoginField;
@@ -359,7 +360,7 @@ public class MyTraderSpi extends CThostFtdcTraderSpi {
     @Override
     public void OnRspQryInstrumentMarginRate(CThostFtdcInstrumentMarginRateField pInstrumentMarginRate,
             CThostFtdcRspInfoField pRspInfo, int nRequestID, boolean bIsLast) {
-        
+            logger.info("查询保证金返回："+JSON.toJSONString(pInstrumentMarginRate));
     }
     
     /**
@@ -404,6 +405,12 @@ public class MyTraderSpi extends CThostFtdcTraderSpi {
         this.instrumentService.saveInstrument(info);
         
         if(bIsLast){
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
             CThostFtdcQryOrderField pQryOrder = new CThostFtdcQryOrderField();
             pQryOrder.setInvestorID(TradeMain.USER_ID);
             System.out.println("查询报单:"+traderApi.ReqQryOrder(pQryOrder, ++nRequestID));
@@ -416,6 +423,7 @@ public class MyTraderSpi extends CThostFtdcTraderSpi {
         pQryInstrumentCommissionRate.setInvestorID(TradeMain.USER_ID);
         pQryInstrumentCommissionRate.setInstrumentID(pInstrument.getInstrumentID());
         logger.info("查询手续费："+traderApi.ReqQryInstrumentCommissionRate(pQryInstrumentCommissionRate, ++nRequestID));*/
+        
     }
     
        /**
@@ -445,6 +453,20 @@ public class MyTraderSpi extends CThostFtdcTraderSpi {
     @Override
     public void OnRspQryOrder(CThostFtdcOrderField pOrder, CThostFtdcRspInfoField pRspInfo, int nRequestID, boolean bIsLast){
         System.out.println("查询报单返回："+JSON.toJSONString(pOrder));
+        if(pOrder == null || bIsLast){
+          //查询合约保证金
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+            CThostFtdcQryInstrumentMarginRateField pQryInstrumentMarginRate = new CThostFtdcQryInstrumentMarginRateField();
+            pQryInstrumentMarginRate.setBrokerID(TradeMain.BROKER_ID);
+            pQryInstrumentMarginRate.setInvestorID(TradeMain.USER_ID);
+            int code = traderApi.ReqQryInstrumentMarginRate(pQryInstrumentMarginRate, nRequestID);
+            System.out.println("查询保证金响应:"+code);
+        }
     }
 
 }
