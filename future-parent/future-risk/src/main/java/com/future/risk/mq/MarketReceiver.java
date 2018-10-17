@@ -9,8 +9,8 @@ import com.alibaba.fastjson.JSON;
 import com.future.market.api.vo.DepthMarketData;
 import com.future.risk.websocket.MyWebSocketHandler;
 
-@Component
-@RabbitListener(queues="marketQ")
+//@Component
+//@RabbitListener(queues="marketQ")
 public class MarketReceiver {
     
     @Autowired

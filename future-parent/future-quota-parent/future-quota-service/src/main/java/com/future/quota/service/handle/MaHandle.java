@@ -65,94 +65,98 @@ public class MaHandle implements Runnable {
                 return ;
             }
             
-            String instrumentId = marketData.getInstrumentID();
-            String product = instrumentId.replaceAll("[^a-z^A-Z]", "");
-            
-            //先从缓存中找出该品种的k线横坐标
-            KlineRange klineRange = rangeMap.get(product);
-            if(klineRange == null){
-              //如果没有则去数据库查询
-                try {
-                    klineRange = this.klineRangeDao.selectByCondition(product, "1m", marketData.getUpdateTime());
-                    //把当前坐标放入缓存
-                    rangeMap.put(product, klineRange);
-                } catch (EmptyResultDataAccessException e) {
-                    //如果数据库查询不到，则该时间为非交易时间,不处理，等待进入交易时间
-                    continue;
-                }
+            try {
+                String instrumentId = marketData.getInstrumentID();
+                String product = instrumentId.replaceAll("[^a-z^A-Z]", "");
                 
-            }else {
-                //如果k线横坐标存在，判断本次行情的更新时间是否落在该k线横坐标周期内
-                if(marketData.getUpdateTime().compareTo(klineRange.getBeginTime()) > -1 
-                        && marketData.getUpdateTime().compareTo(klineRange.getEndTime()) < 1){
-                    MA ma = maMap.get(instrumentId);
-                    if(ma == null){
-                        ma = new MA();
-                        maMap.put(instrumentId, ma);
-                        ma.setInstrumentId(instrumentId);
-                        ma.setPersiod("1m");
-                        ma.setComplete(false);
-                        ma.setUpperPrice(new BigDecimal(marketData.getUpperLimitPrice()));
-                        ma.setLowerPrice(new BigDecimal(marketData.getLowerLimitPrice()));
-                        ma.setBidPrice1(new BigDecimal(marketData.getBidPrice1()));
-                        ma.setAskPrice1(new BigDecimal(marketData.getAskPrice1()));
-                        ma.setTradingDay(marketData.getTradingDate());
-                    }
-                    ma.setLastPrice(new BigDecimal(marketData.getLastPrice()));
-                    ma.setTitle(marketData.getUpdateTime());
-                    ma.setBidPrice1(new BigDecimal(marketData.getBidPrice1()));
-                    ma.setAskPrice1(new BigDecimal(marketData.getAskPrice1()));
-                    BigDecimal ma5 = this.calcMA(instrumentId, marketData.getLastPrice());
-                    ma.setMa5(ma5);
-                    //如果该跳行情是区间内最后一跳，直接保存
-                    if(marketData.getUpdateTime().equals(klineRange.getEndTime()) && marketData.getUpdateMillisec() == 500){
-                        ma.setComplete(true);
-                        this.addClosePrice(instrumentId, marketData.getLastPrice());
-                    }
-                    rabbitTemplate.convertAndSend(EXCHANGE_NAME, "quota."+instrumentId+".MA.1m", ma);
-                    if(ma.isComplete()){
-                        maMap.remove(instrumentId);
-                    }
-                    
-                }else {
-                    //如果当前时间不在缓存的k先横坐标内，先保存上一周期k线，再查询新的坐标范围
-                    MA ma = maMap.get(instrumentId);
-                    if(ma != null) {
-                        ma.setComplete(true);
-                        rabbitTemplate.convertAndSend(EXCHANGE_NAME, "quota."+instrumentId+".MA.1m", ma);
-                        //保存收盘价到队列
-                        this.addClosePrice(instrumentId, ma.getLastPrice().doubleValue());
-                        //删除缓存的MA数据
-                        maMap.remove(instrumentId);
-                    }
-                    
+                //先从缓存中找出该品种的k线横坐标
+                KlineRange klineRange = rangeMap.get(product);
+                if(klineRange == null){
+                  //如果没有则去数据库查询
                     try {
                         klineRange = this.klineRangeDao.selectByCondition(product, "1m", marketData.getUpdateTime());
                         //把当前坐标放入缓存
                         rangeMap.put(product, klineRange);
-                        ma = new MA();
-                        ma.setInstrumentId(instrumentId);
-                        ma.setPersiod("1m");
-                        ma.setComplete(false);
-                        ma.setLastPrice(new BigDecimal(marketData.getLastPrice()));
-                        ma.setUpperPrice(new BigDecimal(marketData.getUpperLimitPrice()));
-                        ma.setLowerPrice(new BigDecimal(marketData.getLowerLimitPrice()));
-                        ma.setBidPrice1(new BigDecimal(marketData.getBidPrice1()));
-                        ma.setAskPrice1(new BigDecimal(marketData.getAskPrice1()));
-                        ma.setTitle(marketData.getUpdateTime());
-                        ma.setTradingDay(marketData.getTradingDate());
-                        BigDecimal ma5 = this.calcMA(instrumentId, marketData.getLastPrice());
-                        ma.setMa5(ma5);
-                        rabbitTemplate.convertAndSend(EXCHANGE_NAME, "quota."+instrumentId+".MA.1m", ma);
-                        maMap.put(instrumentId, ma);
-                        
                     } catch (EmptyResultDataAccessException e) {
-                        //如果数据库查询不到，则该时间为非交易时间
-                        
-                        System.out.println("非交易时间："+JSON.toJSONString(marketData));
+                        //如果数据库查询不到，则该时间为非交易时间,不处理，等待进入交易时间
+                        continue;
                     }
                     
+                }else {
+                    //如果k线横坐标存在，判断本次行情的更新时间是否落在该k线横坐标周期内
+                    if(marketData.getUpdateTime().compareTo(klineRange.getBeginTime()) > -1 
+                            && marketData.getUpdateTime().compareTo(klineRange.getEndTime()) < 1){
+                        MA ma = maMap.get(instrumentId);
+                        if(ma == null){
+                            ma = new MA();
+                            maMap.put(instrumentId, ma);
+                            ma.setInstrumentId(instrumentId);
+                            ma.setPersiod("1m");
+                            ma.setComplete(false);
+                            ma.setUpperPrice(new BigDecimal(marketData.getUpperLimitPrice()));
+                            ma.setLowerPrice(new BigDecimal(marketData.getLowerLimitPrice()));
+                            ma.setBidPrice1(new BigDecimal(marketData.getBidPrice1()));
+                            ma.setAskPrice1(new BigDecimal(marketData.getAskPrice1()));
+                            ma.setTradingDay(marketData.getTradingDate());
+                        }
+                        ma.setLastPrice(new BigDecimal(marketData.getLastPrice()));
+                        ma.setTitle(marketData.getUpdateTime());
+                        ma.setBidPrice1(new BigDecimal(marketData.getBidPrice1()));
+                        ma.setAskPrice1(new BigDecimal(marketData.getAskPrice1()));
+                        BigDecimal ma5 = this.calcMA(instrumentId, marketData.getLastPrice());
+                        ma.setMa5(ma5);
+                        //如果该跳行情是区间内最后一跳，直接保存
+                        if(marketData.getUpdateTime().equals(klineRange.getEndTime()) && marketData.getUpdateMillisec() == 500){
+                            ma.setComplete(true);
+                            this.addClosePrice(instrumentId, marketData.getLastPrice());
+                        }
+                        rabbitTemplate.convertAndSend(EXCHANGE_NAME, "quota."+instrumentId+".MA.1m", ma);
+                        if(ma.isComplete()){
+                            maMap.remove(instrumentId);
+                        }
+                        
+                    }else {
+                        //如果当前时间不在缓存的k先横坐标内，先保存上一周期k线，再查询新的坐标范围
+                        MA ma = maMap.get(instrumentId);
+                        if(ma != null) {
+                            ma.setComplete(true);
+                            rabbitTemplate.convertAndSend(EXCHANGE_NAME, "quota."+instrumentId+".MA.1m", ma);
+                            //保存收盘价到队列
+                            this.addClosePrice(instrumentId, ma.getLastPrice().doubleValue());
+                            //删除缓存的MA数据
+                            maMap.remove(instrumentId);
+                        }
+                        
+                        try {
+                            klineRange = this.klineRangeDao.selectByCondition(product, "1m", marketData.getUpdateTime());
+                            //把当前坐标放入缓存
+                            rangeMap.put(product, klineRange);
+                            ma = new MA();
+                            ma.setInstrumentId(instrumentId);
+                            ma.setPersiod("1m");
+                            ma.setComplete(false);
+                            ma.setLastPrice(new BigDecimal(marketData.getLastPrice()));
+                            ma.setUpperPrice(new BigDecimal(marketData.getUpperLimitPrice()));
+                            ma.setLowerPrice(new BigDecimal(marketData.getLowerLimitPrice()));
+                            ma.setBidPrice1(new BigDecimal(marketData.getBidPrice1()));
+                            ma.setAskPrice1(new BigDecimal(marketData.getAskPrice1()));
+                            ma.setTitle(marketData.getUpdateTime());
+                            ma.setTradingDay(marketData.getTradingDate());
+                            BigDecimal ma5 = this.calcMA(instrumentId, marketData.getLastPrice());
+                            ma.setMa5(ma5);
+                            rabbitTemplate.convertAndSend(EXCHANGE_NAME, "quota."+instrumentId+".MA.1m", ma);
+                            maMap.put(instrumentId, ma);
+                            
+                        } catch (EmptyResultDataAccessException e) {
+                            //如果数据库查询不到，则该时间为非交易时间
+                            
+                            System.out.println("非交易时间："+JSON.toJSONString(marketData));
+                        }
+                        
+                    }
                 }
+            } catch (Exception e) {
+                logger.error("计算MA异常:"+JSON.toJSONString(marketData),e);
             }
             
         }
