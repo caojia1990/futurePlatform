@@ -256,11 +256,6 @@ public class FiveMinutesEMA implements Runnable {
                     return;
                 }
                 
-                if(marketData.getLastPrice() == 0){
-                    logger.warn("收到行情价格为0");
-                    return;
-                }
-                
                 //更新最高价和最低价
                 if(new BigDecimal(marketData.getLastPrice()).compareTo(oldEma.getHighestPrice()) > 0){
                     oldEma.setHighestPrice(new BigDecimal(marketData.getLastPrice()));
