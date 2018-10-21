@@ -10,9 +10,10 @@ public class Test {
     
     public static void main(String[] args) throws ParseException {
         
-        
-        BigDecimal diff = new BigDecimal("12720")
-                .subtract(new BigDecimal("12720").subtract(new BigDecimal("12235"))
+       
+    	
+    	BigDecimal diff = new BigDecimal("12720")
+        .subtract(new BigDecimal("12720").subtract(new BigDecimal("12235"))
                         .multiply(new BigDecimal("0.4"))).setScale(2, RoundingMode.HALF_UP);
         
         System.out.println(diff);
