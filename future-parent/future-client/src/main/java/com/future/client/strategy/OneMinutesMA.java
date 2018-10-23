@@ -236,6 +236,7 @@ public class OneMinutesMA implements Runnable {
                         }
                     }
                 }
+                break;
             }
             //更新缓存中的ma
             if(ma.getLastPrice().compareTo(ma.getMa5())!=0){
