@@ -39,7 +39,7 @@ public class CloseService {
                     volume -= onRtnTradeVO.getVolume();
                 }else {
                     //更新该笔持仓明细    剩余持仓为   onRtnTradeVO.getVolume-volume
-                    this.tradeDao.updatePosition(onRtnTradeVO.getTradingDay(), onRtnTradeVO.getTradeId(), onRtnTradeVO.getInstrumentId(), onRtnTradeVO.getVolume());
+                    this.tradeDao.updatePosition(onRtnTradeVO.getTradingDay(), onRtnTradeVO.getTradeId(), onRtnTradeVO.getInstrumentId(), volume);
                     volume = 0;
                 }
                 
