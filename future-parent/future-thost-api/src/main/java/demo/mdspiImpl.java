@@ -31,7 +31,7 @@ public class mdspiImpl extends CThostFtdcMdSpi{
         }
 
         String[] instruementid = new String[1];
-        instruementid[0]="cu1807";      
+        instruementid[0]="cu1812";      
         m_mdapi.SubscribeMarketData(instruementid,1);
     }
 
