@@ -413,7 +413,7 @@ public class MyTraderSpi extends CThostFtdcTraderSpi {
             }
             CThostFtdcQryOrderField pQryOrder = new CThostFtdcQryOrderField();
             pQryOrder.setInvestorID(TradeMain.USER_ID);
-            System.out.println("查询报单:"+traderApi.ReqQryOrder(pQryOrder, ++nRequestID));
+            logger.info("查询报单:"+traderApi.ReqQryOrder(pQryOrder, ++nRequestID));
         }
         
         
@@ -465,7 +465,7 @@ public class MyTraderSpi extends CThostFtdcTraderSpi {
             pQryInstrumentMarginRate.setBrokerID(TradeMain.BROKER_ID);
             pQryInstrumentMarginRate.setInvestorID(TradeMain.USER_ID);
             int code = traderApi.ReqQryInstrumentMarginRate(pQryInstrumentMarginRate, nRequestID);
-            System.out.println("查询保证金响应:"+code);
+            logger.info("查询保证金响应:"+code);
         }
     }
 

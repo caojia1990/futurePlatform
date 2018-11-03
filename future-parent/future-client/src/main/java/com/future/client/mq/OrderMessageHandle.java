@@ -10,6 +10,7 @@ import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 
+import com.alibaba.fastjson.JSON;
 import com.future.client.dao.TradeDao;
 import com.future.client.service.CloseService;
 import com.future.order.api.vo.OffsetFlag;
@@ -85,7 +86,7 @@ public class OrderMessageHandle {
             logger.error("处理成交回报失败",e);
         }
         
-        
+        logger.info("成交回报"+JSON.toJSONString(onRtnTrade));
     }
     
     /**
