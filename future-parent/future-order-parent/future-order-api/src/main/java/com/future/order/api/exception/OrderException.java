@@ -1,5 +1,6 @@
 package com.future.order.api.exception;
 
+import com.future.common.exception.CommonError;
 import com.future.common.exception.CommonFutureException;
 
 /**
@@ -33,6 +34,11 @@ public class OrderException extends CommonFutureException{
     
     public OrderException(OrderError orderError, Throwable cause){
         super(SERVICE_NAME, orderError.errorCode, orderError.errorMsg, cause);
-}
+    }
+    
+    public OrderException(CommonError commonError){
+        super(SERVICE_NAME, commonError.getErrorCode(), commonError.getErrorMsg());
+    }
+    
 
 }
