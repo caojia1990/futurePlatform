@@ -56,7 +56,7 @@ public class InvestorPositionDaoTest extends AbstractJUnit4SpringContextTests{
             r.setHedgeFlag(HedgeFlag.Speculation);
             this.investorPositionDao.insert(r);
             
-            InvestorPositionVO rindb = this.investorPositionDao.selectByCondition(inputStr, instrumentID, Direction.SELL);
+            InvestorPositionVO rindb = this.investorPositionDao.selectByCondition(inputStr, instrumentID, direction);
             System.out.println(JSON.toJSONString(rindb));
             Assert.assertEquals(investorID,rindb.getInvestorID());
             watch.stop();

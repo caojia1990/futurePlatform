@@ -4,7 +4,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -16,41 +15,90 @@ import com.future.order.api.vo.InvestorPositionVO;
 @Repository("investorPositionDao")
 public class InvestorPositionDao {
 
-	@Autowired
+    @Autowired
     private JdbcTemplate jdbcTemplate;
-	
-	public int insert(InvestorPositionVO record) {
-		
-		return jdbcTemplate.update("INSERT INTO FUTURE_INVESTOR_POSITION VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", 
-		        record.getInstrumentID(),
-		        record.getInvestorID(),
-		        record.getAccountNo(),
-		        record.getPosiDirection().getCode(),
-		        record.getHedgeFlag().getCode(),
-		        record.getYdPosition(),
-		        record.getPosition(),
-		        record.getYdPositionFrozen(),
-		        record.getPositionFrozen(),
-		        record.getOpenVolume(),
-		        record.getCloseVolume(),
-		        record.getOpenAmount(),
-		        record.getPositionCost(),
-		        record.getPreMargin(),
-		        record.getUseMargin(),
-		        record.getFrozenCommission(),
-		        record.getCommission(),
-		        record.getCloseProfit(),
-		        record.getPositionProfit(),
-		        record.getPreSettlementPrice(),
-		        record.getSettlementPrice(),
-		        record.getTradingDay(),
-		        record.getSettlementID());
-	}
-	
-	public InvestorPositionVO selectByCondition(String accountNo, String instrument, Direction direction) {
-	    
-	    return jdbcTemplate.queryForObject("SELECT * FROM FUTURE_INVESTOR_POSITION "
-                + "WHERE ACCOUNT_NO = ? AND INSTRUMENT_ID = ? AND POSI_DIRECTION != ?", 
+    
+    public int insert(InvestorPositionVO record) {
+        
+        return jdbcTemplate.update("INSERT INTO FUTURE_INVESTOR_POSITION VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", 
+                record.getInstrumentID(),
+                record.getInvestorID(),
+                record.getAccountNo(),
+                record.getPosiDirection().getCode(),
+                record.getHedgeFlag().getCode(),
+                record.getYdPosition(),
+                record.getPosition(),
+                record.getYdPositionFrozen(),
+                record.getPositionFrozen(),
+                record.getOpenVolume(),
+                record.getCloseVolume(),
+                record.getOpenAmount(),
+                record.getPositionCost(),
+                record.getPreMargin(),
+                record.getUseMargin(),
+                record.getFrozenCommission(),
+                record.getCommission(),
+                record.getCloseProfit(),
+                record.getPositionProfit(),
+                record.getPreSettlementPrice(),
+                record.getSettlementPrice(),
+                record.getTradingDay(),
+                record.getSettlementID());
+    }
+    
+    public int update(InvestorPositionVO record) {
+        String sql = "update FUTURE_INVESTOR_POSITION"
+                + "set INVESTOR_ID = ?,"
+                + "HEDGE_FLAG = ?,"
+                + "YD_POSITION = ?,"
+                + "POSITION = ?,"
+                + "YD_POSITION_FROZEN = ?,"
+                + "POSITION_FROZEN = ?,"
+                + "OPEN_VOLUME = ?,"
+                + "CLOSE_VOLUME = ?,"
+                + "OPEN_AMOUNT = ?,"
+                + "POSITION_COST = ?,"
+                + "PRE_MARGIN = ?,"
+                + "USE_MARGIN = ?,"
+                + "FROZEN_COMMISSION = ?,"
+                + "COMMISSION = ?,"
+                + "CLOSE_PROFIT = ?,"
+                + "POSITION_PROFIT = ?,"
+                + "PRE_SETTLEMENT_PRICE = ?,"
+                + "SETTLEMENT_PRICE = ?,"
+                + "TRADING_DAY = ?,"
+                + "SETTLEMENT_ID = ?"
+                + "WHERE ACCOUNT_NO = ? AND INSTRUMENT_ID = ? AND POSI_DIRECTION = ?";
+        
+        return jdbcTemplate.update(sql, record.getInvestorID(),
+                record.getHedgeFlag().getCode(),
+                record.getYdPosition(),
+                record.getPosition(),
+                record.getYdPositionFrozen(),
+                record.getPositionFrozen(),
+                record.getOpenVolume(),
+                record.getCloseVolume(),
+                record.getOpenAmount(),
+                record.getPositionCost(),
+                record.getPreMargin(),
+                record.getUseMargin(),
+                record.getFrozenCommission(),
+                record.getCommission(),
+                record.getCloseProfit(),
+                record.getPositionProfit(),
+                record.getPreSettlementPrice(),
+                record.getSettlementPrice(),
+                record.getTradingDay(),
+                record.getSettlementID(),
+                record.getAccountNo(),
+                record.getInstrumentID(),
+                record.getPosiDirection().getCode());
+    }
+    
+    public InvestorPositionVO selectByCondition(String accountNo, String instrument, Direction direction) {
+        
+        return jdbcTemplate.queryForObject("SELECT * FROM FUTURE_INVESTOR_POSITION "
+                + "WHERE ACCOUNT_NO = ? AND INSTRUMENT_ID = ? AND POSI_DIRECTION = ?", 
                 new RowMapper<InvestorPositionVO>() {
 
                     @Override
@@ -84,6 +132,6 @@ public class InvestorPositionDao {
                     
                 },
                 accountNo, instrument, direction.getCode());
-	    
-	}
+        
+    }
 }
