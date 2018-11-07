@@ -74,14 +74,14 @@ public class QuotaHandle implements MessageReceive{
             
             String product = instrumentId.replaceAll("[^a-z^A-Z]", "");
             
-            //先从缓存中找出该品种的k线横坐标
-            KlineRange klineRange = kMap.get(product);
+            //先从缓存中找出该合约的k线横坐标
+            KlineRange klineRange = kMap.get(instrumentId);
             if(klineRange == null) {
                 //如果没有则去数据库查询
                 try {
                     klineRange = this.klineRangeDao.selectByCondition(product, "5m", marketData.getUpdateTime());
                     //把当前坐标放入缓存
-                    kMap.put(product, klineRange);
+                    kMap.put(instrumentId, klineRange);
                 } catch (EmptyResultDataAccessException e) {
                     //如果数据库查询不到，则该时间为非交易时间，把之前一个周期的k线保存
                     //TODO 保存k线数据
@@ -206,7 +206,7 @@ public class QuotaHandle implements MessageReceive{
                     try {
                         klineRange = this.klineRangeDao.selectByCondition(product, "5m", marketData.getUpdateTime());
                         //把当前坐标放入缓存
-                        kMap.put(product, klineRange);
+                        kMap.put(instrumentId, klineRange);
                         Kline kline = new Kline();
                         kline.setInstrumentId(instrumentId);
                         kline.setOpenPrice(new BigDecimal(marketData.getLastPrice()));

@@ -69,14 +69,14 @@ public class MaHandle implements Runnable {
                 String instrumentId = marketData.getInstrumentID();
                 String product = instrumentId.replaceAll("[^a-z^A-Z]", "");
                 
-                //先从缓存中找出该品种的k线横坐标
-                KlineRange klineRange = rangeMap.get(product);
+                //先从缓存中找出该合约的k线横坐标
+                KlineRange klineRange = rangeMap.get(instrumentId);
                 if(klineRange == null){
                   //如果没有则去数据库查询
                     try {
                         klineRange = this.klineRangeDao.selectByCondition(product, "1m", marketData.getUpdateTime());
                         //把当前坐标放入缓存
-                        rangeMap.put(product, klineRange);
+                        rangeMap.put(instrumentId, klineRange);
                     } catch (EmptyResultDataAccessException e) {
                         //如果数据库查询不到，则该时间为非交易时间,不处理，等待进入交易时间
                         continue;
@@ -130,7 +130,7 @@ public class MaHandle implements Runnable {
                         try {
                             klineRange = this.klineRangeDao.selectByCondition(product, "1m", marketData.getUpdateTime());
                             //把当前坐标放入缓存
-                            rangeMap.put(product, klineRange);
+                            rangeMap.put(instrumentId, klineRange);
                             ma = new MA();
                             ma.setInstrumentId(instrumentId);
                             ma.setPersiod("1m");
