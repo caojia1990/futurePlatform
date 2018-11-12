@@ -38,7 +38,11 @@
             methods:{
                 queryInvestorInstrument:function(){
                     this.$http.get('queryInvestorInstrument/'+this.param.investorNo).then(response => {
-                        this.items = response.body.data;
+                        if(response.body.rspCode == '00000'){
+                            this.items = response.body.data;
+                        }else{
+                            toastr.error('查询失败'+response.body.errorMsg);
+                        }
                     }, response => {
                         // error callback
                         toastr.error('查询失败'+response.body.message);
