@@ -6,11 +6,14 @@
 <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js" />
 <script type="text/javascript" src="resources/bootstrap/js/bootstrap.min.js"></script>
 <link href="resources/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+
 <script src="https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/vue-resource@1.5.1"></script>
 
-<script src="resources/jquery-ui-1.12.1.custom/jquery-ui.js"></script>
-<link rel="stylesheet" href="resources/jquery-ui-1.12.1.custom/jquery-ui.min.css" />
+<!-- <script src="resources/jquery-ui-1.12.1.custom/jquery-ui.js"></script>
+<link rel="stylesheet" href="resources/jquery-ui-1.12.1.custom/jquery-ui.min.css" /> -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css" />
 
 <!-- 操作完成提示插件 -->
 <script src="https://cdn.bootcss.com/toastr.js/latest/js/toastr.min.js"></script>
@@ -40,6 +43,18 @@
                     Vue.set(quotaForm,"EMA",row);
                     $( "#quotaDetail" ).dialog( "open" );
                 },
+                openImportDialog:function(){
+                    Vue.set(toolbar,"importList",null);
+                    $( "#importDialog" ).dialog( "open" );
+                },
+                openExportDialog:function(){
+                    this.$http.get('queryEmaList').then(response => {
+                        Vue.set(exptoolbar,"exportList",JSON.stringify(response.body.data));
+                    }, response => {
+                        // error callback
+                    });
+                    $( "#exportDialog" ).dialog( "open" );
+                },
                 remove:function(row){
                     this.$http.delete('removeEma/'+row.instrumentId).then(response => {
                         // success callback
@@ -48,7 +63,7 @@
                             this.queryEmaList();
                         }
                     }, response => {
-                        toastr.error('删除失败'+response.body.errorMsg);
+                        toastr.error('删除失败'+response.body.message);
                     });
                 }
             }
@@ -72,6 +87,35 @@
                 }
             }
         });
+        
+        var toolbar = new Vue({
+            el:'#toolbar',
+            data:{importList:null},
+            methods:{
+                importEma:function(){
+                    this.$http.post('importEma',this.importList).then(response => {
+                        // success callback
+                        if(response.body.rspCode == '00000'){
+                            $( "#importDialog" ).dialog( "close" );
+                            toastr.success('导入成功');
+                            emaTable.queryEmaList();
+                        }else{
+                            toastr.error('保存失败'+response.body.errorMsg);
+                        }
+                    }, response => {
+                        toastr.error('保存失败'+response.body.message);
+                    });
+                },
+            }
+        });
+        
+        var exptoolbar = new Vue({
+            el:'#exptoolbar',
+            data:{exportList:null},
+            methods:{
+                
+            }
+        });
     }
 </script>
 
@@ -85,42 +129,65 @@
         </div>
         <div class="col-md-10 column">
         
-            <div th:include="common :: header"></div> 
+            <div th:include="common :: header"></div>
             
-            <table id="emaTable" class="table table-bordered table-hover">
-                <thead>
-                    <tr>
-                        <th>合约</th>
-                        <th>时间</th>
-                        <th>周期</th>
-                        <th>ema5</th>
-                        <th>ema619</th>
-                        <th>偏差值</th>
-                        <th>偏差</th>
-                        <th>操作</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="(item in items" v-on:dblclick="">
-                        <td>{{item.instrumentId}}</td>
-                        <td>{{item.title}}</td>
-                        <td>{{item.period}}</td>
-                        <td>{{item.ema5}}</td>
-                        <td>{{item.ema619}}</td>
-                        <td>{{ item.ema5 - item.ema619 }}</td>
-                        <td>{{ (item.ema5 - item.ema619)*100/item.ema5 }}%</td>
-                        <td>
-                            <button type="button" class="btn btn-default btn-sm" v-on:click="quotaDetail(item)">
-                                <i class="glyphicon glyphicon-cog"></i>
-                            </button>
-                            &nbsp;
-                            <button type="button" class="btn btn-default btn-sm" v-on:click="remove(item)">
-                                <i class="glyphicon glyphicon-trash"></i>
-                            </button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+            <div id="importDialog" title="导入">
+                <div id="toolbar">
+	                 <textarea class="form-control" rows="10" v-model="importList"></textarea>
+	                 <br/>
+	                 <button type="button" class="btn btn-default" v-on:click="importEma()">提交</button>
+                </div>
+            </div>
+            <div id="exportDialog" title="导出">
+                <div id="exptoolbar">
+                     <textarea class="form-control" rows="10" v-model="exportList"></textarea>
+                     <br/>
+                </div>
+            </div>
+            <div id="emaTable">
+                <button type="button" class="btn btn-default btn-sm" v-on:click="openImportDialog">
+                    <i class="glyphicon glyphicon-import">导入</i>
+                </button>
+                &nbsp;
+                <button type="button" class="btn btn-default btn-sm" v-on:click="openExportDialog">
+                    <i class="glyphicon glyphicon-export">导出</i>
+                </button>
+                <br/>
+	            <table class="table table-bordered table-hover">
+	                <thead>
+	                    <tr>
+	                        <th>合约</th>
+	                        <th>时间</th>
+	                        <th>周期</th>
+	                        <th>ema5</th>
+	                        <th>ema619</th>
+	                        <th>偏差值</th>
+	                        <th>偏差</th>
+	                        <th>操作</th>
+	                    </tr>
+	                </thead>
+	                <tbody>
+	                    <tr v-for="(item in items" v-on:dblclick="">
+	                        <td>{{item.instrumentId}}</td>
+	                        <td>{{item.title}}</td>
+	                        <td>{{item.period}}</td>
+	                        <td>{{item.ema5}}</td>
+	                        <td>{{item.ema619}}</td>
+	                        <td>{{ item.ema5 - item.ema619 }}</td>
+	                        <td>{{ (item.ema5 - item.ema619)*100/item.ema5 }}%</td>
+	                        <td>
+	                            <button type="button" class="btn btn-default btn-sm" v-on:click="quotaDetail(item)">
+	                                <i class="glyphicon glyphicon-cog"></i>
+	                            </button>
+	                            &nbsp;
+	                            <button type="button" class="btn btn-default btn-sm" v-on:click="remove(item)">
+	                                <i class="glyphicon glyphicon-trash"></i>
+	                            </button>
+	                        </td>
+	                    </tr>
+	                </tbody>
+	            </table>
+	        </div>
         </div>
         <div class="col-md-1 column">
         </div>
@@ -167,6 +234,8 @@
 </div>
 <script>
     $( "#quotaDetail" ).dialog({ autoOpen: false });
-    </script>
+    $( "#importDialog" ).dialog({ autoOpen: false });
+    $( "#exportDialog" ).dialog({ autoOpen: false });
+</script>
 </body>
 </html>
