@@ -13,9 +13,11 @@ import com.future.thost.api.CThostFtdcInputOrderField;
 import com.future.thost.api.CThostFtdcInstrumentCommissionRateField;
 import com.future.thost.api.CThostFtdcInstrumentField;
 import com.future.thost.api.CThostFtdcInstrumentMarginRateField;
+import com.future.thost.api.CThostFtdcInstrumentStatusField;
 import com.future.thost.api.CThostFtdcInvestorPositionDetailField;
 import com.future.thost.api.CThostFtdcInvestorPositionField;
 import com.future.thost.api.CThostFtdcOrderField;
+import com.future.thost.api.CThostFtdcQryInstrumentCommissionRateField;
 import com.future.thost.api.CThostFtdcQryInstrumentField;
 import com.future.thost.api.CThostFtdcQryInstrumentMarginRateField;
 import com.future.thost.api.CThostFtdcQryInvestorPositionDetailField;
@@ -127,12 +129,6 @@ public class MyTraderSpi extends CThostFtdcTraderSpi {
         confirmField.setBrokerID(TradeMain.BROKER_ID);
         confirmField.setInvestorID(TradeMain.USER_ID);
         traderApi.ReqSettlementInfoConfirm(confirmField, ++nRequestID);
-        
-        this.instrumentService.removeInstrument();
-        
-        //查询合约信息
-        CThostFtdcQryInstrumentField pQryInstrument = new CThostFtdcQryInstrumentField();
-        traderApi.ReqQryInstrument(pQryInstrument, ++nRequestID);
         
     }
     
@@ -299,6 +295,12 @@ public class MyTraderSpi extends CThostFtdcTraderSpi {
             CThostFtdcSettlementInfoConfirmField pSettlementInfoConfirm,
             CThostFtdcRspInfoField pRspInfo, int nRequestID, boolean bIsLast) {
         logger.info("确认结算单："+JSON.toJSONString(pSettlementInfoConfirm));
+        if(bIsLast){
+            this.instrumentService.removeInstrument();
+            //查询合约信息
+            CThostFtdcQryInstrumentField pQryInstrument = new CThostFtdcQryInstrumentField();
+            traderApi.ReqQryInstrument(pQryInstrument, ++nRequestID);
+        }
     }
     
     @Override
@@ -361,6 +363,19 @@ public class MyTraderSpi extends CThostFtdcTraderSpi {
     public void OnRspQryInstrumentMarginRate(CThostFtdcInstrumentMarginRateField pInstrumentMarginRate,
             CThostFtdcRspInfoField pRspInfo, int nRequestID, boolean bIsLast) {
             logger.info("查询保证金返回："+JSON.toJSONString(pInstrumentMarginRate));
+            if(bIsLast){
+              //查询合约手续费
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+                CThostFtdcQryInstrumentCommissionRateField pQryInstrumentCommissionRate = new CThostFtdcQryInstrumentCommissionRateField();
+                pQryInstrumentCommissionRate.setBrokerID(TradeMain.BROKER_ID);
+                pQryInstrumentCommissionRate.setInvestorID(TradeMain.USER_ID);
+                logger.info("查询手续费："+traderApi.ReqQryInstrumentCommissionRate(pQryInstrumentCommissionRate, ++nRequestID));
+            }
     }
     
     /**
@@ -376,6 +391,7 @@ public class MyTraderSpi extends CThostFtdcTraderSpi {
         if(pInstrument.getInstrumentID().length()>6) {
             return;
         }
+        logger.info("查询合约返回:"+JSON.toJSONString(pInstrument));
         InstrumentVO info = new InstrumentVO();
         info.setInstrumentID(pInstrument.getInstrumentID());
         info.setInstrumentName(pInstrument.getInstrumentName());//合约名称
@@ -467,6 +483,11 @@ public class MyTraderSpi extends CThostFtdcTraderSpi {
             int code = traderApi.ReqQryInstrumentMarginRate(pQryInstrumentMarginRate, nRequestID);
             logger.info("查询保证金响应:"+code);
         }
+    }
+    
+    @Override
+    public void OnRtnInstrumentStatus(CThostFtdcInstrumentStatusField pInstrumentStatus) {
+        logger.info("OnRtnInstrumentStatus返回："+JSON.toJSONString(pInstrumentStatus));;
     }
 
 }
