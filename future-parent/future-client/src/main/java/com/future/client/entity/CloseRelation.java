@@ -5,7 +5,7 @@ package com.future.client.entity;
  * @author caojia
  *
  */
-public class CloseRelationship {
+public class CloseRelation {
     
     //客户端请求ID
     private String clientRequestId;
