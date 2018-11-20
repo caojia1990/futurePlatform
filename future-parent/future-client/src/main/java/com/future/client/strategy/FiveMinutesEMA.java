@@ -107,20 +107,24 @@ public class FiveMinutesEMA implements Runnable {
                 ema.setLowestPrice(ema.getClosePrice());
                 //下多单
                 {
-                    
-                    ReqOrderInsertVO reqOrderInsertVO = new ReqOrderInsertVO();
-                    reqOrderInsertVO.setAccountNo(ACCOUNT_NO);
-                    reqOrderInsertVO.setInvestorId(ClientStarter.INVESTOR_ID);
-                    reqOrderInsertVO.setInstrumentId(instrumentId);
-                    reqOrderInsertVO.setLimitPrice(ema.getUpperPrice().doubleValue());
-                    reqOrderInsertVO.setCombOffsetFlag(CombOffsetFlag.OPEN);
-                    reqOrderInsertVO.setTimeCondition(TimeCondition.GFD);
-                    reqOrderInsertVO.setDirection(Direction.BUY);
-                    reqOrderInsertVO.setMinVolume(1);
-                    reqOrderInsertVO.setVolumeTotalOriginal((int)volume);
-                    reqOrderInsertVO.setOrderPriceType(OrderPriceType.LimitPrice);
-                    orderService.reqOrderInsert(reqOrderInsertVO);
-                    logger.info(instrumentId+"出现金叉，下多单");
+                    double tickPrice = this.cacheMap.getTickPrice(instrumentId);
+                    if(ema.getEma619().doubleValue()+tickPrice*15 <= ema.getClosePrice().doubleValue()){
+                        logger.info("急速金叉，不追高");
+                    }else {
+                        ReqOrderInsertVO reqOrderInsertVO = new ReqOrderInsertVO();
+                        reqOrderInsertVO.setAccountNo(ACCOUNT_NO);
+                        reqOrderInsertVO.setInvestorId(ClientStarter.INVESTOR_ID);
+                        reqOrderInsertVO.setInstrumentId(instrumentId);
+                        reqOrderInsertVO.setLimitPrice(ema.getUpperPrice().doubleValue());
+                        reqOrderInsertVO.setCombOffsetFlag(CombOffsetFlag.OPEN);
+                        reqOrderInsertVO.setTimeCondition(TimeCondition.GFD);
+                        reqOrderInsertVO.setDirection(Direction.BUY);
+                        reqOrderInsertVO.setMinVolume(1);
+                        reqOrderInsertVO.setVolumeTotalOriginal((int)volume);
+                        reqOrderInsertVO.setOrderPriceType(OrderPriceType.LimitPrice);
+                        orderService.reqOrderInsert(reqOrderInsertVO);
+                        logger.info(instrumentId+"出现金叉，下多单");
+                    }
                 }
                 
                 
@@ -160,19 +164,24 @@ public class FiveMinutesEMA implements Runnable {
                 ema.setLowestPrice(ema.getClosePrice());
                 //下空单
                 {
-                    ReqOrderInsertVO reqOrderInsertVO = new ReqOrderInsertVO();
-                    reqOrderInsertVO.setAccountNo(ACCOUNT_NO);
-                    reqOrderInsertVO.setInvestorId(ClientStarter.INVESTOR_ID);
-                    reqOrderInsertVO.setInstrumentId(instrumentId);
-                    reqOrderInsertVO.setLimitPrice(ema.getLowerPrice().doubleValue());
-                    reqOrderInsertVO.setCombOffsetFlag(CombOffsetFlag.OPEN);
-                    reqOrderInsertVO.setTimeCondition(TimeCondition.GFD);
-                    reqOrderInsertVO.setDirection(Direction.SELL);
-                    reqOrderInsertVO.setMinVolume(1);
-                    reqOrderInsertVO.setVolumeTotalOriginal((int)volume);
-                    reqOrderInsertVO.setOrderPriceType(OrderPriceType.LimitPrice);
-                    orderService.reqOrderInsert(reqOrderInsertVO);
-                    logger.info(instrumentId+"出现死叉，下空单");
+                    double tickPrice = this.cacheMap.getTickPrice(instrumentId);
+                    if(ema.getEma619().doubleValue()-tickPrice*15 >= ema.getClosePrice().doubleValue()){
+                        logger.info("急速死叉，不杀跌");
+                    }else {
+                        ReqOrderInsertVO reqOrderInsertVO = new ReqOrderInsertVO();
+                        reqOrderInsertVO.setAccountNo(ACCOUNT_NO);
+                        reqOrderInsertVO.setInvestorId(ClientStarter.INVESTOR_ID);
+                        reqOrderInsertVO.setInstrumentId(instrumentId);
+                        reqOrderInsertVO.setLimitPrice(ema.getLowerPrice().doubleValue());
+                        reqOrderInsertVO.setCombOffsetFlag(CombOffsetFlag.OPEN);
+                        reqOrderInsertVO.setTimeCondition(TimeCondition.GFD);
+                        reqOrderInsertVO.setDirection(Direction.SELL);
+                        reqOrderInsertVO.setMinVolume(1);
+                        reqOrderInsertVO.setVolumeTotalOriginal((int)volume);
+                        reqOrderInsertVO.setOrderPriceType(OrderPriceType.LimitPrice);
+                        orderService.reqOrderInsert(reqOrderInsertVO);
+                        logger.info(instrumentId+"出现死叉，下空单");
+                    }
                 }
                 
                 //查询是否有多单
