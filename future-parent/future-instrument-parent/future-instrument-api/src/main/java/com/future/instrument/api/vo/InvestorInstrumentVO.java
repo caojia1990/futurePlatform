@@ -54,6 +54,8 @@ public class InvestorInstrumentVO implements Serializable{
     //对冲止损跳数
     private Integer hedgingStopLoss;
     
+    
+    
 
     public String getInvestorNo() {
         return investorNo;
