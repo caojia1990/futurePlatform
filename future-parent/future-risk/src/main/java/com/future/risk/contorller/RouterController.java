@@ -26,4 +26,9 @@ public class RouterController {
         return "quota";
     }
     
+    @RequestMapping(value="sqlconsole")
+    public String sqlconsole(){
+        return "sqlconsole";
+    }
+    
 }

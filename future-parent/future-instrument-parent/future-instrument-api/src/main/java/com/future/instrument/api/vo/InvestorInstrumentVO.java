@@ -2,6 +2,7 @@ package com.future.instrument.api.vo;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * 投资者合约信息
@@ -54,8 +55,15 @@ public class InvestorInstrumentVO implements Serializable{
     //对冲止损跳数
     private Integer hedgingStopLoss;
     
+    private List<StaircaseHedgingVO> hedgingVOs;
     
-    
+    public List<StaircaseHedgingVO> getHedgingVOs() {
+        return hedgingVOs;
+    }
+
+    public void setHedgingVOs(List<StaircaseHedgingVO> hedgingVOs) {
+        this.hedgingVOs = hedgingVOs;
+    }
 
     public String getInvestorNo() {
         return investorNo;

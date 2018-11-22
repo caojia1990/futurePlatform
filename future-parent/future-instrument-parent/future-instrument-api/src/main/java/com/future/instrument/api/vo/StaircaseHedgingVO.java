@@ -1,11 +1,18 @@
 package com.future.instrument.api.vo;
 
+import java.io.Serializable;
+
 /**
  * 阶梯对冲
  * @author caojia
  *
  */
-public class StaircaseHedgingVO {
+public class StaircaseHedgingVO implements Serializable{
+
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -5391397304651289037L;
 
     //合约
     private String instrumentId;
