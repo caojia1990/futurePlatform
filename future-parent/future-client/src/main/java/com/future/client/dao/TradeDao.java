@@ -36,7 +36,7 @@ public class TradeDao {
     
     public List<OnRtnTradeVO> selectByCondition(String investorId, String accountNo, String instrumentId, String direction) {
         
-        String sql = "select * from FUTURE_TRADE where INVESTOR_ID = ? and ACCOUNT_NO = ? and INSTRUMENT_ID = ? and DIRECTION = ?";
+        String sql = "select * from FUTURE_TRADE where INVESTOR_ID = ? and ACCOUNT_NO = ? and INSTRUMENT_ID = ? and DIRECTION = ? order by ORDER_REF desc,";
         return this.jdbcTemplate.query(sql, 
                 new RowMapper<OnRtnTradeVO>() {
 
@@ -58,6 +58,13 @@ public class TradeDao {
             
                 }, 
                 investorId,accountNo,instrumentId,direction);
+    }
+    
+    public int countByCondition(String investorId, String accountNo, String instrumentId, String direction) {
+        
+        String sql = "select count(1) from FUTURE_TRADE where INVESTOR_ID = ? and ACCOUNT_NO = ? and INSTRUMENT_ID = ? and DIRECTION = ?";
+        return this.jdbcTemplate.queryForObject(sql,Integer.class,investorId,accountNo,instrumentId,direction);
+        
     }
     
     public List<OnRtnTradeVO> selectByCondition(String investorId, String accountNo, String instrumentId) {
