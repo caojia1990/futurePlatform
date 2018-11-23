@@ -16,6 +16,11 @@ public class RouterController {
         return "instrument";
     }
     
+    @RequestMapping(value="instrument2")
+    public String instrument2(){
+        return "instrument2";
+    }
+    
     @RequestMapping(value="market")
     public String market(){
         return "market";

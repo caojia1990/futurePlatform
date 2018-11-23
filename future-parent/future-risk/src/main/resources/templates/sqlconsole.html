@@ -67,11 +67,11 @@
                   <div class="form-group">
                     <div class="col-sm-offset-1 col-sm-2">
                           <label for="module" class="control-label">模块</label>
-                          <select id="module" class="form-control">
-                              <option>策略</option>
-                              <option>合约</option>
-                              <option>指标</option>
-                              <option>订单</option>
+                          <select v-model="module" class="form-control">
+                              <option value="1">策略</option>
+                              <option value="2">合约</option>
+                              <option value="3">指标</option>
+                              <option value="4">订单</option>
                           </select>
                     </div>
                   </div>

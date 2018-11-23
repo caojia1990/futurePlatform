@@ -22,6 +22,15 @@
 <script src="https://cdn.bootcss.com/toastr.js/latest/js/toastr.min.js"></script>
 <link href="https://cdn.bootcss.com/toastr.js/latest/css/toastr.min.css" rel="stylesheet" />
 
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.12.1/bootstrap-table.min.css">
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.12.1/bootstrap-table.min.js"></script>
+
+<!-- Latest compiled and minified Locales -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.12.1/locale/bootstrap-table-zh-CN.min.js"></script>
+
 <script type="text/javascript">
 
     toastr.options.positionClass = 'toast-bottom-left';
@@ -191,7 +200,8 @@
                             <td>{{item.stopLoss}}</td>
                             <td>{{item.target}}</td>
                             <td>{{item.retracement}}</td>
-                            <td v-if="item.hedgingType == '0'">按比例触发</td><td v-else-if="item.hedgingType == '1'">立即触发</td><td v-else-if="item.hedgingType == '2'">不触发</td>
+                            <td v-if="item.hedgingType == '0'">按比例触发</td><td v-else-if="item.hedgingType == '1'">立即触发</td>
+                            <td v-else-if="item.hedgingType == '2'">不触发</td><td v-else-if="item.hedgingType == '3'">阶梯触发</td>
                             <td>{{item.hedgingTigger}}</td>
                             <td>{{item.hedgingVolume}}</td>
                             <td>{{item.hedgingStopWin}}</td>
@@ -274,6 +284,7 @@
               <option value="0">按比例触发</option>
               <option value="1">立即触发</option>
               <option value="2">不触发</option>
+              <option value="3">阶梯触发</option>
             </select>
         </div>
       </div>
