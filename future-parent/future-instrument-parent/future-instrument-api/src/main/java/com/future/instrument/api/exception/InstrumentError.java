@@ -31,8 +31,10 @@ public enum InstrumentError {
     HEDGING_TIGGER_ILLEGAL("I00014", "触发对冲比例不合法"),
     
     VOLUME_ILLEGAL("I00015", "开仓手数不合法"),
-
+    
     INSTRUMENT_ALREADY_EXSITS("I00016", "合约已存在"),
+    
+    GREES_HEDGING_REQUIRED("I00017", "阶梯对冲信息不能为空"),
     
     ;
 

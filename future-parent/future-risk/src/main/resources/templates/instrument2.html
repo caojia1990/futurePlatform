@@ -29,7 +29,7 @@
     rel="stylesheet" />
     
 <!-- Latest compiled and minified CSS -->
-<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.12.1/bootstrap-table.min.css">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.12.1/bootstrap-table.min.css" />
 
 <!-- Latest compiled and minified JavaScript -->
 <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.12.1/bootstrap-table.min.js"></script>
@@ -101,9 +101,6 @@
                     }, response => {
                         toastr.error('保存失败'+response.body.message);
                     });
-                },
-                closeDialog:function(){
-                    $( "#saveDialog" ).dialog( "close" );
                 }
             }
         });
@@ -240,7 +237,7 @@
     <div class="modal fade" id="addModal" tabindex="-1" role="dialog"
         aria-labelledby="myModalLabel">
         <div class="modal-dialog" role="document">
-            <div class="modal-content">
+            <div class="modal-content" id="saveForm">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal"
                         aria-label="Close">
@@ -249,7 +246,7 @@
                     <h4 class="modal-title" id="myModalLabel">Modal title</h4>
                 </div>
                 <div class="modal-body">
-                    <form class="form-horizontal" id="saveForm">
+                    <form class="form-horizontal" >
                         <div class="form-group">
                             <label for="investorNo" class="col-sm-4 control-label">投资者</label>
                             <div class="col-sm-6">
@@ -328,9 +325,12 @@
                                     v-model="item.hedgingTigger" />
                             </div>
                         </div>
-                        <div class="row">
-                            
-                            <table id="greesTable"></table>
+                        <div class="form-group">
+                            <label for="hedgingVOs" class="col-sm-4 control-label">阶梯对冲区间
+                            </label>
+                            <div class="col-sm-6">
+	                            <textarea class="form-control" rows="5" v-model="item.hedgingVOs"></textarea>
+                            </div>
                         </div>
                         <div class="form-group">
                             <label for="hedgingVolume" class="col-sm-4 control-label">对冲手数
@@ -356,21 +356,11 @@
                                     v-model="item.hedgingStopLoss" />
                             </div>
                         </div>
-                        <div class="form-group">
-                            <div class="col-sm-1 col-sm-offset-3">
-                                <button type="button" class="btn btn-success"
-                                    v-on:click="save()">保存</button>
-                            </div>
-                            <div class="col-sm-1 col-sm-offset-2">
-                                <button type="button" class="btn btn-danger"
-                                    v-on:click="closeDialog()">取消</button>
-                            </div>
-                        </div>
                     </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save changes</button>
+                    <button type="button" class="btn btn-primary" v-on:click="save()">Save</button>
                 </div>
             </div>
         </div>
@@ -440,6 +430,7 @@
                         <option value="0">按比例触发</option>
                         <option value="1">立即触发</option>
                         <option value="2">不触发</option>
+                        <option value="3">阶梯触发</option>
                     </select>
                 </div>
             </div>
@@ -448,6 +439,13 @@
                 <div class="col-sm-6">
                     <input type="text" class="form-control"
                         v-model="item.hedgingTigger" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-4 control-label">阶梯对冲区间
+                </label>
+                <div class="col-sm-6">
+                    <textarea class="form-control" rows="5" v-model="item.hedgingVOs"></textarea>
                 </div>
             </div>
             <div class="form-group">

@@ -55,14 +55,24 @@ public class InvestorInstrumentVO implements Serializable{
     //对冲止损跳数
     private Integer hedgingStopLoss;
     
-    private List<StaircaseHedgingVO> hedgingVOs;
+    private String hedgingVOs;
     
-    public List<StaircaseHedgingVO> getHedgingVOs() {
+    private List<StaircaseHedgingVO> hedgingList;
+    
+    public String getHedgingVOs() {
         return hedgingVOs;
     }
 
-    public void setHedgingVOs(List<StaircaseHedgingVO> hedgingVOs) {
+    public void setHedgingVOs(String hedgingVOs) {
         this.hedgingVOs = hedgingVOs;
+    }
+    
+    public List<StaircaseHedgingVO> getHedgingList() {
+        return hedgingList;
+    }
+
+    public void setHedgingList(List<StaircaseHedgingVO> hedgingList) {
+        this.hedgingList = hedgingList;
     }
 
     public String getInvestorNo() {
@@ -131,7 +141,7 @@ public class InvestorInstrumentVO implements Serializable{
 
     /**
      * 对冲触发类型  
-     * @return 0:按比例触发（默认） 1：立即触发   2：不触发
+     * @return 0:按比例触发（默认） 1：立即触发   2：不触发 3:阶梯对冲
      */
     public String getHedgingType() {
         return hedgingType;

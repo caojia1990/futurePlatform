@@ -9,12 +9,17 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.serializer.SerializeConfig;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.future.instrument.api.exception.InstrumentError;
 import com.future.instrument.api.exception.InstrumentException;
 import com.future.instrument.api.service.InvestorInstrumentService;
 import com.future.instrument.api.vo.InstrumentMessage;
 import com.future.instrument.api.vo.InvestorInstrumentVO;
+import com.future.instrument.api.vo.StaircaseHedgingVO;
 import com.future.instrument.service.dao.InvestorInstrumentDao;
+import com.future.instrument.service.dao.StaircaseHedgingDao;
 
 public class InvestorInstrumentServiceImpl implements InvestorInstrumentService {
     
@@ -22,6 +27,9 @@ public class InvestorInstrumentServiceImpl implements InvestorInstrumentService 
     
     @Autowired
     private InvestorInstrumentDao investorInstrumentDao;
+    
+    @Autowired
+    private StaircaseHedgingDao hedgingDao;
     
     @Autowired
     private RabbitTemplate rabbitTemplate;
@@ -86,6 +94,10 @@ public class InvestorInstrumentServiceImpl implements InvestorInstrumentService 
             throw new InstrumentException(InstrumentError.HEDGING_STOP_WIN_ILLEGAL);
         }
         
+        if(investorInstrumentVO.getHedgingType().equals("3") && investorInstrumentVO.getHedgingVOs() == null){
+            throw new InstrumentException(InstrumentError.GREES_HEDGING_REQUIRED);
+        }
+        
         InvestorInstrumentVO instrumentVO = null;
         try {
             instrumentVO = this.investorInstrumentDao.select(investorInstrumentVO.getInvestorNo(),
@@ -104,6 +116,15 @@ public class InvestorInstrumentServiceImpl implements InvestorInstrumentService 
         
         try {
             this.investorInstrumentDao.insert(investorInstrumentVO);
+            //保存阶梯对冲信息
+            this.hedgingDao.delete(investorInstrumentVO.getInstrumentId());
+            if(investorInstrumentVO.getHedgingVOs() != null){
+                List<StaircaseHedgingVO> list = JSON.parseArray(investorInstrumentVO.getHedgingVOs(), StaircaseHedgingVO.class);
+                investorInstrumentVO.setHedgingList(list);
+                for (StaircaseHedgingVO vo : list) {
+                    this.hedgingDao.insert(vo);
+                }
+            }
         } catch (Exception e) {
             logger.error("保存合约信息失败",e);
             throw new InstrumentException(InstrumentError.DATABASE_FAILED,e);
@@ -158,8 +179,21 @@ public class InvestorInstrumentServiceImpl implements InvestorInstrumentService 
             throw new InstrumentException(InstrumentError.HEDGING_STOP_WIN_ILLEGAL);
         }
         
+        if(investorInstrumentVO.getHedgingType().equals("3") && investorInstrumentVO.getHedgingVOs() == null){
+            throw new InstrumentException(InstrumentError.GREES_HEDGING_REQUIRED);
+        }
+        
         try {
             this.investorInstrumentDao.update(investorInstrumentVO);
+            //保存阶梯对冲信息
+            this.hedgingDao.delete(investorInstrumentVO.getInstrumentId());
+            if(investorInstrumentVO.getHedgingVOs() != null){
+                List<StaircaseHedgingVO> list = JSON.parseArray(investorInstrumentVO.getHedgingVOs(), StaircaseHedgingVO.class);
+                investorInstrumentVO.setHedgingList(list);
+                for (StaircaseHedgingVO vo : list) {
+                    this.hedgingDao.insert(vo);
+                }
+            }
         } catch (Exception e) {
             logger.error("更新合约信息失败",e);
             throw new InstrumentException(InstrumentError.DATABASE_FAILED,e);
@@ -177,6 +211,7 @@ public class InvestorInstrumentServiceImpl implements InvestorInstrumentService 
         
         try {
             this.investorInstrumentDao.delete(investorNo, instrumentId);
+            this.hedgingDao.delete(instrumentId);
         } catch (Exception e) {
             logger.error("删除合约信息失败",e);
             throw new InstrumentException(InstrumentError.DATABASE_FAILED,e);
@@ -198,10 +233,18 @@ public class InvestorInstrumentServiceImpl implements InvestorInstrumentService 
         List<InvestorInstrumentVO> list = null;
         try {
             list = this.investorInstrumentDao.selectList(investorNo);
+            if(list != null){
+                for (InvestorInstrumentVO investorInstrumentVO : list) {
+                    List<StaircaseHedgingVO> hedgingList = this.hedgingDao.selectList(investorInstrumentVO.getInstrumentId());
+                    investorInstrumentVO.setHedgingList(hedgingList);
+                    investorInstrumentVO.setHedgingVOs(JSON.toJSONString(hedgingList));
+                }
+            }
         } catch (Exception e) {
             logger.error("查询合约信息失败",e);
             throw new InstrumentException(InstrumentError.DATABASE_FAILED,e);
         }
+        
         return list;
     }
 

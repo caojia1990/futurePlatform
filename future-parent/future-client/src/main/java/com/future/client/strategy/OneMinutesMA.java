@@ -143,8 +143,8 @@ public class OneMinutesMA implements Runnable {
                             }
                         }else if ("3".equals(vo.getHedgingType())) {
                             //阶梯对冲方式
-                            List<StaircaseHedgingVO> hedgingVOs = vo.getHedgingVOs();
-                            if(hedgingVOs == null){
+                            List<StaircaseHedgingVO> hedgingVOs = vo.getHedgingList();
+                            if(hedgingVOs == null || hedgingVOs.size() <1){
                                 break;
                             }
                             double tickPrice = this.cacheMap.getTickPrice(instrumentId);
@@ -169,7 +169,7 @@ public class OneMinutesMA implements Runnable {
                                         reqOrderInsertVO.setMinVolume(1);
                                         reqOrderInsertVO.setVolumeTotalOriginal(volume-count);
                                         reqOrderInsertVO.setOrderPriceType(OrderPriceType.LimitPrice);
-                                        logger.info("1分钟MA死叉，对冲一手");
+                                        logger.info("1分钟MA死叉，阶梯对冲一手");
                                         orderService.reqOrderInsert(reqOrderInsertVO);
                                     }
                                     break;
@@ -229,8 +229,8 @@ public class OneMinutesMA implements Runnable {
                             }
                         }else if ("3".equals(vo.getHedgingType())) {
                             //阶梯对冲方式
-                            List<StaircaseHedgingVO> hedgingVOs = vo.getHedgingVOs();
-                            if(hedgingVOs == null){
+                            List<StaircaseHedgingVO> hedgingVOs = vo.getHedgingList();
+                            if(hedgingVOs == null || hedgingVOs.size() <1){
                                 break;
                             }
                             double tickPrice = this.cacheMap.getTickPrice(instrumentId);
