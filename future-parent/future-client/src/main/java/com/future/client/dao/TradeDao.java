@@ -36,7 +36,7 @@ public class TradeDao {
     
     public List<OnRtnTradeVO> selectByCondition(String investorId, String accountNo, String instrumentId, String direction) {
         
-        String sql = "select * from FUTURE_TRADE where INVESTOR_ID = ? and ACCOUNT_NO = ? and INSTRUMENT_ID = ? and DIRECTION = ? order by ORDER_REF desc,";
+        String sql = "select * from FUTURE_TRADE where INVESTOR_ID = ? and ACCOUNT_NO = ? and INSTRUMENT_ID = ? and DIRECTION = ? order by ORDER_REF desc";
         return this.jdbcTemplate.query(sql, 
                 new RowMapper<OnRtnTradeVO>() {
 
