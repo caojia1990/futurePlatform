@@ -7,23 +7,29 @@
 <!-- <script type="text/javascript" src="resources/bootstrap/js/bootstrap.min.js"></script>
 <link href="resources/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css"/> -->
 
-<script src="https://cdn.bootcss.com/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
-<link href="https://cdn.bootcss.com/twitter-bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" />
+<script
+    src="https://cdn.bootcss.com/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<link
+    href="https://cdn.bootcss.com/twitter-bootstrap/3.3.7/css/bootstrap.min.css"
+    rel="stylesheet" />
 
 <script src="https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/vue-resource@1.5.1"></script>
 
 <!-- <script src="resources/jquery-ui-1.12.1.custom/jquery-ui.js"></script>
 <link rel="stylesheet" href="resources/jquery-ui-1.12.1.custom/jquery-ui.min.css" /> -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css" />
+<script
+    src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+<link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css" />
 
 <!-- 操作完成提示插件 -->
 <script src="https://cdn.bootcss.com/toastr.js/latest/js/toastr.min.js"></script>
-<link href="https://cdn.bootcss.com/toastr.js/latest/css/toastr.min.css" rel="stylesheet" />
-
+<link href="https://cdn.bootcss.com/toastr.js/latest/css/toastr.min.css"
+    rel="stylesheet" />
+    
 <!-- Latest compiled and minified CSS -->
-<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.12.1/bootstrap-table.min.css">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.12.1/bootstrap-table.min.css" />
 
 <!-- Latest compiled and minified JavaScript -->
 <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.12.1/bootstrap-table.min.js"></script>
@@ -70,13 +76,10 @@
                         toastr.error('删除失败'+response.body.message);
                     });
                 },
-                openSaveDialog:function(){
-                    $( "#saveDialog" ).dialog( "open" );
-                },
                 openUpdateDialog:function(row){
                     updateForm.item = row;
                     //Vue.set(updateForm,"item",row);
-                    $( "#updateDialog" ).dialog( "open" );
+                    $('#updateModal').modal('show')
                 }
             }
         });
@@ -89,7 +92,7 @@
                     this.$http.post('saveInvestorInstrument',this.item).then(response => {
                         // success callback
                         if(response.body.rspCode == '00000'){
-                            $( "#saveDialog" ).dialog( "close" );
+                            $('#addModal').modal('hide')
                             instrumentTable.queryInvestorInstrument();
                             toastr.success('保存成功');
                         }else{
@@ -98,9 +101,6 @@
                     }, response => {
                         toastr.error('保存失败'+response.body.message);
                     });
-                },
-                closeDialog:function(){
-                    $( "#saveDialog" ).dialog( "close" );
                 }
             }
         });
@@ -113,7 +113,7 @@
                     this.$http.post('updateInvestorInstrument',this.item).then(response => {
                         // success callback
                         if(response.body.rspCode == '00000'){
-                            $( "#updateDialog" ).dialog( "close" );
+                            this.closeDialog();
                             instrumentTable.queryInvestorInstrument();
                             toastr.success('修改成功');
                         }else{
@@ -124,7 +124,7 @@
                     });
                 },
                 closeDialog:function(){
-                    $( "#updateDialog" ).dialog( "close" );
+                    $('#updateModal').modal('hide');
                 }
                 
             }
@@ -136,292 +136,357 @@
 <body>
 
 
-<div class="container-fluid">
-    <div class="row-fluid">
-        <div class="col-md-1 column">
-        </div>
-        <div class="col-md-10 column">
-            
-            <div th:include="common :: header"></div> 
-            
-            <!-- 查询条件 -->
-            <div id="investorInstrument">
-                <div class="row placeholders">
-                    <form class="form-horizontal" id="queryInstrumentForm">
-                      <div class="form-group">
-                        <label for="investorNo" class="col-sm-1 control-label">投资者编号</label>
-                        <div class="col-sm-2">
-                            <input type="text" class="form-control" id="investorNo" v-model="param.investorNo" />
-                        </div>
-                        
-                        <label for="instrumentId" class="col-sm-1 control-label">合约</label>
-                        <div class="col-sm-2">
-                            <input type="text" class="form-control" id="instrumentId" v-model="param.instrumentId" />
-                        </div>
-                        
-                        <div class="col-sm-1 col-sm-offset-1">
-                            <button type="button" class="btn btn-info" v-on:click="queryInvestorInstrument()">查询</button>
-                        </div>
-                        
-                        <div class="col-sm-1">
-                            <button type="button" class="btn btn-info" v-on:click="openSaveDialog()">新增</button>
-                        </div>
-                      </div>
-                    </form>
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div class="col-md-1 column"></div>
+            <div class="col-md-10 column">
+
+                <div th:include="common :: header"></div>
+
+                <!-- 查询条件 -->
+                <div id="investorInstrument">
+                    <div class="row placeholders">
+                        <form class="form-horizontal" id="queryInstrumentForm">
+                            <div class="form-group">
+                                <label for="investorNo" class="col-sm-1 control-label">投资者编号</label>
+                                <div class="col-sm-2">
+                                    <input type="text" class="form-control" id="investorNo"
+                                        v-model="param.investorNo" />
+                                </div>
+
+                                <label for="instrumentId" class="col-sm-1 control-label">合约</label>
+                                <div class="col-sm-2">
+                                    <input type="text" class="form-control" id="instrumentId"
+                                        v-model="param.instrumentId" />
+                                </div>
+
+                                <div class="col-sm-1 col-sm-offset-1">
+                                    <button type="button" class="btn btn-info"
+                                        v-on:click="queryInvestorInstrument()">查询</button>
+                                </div>
+
+                                <div class="col-sm-1">
+                                    <!-- Button trigger modal -->
+                                    <button type="button" class="btn btn-primary"
+                                        data-toggle="modal" data-target="#addModal">添加合约</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+
+                    <table id="investorInstrumentTable"
+                        class="table table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th>投资者</th>
+                                <th>合约</th>
+                                <th>运行状态</th>
+                                <th>开仓手数</th>
+                                <th>止盈跳数</th>
+                                <th>止损跳数</th>
+                                <th>止盈幅度</th>
+                                <th>止盈回撤幅度</th>
+                                <th>对冲触发类型</th>
+                                <th>触发对冲比例</th>
+                                <th>对冲手数</th>
+                                <th>对冲止盈跳数</th>
+                                <th>对冲止损跳数</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="(item in items" v-on:dblclick="">
+                                <td>{{item.investorNo}}</td>
+                                <td>{{item.instrumentId}}</td>
+                                <td v-if="item.status == '0'">运行中</td>
+                                <td v-else-if="item.status == '1'">暂停</td>
+                                <td>{{item.volume}}</td>
+                                <td>{{item.stopWin}}</td>
+                                <td>{{item.stopLoss}}</td>
+                                <td>{{item.target}}</td>
+                                <td>{{item.retracement}}</td>
+                                <td v-if="item.hedgingType == '0'">按比例触发</td>
+                                <td v-else-if="item.hedgingType == '1'">立即触发</td>
+                                <td v-else-if="item.hedgingType == '2'">不触发</td>
+                                <td v-else-if="item.hedgingType == '3'">阶梯触发</td>
+                                <td>{{item.hedgingTigger}}</td>
+                                <td>{{item.hedgingVolume}}</td>
+                                <td>{{item.hedgingStopWin}}</td>
+                                <td>{{item.hedgingStopLoss}}</td>
+                                <td>
+                                    <button type="button" class="btn btn-default btn-sm"
+                                        v-on:click="openUpdateDialog(item)">
+                                        <i class="glyphicon glyphicon-cog"></i>
+                                    </button> &nbsp;
+                                    <button type="button" class="btn btn-default btn-sm"
+                                        v-on:click="remove(item)">
+                                        <i class="glyphicon glyphicon-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
-                
-                
-                <table id="investorInstrumentTable" class="table table-bordered table-hover">
-                    <thead>
-                        <tr>
-                            <th>投资者</th>
-                            <th>合约</th>
-                            <th>运行状态</th>
-                            <th>开仓手数</th>
-                            <th>止盈跳数</th>
-                            <th>止损跳数</th>
-                            <th>止盈幅度</th>
-                            <th>止盈回撤幅度</th>
-                            <th>对冲触发类型</th>
-                            <th>触发对冲比例</th>
-                            <th>对冲手数</th>
-                            <th>对冲止盈跳数</th>
-                            <th>对冲止损跳数</th>
-                            <th>操作</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr v-for="(item in items" v-on:dblclick="">
-                            <td>{{item.investorNo}}</td>
-                            <td>{{item.instrumentId}}</td>
-                            <td v-if="item.status == '0'">运行中</td><td v-else-if="item.status == '1'">暂停</td>
-                            <td>{{item.volume}}</td>
-                            <td>{{item.stopWin}}</td>
-                            <td>{{item.stopLoss}}</td>
-                            <td>{{item.target}}</td>
-                            <td>{{item.retracement}}</td>
-                            <td v-if="item.hedgingType == '0'">按比例触发</td><td v-else-if="item.hedgingType == '1'">立即触发</td>
-                            <td v-else-if="item.hedgingType == '2'">不触发</td><td v-else-if="item.hedgingType == '3'">阶梯触发</td>
-                            <td>{{item.hedgingTigger}}</td>
-                            <td>{{item.hedgingVolume}}</td>
-                            <td>{{item.hedgingStopWin}}</td>
-                            <td>{{item.hedgingStopLoss}}</td>
-                            <td>
-                                <button type="button" class="btn btn-default btn-sm" v-on:click="openUpdateDialog(item)">
-                                    <i class="glyphicon glyphicon-cog"></i>
-                                </button>
-                                &nbsp;
-                                <button type="button" class="btn btn-default btn-sm" v-on:click="remove(item)">
-                                    <i class="glyphicon glyphicon-trash"></i>
-                                </button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
             </div>
-        </div>
-        <div class="col-md-1 column">
+            <div class="col-md-1 column"></div>
         </div>
     </div>
-</div>
-<div id="saveDialog" title="保存合约">
-    <form class="form-horizontal" id="saveForm">
-      <div class="form-group">
-        <label for="investorNo" class="col-sm-4 control-label">投资者</label>
-        <div class="col-sm-6">
-            <input type="text" class="form-control" id="investorNo" v-model="item.investorNo" />
+
+    <!-- 保存合约Modal -->
+    <div class="modal fade" id="addModal" tabindex="-1" role="dialog"
+        aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content" id="saveForm">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"
+                        aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel">添加用户合约</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal" >
+                        <div class="form-group">
+                            <label for="investorNo" class="col-sm-4 control-label">投资者</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control" id="investorNo"
+                                    v-model="item.investorNo" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="instrumentId" class="col-sm-4 control-label">合约</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control" id="instrumentId"
+                                    v-model="item.instrumentId" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="status" class="col-sm-4 control-label">运行状态</label>
+                            <div class="col-sm-6">
+                                <select class="form-control" v-model="item.status">
+                                    <option value="0">运行中</option>
+                                    <option value="1">暂停</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="volume" class="col-sm-4 control-label">开仓手数</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control" id="volume"
+                                    v-model="item.volume" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="stopWin" class="col-sm-4 control-label">止盈跳数</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control" id="stopWin"
+                                    v-model="item.stopWin" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="stopLoss" class="col-sm-4 control-label">止损跳数</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control" id="stopLoss"
+                                    v-model="item.stopLoss" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="target" class="col-sm-4 control-label">止盈幅度</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control" id="target"
+                                    v-model="item.target" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="retracement" class="col-sm-4 control-label">回撤止盈幅度</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control" id="retracement"
+                                    v-model="item.retracement" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="hedgingType" class="col-sm-4 control-label">对冲触发类型</label>
+                            <div class="col-sm-6">
+                                <select class="form-control" id="hedgingType"
+                                    v-model="item.hedgingType">
+                                    <option value="0">按比例触发</option>
+                                    <option value="1">立即触发</option>
+                                    <option value="2">不触发</option>
+                                    <option value="3">阶梯触发</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="hedgingTigger" class="col-sm-4 control-label">触发对冲比例
+                            </label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control" id="hedgingTigger"
+                                    v-model="item.hedgingTigger" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="hedgingVOs" class="col-sm-4 control-label">阶梯对冲区间
+                            </label>
+                            <div class="col-sm-6">
+	                            <textarea class="form-control" rows="5" v-model="item.hedgingVOs"></textarea>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="hedgingVolume" class="col-sm-4 control-label">对冲手数
+                            </label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control" id="hedgingVolume"
+                                    v-model="item.hedgingVolume" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="hedgingStopWin" class="col-sm-4 control-label">对冲止盈跳数
+                            </label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control" id="hedgingStopWin"
+                                    v-model="item.hedgingStopWin" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="hedgingStopLoss" class="col-sm-4 control-label">对冲止损跳数
+                            </label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control" id="hedgingStopLoss"
+                                    v-model="item.hedgingStopLoss" />
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" v-on:click="save()">Save</button>
+                </div>
+            </div>
         </div>
-      </div>
-      <div class="form-group">
-        <label for="instrumentId" class="col-sm-4 control-label">合约</label>
-        <div class="col-sm-6">
-            <input type="text" class="form-control" id="instrumentId" v-model="item.instrumentId" />
+    </div>
+
+    <div class="modal fade" id="updateModal" tabindex="-1" role="dialog"
+        aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content" id="updateForm">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"
+                        aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel">修改用户合约</h4>
+                </div>
+                <div class="modal-body"  id="updateForm">
+                    <form class="form-horizontal">
+			            <div class="form-group">
+			                <label class="col-sm-4 control-label">投资者</label>
+			                <div class="col-sm-6">
+			                    <input type="text" class="form-control" v-model="item.investorNo"
+			                        readonly="readonly" />
+			                </div>
+			            </div>
+			            <div class="form-group">
+			                <label class="col-sm-4 control-label">合约</label>
+			                <div class="col-sm-6">
+			                    <input type="text" class="form-control" v-model="item.instrumentId"
+			                        readonly="readonly" />
+			                </div>
+			            </div>
+			            <div class="form-group">
+			                <label class="col-sm-4 control-label">运行状态</label>
+			                <div class="col-sm-6">
+			                    <select class="form-control" v-model="item.status">
+			                        <option value="0">运行中</option>
+			                        <option value="1">暂停</option>
+			                    </select>
+			                </div>
+			            </div>
+			            <div class="form-group">
+			                <label class="col-sm-4 control-label">开仓手数</label>
+			                <div class="col-sm-6">
+			                    <input type="text" class="form-control" v-model="item.volume" />
+			                </div>
+			            </div>
+			            <div class="form-group">
+			                <label class="col-sm-4 control-label">止盈跳数</label>
+			                <div class="col-sm-6">
+			                    <input type="text" class="form-control" v-model="item.stopWin" />
+			                </div>
+			            </div>
+			            <div class="form-group">
+			                <label class="col-sm-4 control-label">止损跳数</label>
+			                <div class="col-sm-6">
+			                    <input type="text" class="form-control" v-model="item.stopLoss" />
+			                </div>
+			            </div>
+			            <div class="form-group">
+			                <label class="col-sm-4 control-label">止盈幅度</label>
+			                <div class="col-sm-6">
+			                    <input type="text" class="form-control" v-model="item.target" />
+			                </div>
+			            </div>
+			            <div class="form-group">
+			                <label class="col-sm-4 control-label">回撤止盈幅度</label>
+			                <div class="col-sm-6">
+			                    <input type="text" class="form-control" v-model="item.retracement" />
+			                </div>
+			            </div>
+			            <div class="form-group">
+			                <label class="col-sm-4 control-label">对冲触发类型</label>
+			                <div class="col-sm-6">
+			                    <select class="form-control" v-model="item.hedgingType">
+			                        <option value="0">按比例触发</option>
+			                        <option value="1">立即触发</option>
+			                        <option value="2">不触发</option>
+			                        <option value="3">阶梯触发</option>
+			                    </select>
+			                </div>
+			            </div>
+			            <div class="form-group">
+			                <label class="col-sm-4 control-label">触发对冲比例 </label>
+			                <div class="col-sm-6">
+			                    <input type="text" class="form-control"
+			                        v-model="item.hedgingTigger" />
+			                </div>
+			            </div>
+			            <div class="form-group">
+			                <label class="col-sm-4 control-label">阶梯对冲区间
+			                </label>
+			                <div class="col-sm-6">
+			                    <textarea class="form-control" rows="5" v-model="item.hedgingVOs"></textarea>
+			                </div>
+			            </div>
+			            <div class="form-group">
+			                <label class="col-sm-4 control-label">对冲手数 </label>
+			                <div class="col-sm-6">
+			                    <input type="text" class="form-control"
+			                        v-model="item.hedgingVolume" />
+			                </div>
+			            </div>
+			            <div class="form-group">
+			                <label class="col-sm-4 control-label">对冲止盈跳数 </label>
+			                <div class="col-sm-6">
+			                    <input type="text" class="form-control"
+			                        v-model="item.hedgingStopWin" />
+			                </div>
+			            </div>
+			            <div class="form-group">
+			                <label class="col-sm-4 control-label">对冲止损跳数 </label>
+			                <div class="col-sm-6">
+			                    <input type="text" class="form-control"
+			                        v-model="item.hedgingStopLoss" />
+			                </div>
+			            </div>
+			        </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" v-on:click="update()">Save</button>
+                </div>
+            </div>
         </div>
-      </div>
-      <div class="form-group">
-        <label for="status" class="col-sm-4 control-label">运行状态</label>
-        <div class="col-sm-6">
-            <select class="form-control" v-model="item.status">
-              <option value="0">运行中</option>
-              <option value="1">暂停</option>
-            </select>
-        </div>
-      </div>
-      <div class="form-group">
-        <label for="volume" class="col-sm-4 control-label">开仓手数</label>
-        <div class="col-sm-6">
-            <input type="text" class="form-control" id="volume" v-model="item.volume" />
-        </div>
-      </div>
-      <div class="form-group">
-        <label for="stopWin" class="col-sm-4 control-label">止盈跳数</label>
-        <div class="col-sm-6">
-           <input type="text" class="form-control" id="stopWin" v-model="item.stopWin" />
-        </div>
-      </div>
-      <div class="form-group">
-        <label for="stopLoss" class="col-sm-4 control-label">止损跳数</label>
-        <div class="col-sm-6">
-            <input type="text" class="form-control" id="stopLoss" v-model="item.stopLoss" />
-        </div>
-      </div>
-      <div class="form-group">
-        <label for="target" class="col-sm-4 control-label">止盈幅度</label>
-        <div class="col-sm-6">
-            <input type="text" class="form-control" id="target" v-model="item.target" />
-        </div>
-      </div>
-      <div class="form-group">
-        <label for="retracement" class="col-sm-4 control-label">回撤止盈幅度</label>
-        <div class="col-sm-6">
-            <input type="text" class="form-control" id="retracement" v-model="item.retracement" />
-        </div>
-      </div>
-      <div class="form-group">
-        <label for="hedgingType" class="col-sm-4 control-label">对冲触发类型</label>
-        <div class="col-sm-6">
-            <select class="form-control" id="hedgingType" v-model="item.hedgingType">
-              <option value="0">按比例触发</option>
-              <option value="1">立即触发</option>
-              <option value="2">不触发</option>
-              <option value="3">阶梯触发</option>
-            </select>
-        </div>
-      </div>
-      <div class="form-group">
-        <label for="hedgingTigger" class="col-sm-4 control-label">触发对冲比例 </label>
-        <div class="col-sm-6">
-            <input type="text" class="form-control" id="hedgingTigger" v-model="item.hedgingTigger" />
-        </div>
-      </div>
-      <div class="form-group">
-        <label for="hedgingVolume" class="col-sm-4 control-label">对冲手数 </label>
-        <div class="col-sm-6">
-            <input type="text" class="form-control" id="hedgingVolume" v-model="item.hedgingVolume" />
-        </div>
-      </div>
-      <div class="form-group">
-        <label for="hedgingStopWin" class="col-sm-4 control-label">对冲止盈跳数 </label>
-        <div class="col-sm-6">
-            <input type="text" class="form-control" id="hedgingStopWin" v-model="item.hedgingStopWin" />
-        </div>
-      </div>
-      <div class="form-group">
-        <label for="hedgingStopLoss" class="col-sm-4 control-label">对冲止损跳数 </label>
-        <div class="col-sm-6">
-            <input type="text" class="form-control" id="hedgingStopLoss" v-model="item.hedgingStopLoss" />
-        </div>
-      </div>
-      <div class="form-group">
-        <div class="col-sm-1 col-sm-offset-3">
-            <button type="button" class="btn btn-success" v-on:click="save()">保存</button>
-        </div>
-        <div class="col-sm-1 col-sm-offset-2">
-            <button type="button" class="btn btn-danger" v-on:click="closeDialog()">取消</button>
-        </div>
-      </div>
-    </form>
-</div>
-<div id="updateDialog" title="修改合约">
-    <form class="form-horizontal" id="updateForm">
-      <div class="form-group">
-        <label class="col-sm-4 control-label">投资者</label>
-        <div class="col-sm-6">
-            <input type="text" class="form-control" v-model="item.investorNo" readonly="readonly" />
-        </div>
-      </div>
-      <div class="form-group">
-        <label class="col-sm-4 control-label">合约</label>
-        <div class="col-sm-6">
-            <input type="text" class="form-control" v-model="item.instrumentId" readonly="readonly" />
-        </div>
-      </div>
-      <div class="form-group">
-        <label class="col-sm-4 control-label">运行状态</label>
-        <div class="col-sm-6">
-            <select class="form-control" v-model="item.status">
-              <option value="0">运行中</option>
-              <option value="1">暂停</option>
-            </select>
-        </div>
-      </div>
-      <div class="form-group">
-        <label class="col-sm-4 control-label">开仓手数</label>
-        <div class="col-sm-6">
-            <input type="text" class="form-control" v-model="item.volume" />
-        </div>
-      </div>
-      <div class="form-group">
-        <label class="col-sm-4 control-label">止盈跳数</label>
-        <div class="col-sm-6">
-           <input type="text" class="form-control" v-model="item.stopWin" />
-        </div>
-      </div>
-      <div class="form-group">
-        <label class="col-sm-4 control-label">止损跳数</label>
-        <div class="col-sm-6">
-            <input type="text" class="form-control" v-model="item.stopLoss" />
-        </div>
-      </div>
-      <div class="form-group">
-        <label class="col-sm-4 control-label">止盈幅度</label>
-        <div class="col-sm-6">
-            <input type="text" class="form-control" v-model="item.target" />
-        </div>
-      </div>
-      <div class="form-group">
-        <label class="col-sm-4 control-label">回撤止盈幅度</label>
-        <div class="col-sm-6">
-            <input type="text" class="form-control" v-model="item.retracement" />
-        </div>
-      </div>
-      <div class="form-group">
-        <label class="col-sm-4 control-label">对冲触发类型</label>
-        <div class="col-sm-6">
-            <select class="form-control" v-model="item.hedgingType">
-              <option value="0">按比例触发</option>
-              <option value="1">立即触发</option>
-              <option value="2">不触发</option>
-            </select>
-        </div>
-      </div>
-      <div class="form-group">
-        <label class="col-sm-4 control-label">触发对冲比例 </label>
-        <div class="col-sm-6">
-            <input type="text" class="form-control" v-model="item.hedgingTigger" />
-        </div>
-      </div>
-      <div class="form-group">
-        <label class="col-sm-4 control-label">对冲手数 </label>
-        <div class="col-sm-6">
-            <input type="text" class="form-control" v-model="item.hedgingVolume" />
-        </div>
-      </div>
-      <div class="form-group">
-        <label class="col-sm-4 control-label">对冲止盈跳数 </label>
-        <div class="col-sm-6">
-            <input type="text" class="form-control" v-model="item.hedgingStopWin" />
-        </div>
-      </div>
-      <div class="form-group">
-        <label class="col-sm-4 control-label">对冲止损跳数 </label>
-        <div class="col-sm-6">
-            <input type="text" class="form-control" v-model="item.hedgingStopLoss" />
-        </div>
-      </div>
-      <div class="form-group">
-        <div class="col-sm-1 col-sm-offset-3">
-            <button type="button" class="btn btn-success" v-on:click="update()">修改</button>
-        </div>
-        <div class="col-sm-1 col-sm-offset-2">
-            <button type="button" class="btn btn-danger" v-on:click="closeDialog()">取消</button>
-        </div>
-      </div>
-    </form>
-</div>
-<script>
-    $( "#saveDialog" ).dialog({ autoOpen: false });
-    $( "#updateDialog" ).dialog({ autoOpen: false });
-</script>
+    </div>
+
 </body>
 </html>
