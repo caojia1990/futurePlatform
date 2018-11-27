@@ -63,7 +63,9 @@ public class TradeDao {
     public int sumByCondition(String investorId, String accountNo, String instrumentId, String direction) {
         
         String sql = "select sum(VOLUME) from FUTURE_TRADE where INVESTOR_ID = ? and ACCOUNT_NO = ? and INSTRUMENT_ID = ? and DIRECTION = ?";
-        return this.jdbcTemplate.queryForObject(sql,Integer.class,investorId,accountNo,instrumentId,direction);
+        Integer sum = this.jdbcTemplate.queryForObject(sql,Integer.class,investorId,accountNo,instrumentId,direction);
+        sum = sum == null ? 0 : sum;
+        return sum;
         
     }
     
