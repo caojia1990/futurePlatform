@@ -155,7 +155,7 @@ public class OneMinutesMA implements Runnable {
                                 if(tick >= staircaseHedgingVO.getHedgingBeginTick() && tick< staircaseHedgingVO.getHedgingEndTick()){
                                     int volume = staircaseHedgingVO.getHedgingVolume();//可以对冲的笔数
                                     //查询已经对冲的笔数
-                                    int count = this.tradeDao.countByCondition(ClientStarter.INVESTOR_ID, ACCOUNT_NO, instrumentId,"1");
+                                    int count = this.tradeDao.sumByCondition(ClientStarter.INVESTOR_ID, ACCOUNT_NO, instrumentId,"1");
                                     if(volume > count){
                                         //如果对冲数量还不满，则继续对冲
                                         ReqOrderInsertVO reqOrderInsertVO = new ReqOrderInsertVO();
@@ -241,7 +241,7 @@ public class OneMinutesMA implements Runnable {
                                 if(tick >= staircaseHedgingVO.getHedgingBeginTick() && tick< staircaseHedgingVO.getHedgingEndTick()){
                                     int volume = staircaseHedgingVO.getHedgingVolume();//可以对冲的笔数
                                     //查询已经对冲的笔数
-                                    int count = this.tradeDao.countByCondition(ClientStarter.INVESTOR_ID, ACCOUNT_NO, instrumentId,"0");
+                                    int count = this.tradeDao.sumByCondition(ClientStarter.INVESTOR_ID, ACCOUNT_NO, instrumentId,"0");
                                     if(volume > count){
                                         //如果对冲数量还不满，则继续对冲
                                         ReqOrderInsertVO reqOrderInsertVO = new ReqOrderInsertVO();
