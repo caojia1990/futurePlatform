@@ -148,7 +148,7 @@ public class OneMinutesMA implements Runnable {
                                 break;
                             }
                             double tickPrice = this.cacheMap.getTickPrice(instrumentId);
-                            int tick = (int) ((ma.getLastPrice().doubleValue()-onRtnTradeVO.getPrice())/tickPrice);
+                            int tick = (int) ((ma.getBidPrice1().doubleValue()-onRtnTradeVO.getPrice())/tickPrice);
                             
                             for (StaircaseHedgingVO staircaseHedgingVO : hedgingVOs) {
                                 //寻找当前价格所在的对冲阶段
@@ -234,7 +234,7 @@ public class OneMinutesMA implements Runnable {
                                 break;
                             }
                             double tickPrice = this.cacheMap.getTickPrice(instrumentId);
-                            int tick = (int) ((onRtnTradeVO.getPrice()-ma.getLastPrice().doubleValue())/tickPrice);
+                            int tick = (int) ((onRtnTradeVO.getPrice()-ma.getAskPrice1().doubleValue())/tickPrice);
                             
                             for (StaircaseHedgingVO staircaseHedgingVO : hedgingVOs) {
                                 //寻找当前价格所在的对冲阶段
