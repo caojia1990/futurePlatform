@@ -109,7 +109,7 @@ public class FiveMinutesEMA implements Runnable {
                 {
                     double tickPrice = this.cacheMap.getTickPrice(instrumentId);
                     if(ema.getEma619().doubleValue()+tickPrice*15 <= ema.getClosePrice().doubleValue()){
-                        logger.info("急速金叉，不追高");
+                        logger.info(instrumentId+"急速金叉，不追高");
                     }else {
                         ReqOrderInsertVO reqOrderInsertVO = new ReqOrderInsertVO();
                         reqOrderInsertVO.setAccountNo(ACCOUNT_NO);
@@ -166,7 +166,7 @@ public class FiveMinutesEMA implements Runnable {
                 {
                     double tickPrice = this.cacheMap.getTickPrice(instrumentId);
                     if(ema.getEma619().doubleValue()-tickPrice*15 >= ema.getClosePrice().doubleValue()){
-                        logger.info("急速死叉，不杀跌");
+                        logger.info(instrumentId+"急速死叉，不杀跌");
                     }else {
                         ReqOrderInsertVO reqOrderInsertVO = new ReqOrderInsertVO();
                         reqOrderInsertVO.setAccountNo(ACCOUNT_NO);
