@@ -121,8 +121,10 @@ public class InvestorInstrumentServiceImpl implements InvestorInstrumentService 
             if(investorInstrumentVO.getHedgingVOs() != null){
                 List<StaircaseHedgingVO> list = JSON.parseArray(investorInstrumentVO.getHedgingVOs(), StaircaseHedgingVO.class);
                 investorInstrumentVO.setHedgingList(list);
-                for (StaircaseHedgingVO vo : list) {
-                    this.hedgingDao.insert(vo);
+                if(list != null && list.size() > 0){
+                    for (StaircaseHedgingVO vo : list) {
+                        this.hedgingDao.insert(vo);
+                    }
                 }
             }
         } catch (Exception e) {
