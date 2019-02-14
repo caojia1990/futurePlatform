@@ -80,6 +80,7 @@ public class OneMinutesMA implements Runnable {
                 //查询需要对冲账户的持仓信息
                 List<OnRtnTradeVO> list = this.tradeDao.selectByCondition(ClientStarter.INVESTOR_ID, ORIG_ACCOUNT_NO, instrumentId);
                 if(list == null||list.size() < 1){
+                    //如果没有持仓，平所有对冲的头寸 TODO
                     continue;
                 }
                 

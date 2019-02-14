@@ -328,7 +328,7 @@ public class FiveMinutesEMA implements Runnable {
                                     reqOrderInsertVO.setAccountNo(ACCOUNT_NO);
                                     reqOrderInsertVO.setInvestorId(ClientStarter.INVESTOR_ID);
                                     reqOrderInsertVO.setInstrumentId(instrumentId);
-                                    reqOrderInsertVO.setLimitPrice(marketData.getLowerLimitPrice().doubleValue());
+                                    reqOrderInsertVO.setLimitPrice(marketData.getBidPrice1().doubleValue());
                                     if(tradeVO.getTradingDay().equals(marketData.getTradingDate())) {
                                         reqOrderInsertVO.setCombOffsetFlag(CombOffsetFlag.CloseToday);
                                     }else {
@@ -407,7 +407,7 @@ public class FiveMinutesEMA implements Runnable {
                                     reqOrderInsertVO.setAccountNo(ACCOUNT_NO);
                                     reqOrderInsertVO.setInvestorId(ClientStarter.INVESTOR_ID);
                                     reqOrderInsertVO.setInstrumentId(instrumentId);
-                                    reqOrderInsertVO.setLimitPrice(marketData.getUpperLimitPrice().doubleValue());
+                                    reqOrderInsertVO.setLimitPrice(marketData.getAskPrice1().doubleValue());
                                     if(tradeVO.getTradingDay().equals(marketData.getTradingDate())) {
                                         reqOrderInsertVO.setCombOffsetFlag(CombOffsetFlag.CloseToday);
                                     }else {
