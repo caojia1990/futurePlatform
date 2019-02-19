@@ -310,7 +310,7 @@ public class FiveMinutesEMA implements Runnable {
                                 }else {
                                     reqOrderInsertVO.setCombOffsetFlag(CombOffsetFlag.CLOSE);
                                 }
-                                reqOrderInsertVO.setTimeCondition(TimeCondition.GFD);
+                                reqOrderInsertVO.setTimeCondition(TimeCondition.IOC);
                                 reqOrderInsertVO.setDirection(Direction.SELL);
                                 reqOrderInsertVO.setMinVolume(1);
                                 reqOrderInsertVO.setVolumeTotalOriginal(tradeVO.getVolume());
@@ -334,7 +334,7 @@ public class FiveMinutesEMA implements Runnable {
                                     }else {
                                         reqOrderInsertVO.setCombOffsetFlag(CombOffsetFlag.CLOSE);
                                     }
-                                    reqOrderInsertVO.setTimeCondition(TimeCondition.GFD);
+                                    reqOrderInsertVO.setTimeCondition(TimeCondition.IOC);
                                     reqOrderInsertVO.setDirection(Direction.SELL);
                                     reqOrderInsertVO.setMinVolume(1);
                                     reqOrderInsertVO.setVolumeTotalOriginal(tradeVO.getVolume());
@@ -364,7 +364,7 @@ public class FiveMinutesEMA implements Runnable {
                                         }else {
                                             reqOrderInsertVO.setCombOffsetFlag(CombOffsetFlag.CLOSE);
                                         }
-                                        reqOrderInsertVO.setTimeCondition(TimeCondition.GFD);
+                                        reqOrderInsertVO.setTimeCondition(TimeCondition.IOC);
                                         reqOrderInsertVO.setDirection(Direction.SELL);
                                         reqOrderInsertVO.setMinVolume(1);
                                         reqOrderInsertVO.setVolumeTotalOriginal(tradeVO.getVolume());
@@ -389,7 +389,7 @@ public class FiveMinutesEMA implements Runnable {
                                 }else {
                                     reqOrderInsertVO.setCombOffsetFlag(CombOffsetFlag.CLOSE);
                                 }
-                                reqOrderInsertVO.setTimeCondition(TimeCondition.GFD);
+                                reqOrderInsertVO.setTimeCondition(TimeCondition.IOC);
                                 reqOrderInsertVO.setDirection(Direction.BUY);
                                 reqOrderInsertVO.setMinVolume(1);
                                 reqOrderInsertVO.setVolumeTotalOriginal(tradeVO.getVolume());
@@ -413,7 +413,7 @@ public class FiveMinutesEMA implements Runnable {
                                     }else {
                                         reqOrderInsertVO.setCombOffsetFlag(CombOffsetFlag.CLOSE);
                                     }
-                                    reqOrderInsertVO.setTimeCondition(TimeCondition.GFD);
+                                    reqOrderInsertVO.setTimeCondition(TimeCondition.IOC);
                                     reqOrderInsertVO.setDirection(Direction.BUY);
                                     reqOrderInsertVO.setMinVolume(1);
                                     reqOrderInsertVO.setVolumeTotalOriginal(tradeVO.getVolume());
@@ -441,7 +441,7 @@ public class FiveMinutesEMA implements Runnable {
                                         }else {
                                             reqOrderInsertVO.setCombOffsetFlag(CombOffsetFlag.CLOSE);
                                         }
-                                        reqOrderInsertVO.setTimeCondition(TimeCondition.GFD);
+                                        reqOrderInsertVO.setTimeCondition(TimeCondition.IOC);
                                         reqOrderInsertVO.setDirection(Direction.BUY);
                                         reqOrderInsertVO.setMinVolume(1);
                                         reqOrderInsertVO.setVolumeTotalOriginal(tradeVO.getVolume());
