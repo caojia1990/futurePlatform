@@ -9,6 +9,7 @@ import org.springframework.amqp.rabbit.core.RabbitAdmin;
 import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import com.future.client.strategy.Manual;
 import com.future.client.strategy.OneMinutesMA;
 import com.future.client.utils.CacheMap;
 import com.future.instrument.api.exception.InstrumentException;
@@ -26,7 +27,7 @@ public class EMAStarter {
         
         context.start();
         RabbitAdmin admin = context.getBean(RabbitAdmin.class);
-        {
+        /*{
             //订阅EMA指标
             TopicExchange topicExchange = (TopicExchange) context.getBean("com.future.quota");
             Queue quotaQ = (Queue) context.getBean("quotaQ");
@@ -34,7 +35,7 @@ public class EMAStarter {
             //订阅MA指标
             Queue maQuotaQ = (Queue) context.getBean("maQuotaQ");
             admin.declareBinding(BindingBuilder.bind(maQuotaQ).to(topicExchange).with("quota.*.MA.1m"));
-        }
+        }*/
         
         {
             //订阅行情
@@ -97,7 +98,9 @@ public class EMAStarter {
             admin.declareBinding(BindingBuilder.bind(queue).to(exchange).with(INVESTOR_ID));
         }
         //启动对冲策略
-        OneMinutesMA.START(context);
+        //OneMinutesMA.START(context);
+        //启动一跳止赢线程
+        Manual.START(context);
         
     }
 

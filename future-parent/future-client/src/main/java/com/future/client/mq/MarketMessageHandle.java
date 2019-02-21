@@ -39,8 +39,9 @@ public class MarketMessageHandle implements MessageReceive{
     @Override
     public void handleMessage(DepthMarketData marketData) {
         
-        taskExecutor.execute(new StopProfit(orderService, cacheMap, tradeDao, marketData, redisTemplate));
-        //taskExecutor.execute(new Manual(marketData, cacheMap, orderService,tradeDao));
+        //taskExecutor.execute(new StopProfit(orderService, cacheMap, tradeDao, marketData, redisTemplate));
+        //手动下单  1跳止损
+        Manual.offerQuota(marketData);
         
         /*taskExecutor.execute(new FiveSecsFollow(marketData, orderService, redisTemplate, cacheMap,quotaDao));
         if(taskExecutor.getActiveCount() > 50) {
