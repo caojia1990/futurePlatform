@@ -94,7 +94,7 @@ public class Manual implements Runnable {
                                 reqOrderInsertVO.setAccountNo(ACCOUNT_NO);
                                 reqOrderInsertVO.setInvestorId(INVESTOR_ID);
                                 reqOrderInsertVO.setInstrumentId(instrumentId);
-                                reqOrderInsertVO.setLimitPrice(marketData.getBidPrice1().doubleValue());
+                                reqOrderInsertVO.setLimitPrice(marketData.getLowerLimitPrice().doubleValue());
                                 if(tradeVO.getTradingDay().equals(marketData.getTradingDate())) {
                                     reqOrderInsertVO.setCombOffsetFlag(CombOffsetFlag.CloseToday);
                                 }else {
@@ -135,7 +135,7 @@ public class Manual implements Runnable {
                                   reqOrderInsertVO.setAccountNo(ACCOUNT_NO);
                                   reqOrderInsertVO.setInvestorId(INVESTOR_ID);
                                   reqOrderInsertVO.setInstrumentId(instrumentId);
-                                  reqOrderInsertVO.setLimitPrice(marketData.getAskPrice1().doubleValue());
+                                  reqOrderInsertVO.setLimitPrice(marketData.getUpperLimitPrice().doubleValue());
                                   if(tradeVO.getTradingDay().equals(marketData.getTradingDate())) {
                                       reqOrderInsertVO.setCombOffsetFlag(CombOffsetFlag.CloseToday);
                                   }else {
