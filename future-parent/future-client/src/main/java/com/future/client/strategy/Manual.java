@@ -3,9 +3,9 @@ package com.future.client.strategy;
 import java.util.List;
 import java.util.concurrent.LinkedBlockingQueue;
 
+import org.apache.log4j.Logger;
 import org.springframework.context.support.AbstractApplicationContext;
 
-import com.future.client.ClientStarter;
 import com.future.client.dao.TradeDao;
 import com.future.client.utils.CacheMap;
 import com.future.market.api.vo.DepthMarketData;
@@ -16,7 +16,6 @@ import com.future.order.api.vo.OnRtnTradeVO;
 import com.future.order.api.vo.OrderPriceType;
 import com.future.order.api.vo.ReqOrderInsertVO;
 import com.future.order.api.vo.TimeCondition;
-import com.future.quota.api.vo.MA;
 
 /**
  * 手动抄单，1跳止盈
@@ -24,6 +23,8 @@ import com.future.quota.api.vo.MA;
  *
  */
 public class Manual implements Runnable {
+    
+    public static Logger logger = Logger.getLogger(Manual.class);
     
     static String INVESTOR_ID = "001";
     
@@ -154,8 +155,7 @@ public class Manual implements Runnable {
                 }
             }
         } catch (Exception e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            logger.error("手动炒单止赢异常",e);
         }
     
 
@@ -172,5 +172,5 @@ public class Manual implements Runnable {
     public static void offerQuota(DepthMarketData marketData){
         marketDataQueue.offer(marketData);
     }
-
+    
 }
