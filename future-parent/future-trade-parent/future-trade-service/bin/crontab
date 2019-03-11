@@ -1,0 +1,6 @@
+30 15 * * MON-FRI /home/tomcat/future/future-market-service-0.0.1-SNAPSHOT/bin/server.sh stop
+40 20 * * * /home/tomcat/future/future-trade-service-0.0.1-SNAPSHOT/bin/server.sh restart
+45 20 * * MON-FRI /home/tomcat/future/future-market-service-0.0.1-SNAPSHOT/bin/server.sh start
+30 03 * * * /home/tomcat/future/future-market-service-0.0.1-SNAPSHOT/bin/server.sh stop
+35 08 * * * /home/tomcat/future/future-trade-service-0.0.1-SNAPSHOT/bin/server.sh restart
+40 08 * * MON-FRI /home/tomcat/future/future-market-service-0.0.1-SNAPSHOT/bin/server.sh start
