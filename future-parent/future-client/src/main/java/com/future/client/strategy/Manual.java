@@ -8,6 +8,7 @@ import org.springframework.context.support.AbstractApplicationContext;
 
 import com.future.client.dao.TradeDao;
 import com.future.client.utils.CacheMap;
+import com.future.instrument.api.vo.InvestorInstrumentVO;
 import com.future.market.api.vo.DepthMarketData;
 import com.future.order.api.service.OrderService;
 import com.future.order.api.vo.CombOffsetFlag;
@@ -61,6 +62,10 @@ public class Manual implements Runnable {
             
                 String instrumentId = marketData.getInstrumentID();
                 double tickPrice = this.cacheMap.getTickPrice(instrumentId);
+                //获取合约运行参数
+                InvestorInstrumentVO vo = CacheMap.INVESTOR_INSTRUMENT.get(instrumentId);
+                //止赢跳数
+                int stopTick = vo.getStopWin() == null ? STOP_WIN : vo.getStopWin();
                 
                 List<OnRtnTradeVO> list = this.tradeDao.selectByCondition(INVESTOR_ID, ACCOUNT_NO, instrumentId);
                 
@@ -69,7 +74,7 @@ public class Manual implements Runnable {
                         
                         if(tradeVO.getDirection() == Direction.BUY) {
                             //买开
-                            if(tradeVO.getPrice() + tickPrice*STOP_WIN <= marketData.getBidPrice1().doubleValue()) {
+                            if(tradeVO.getPrice() + tickPrice*stopTick <= marketData.getBidPrice1().doubleValue()) {
                                 
                                 //止赢
                                 ReqOrderInsertVO reqOrderInsertVO = new ReqOrderInsertVO();
@@ -110,7 +115,7 @@ public class Manual implements Runnable {
                             }
                         }else {
                             //卖开
-                            if(tradeVO.getPrice() - tickPrice*STOP_WIN >= marketData.getAskPrice1().doubleValue()) {
+                            if(tradeVO.getPrice() - tickPrice*stopTick >= marketData.getAskPrice1().doubleValue()) {
                                 
                                 //止赢
                                   ReqOrderInsertVO reqOrderInsertVO = new ReqOrderInsertVO();
