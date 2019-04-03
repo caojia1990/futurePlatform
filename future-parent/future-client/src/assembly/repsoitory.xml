@@ -23,8 +23,12 @@
       <outputDirectory>./jre32</outputDirectory>
     </fileSet>
     <fileSet>
-      <directory>${project.basedir}/conf</directory>
+      <directory>${project.basedir}/target/classes</directory>
       <outputDirectory>./conf</outputDirectory>
+      <includes>
+            <include>*.properties</include>
+      </includes>
+      <fileMode>0640</fileMode>
     </fileSet>
     <fileSet>
       <directory>${project.basedir}/data</directory>
