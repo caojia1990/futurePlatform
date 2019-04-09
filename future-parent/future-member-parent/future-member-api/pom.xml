@@ -7,4 +7,30 @@
   </parent>
   <artifactId>future-member-api</artifactId>
   <description>会员中心api</description>
+  
+  <build>
+    <plugins>
+        <!--配置生成Javadoc包-->
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-javadoc-plugin</artifactId>
+            <version>2.9.1</version>
+            <configuration>
+                <encoding>UTF-8</encoding>
+                <aggregate>true</aggregate>
+                <charset>UTF-8</charset>
+                <docencoding>UTF-8</docencoding>
+            </configuration>
+            <executions>
+                <execution>
+                    <id>attach-javadocs</id>
+                    <goals>
+                        <goal>jar</goal>
+                    </goals>
+                </execution>
+            </executions>
+        </plugin>
+        <!--配置生成源码包-->
+    </plugins>
+  </build>
 </project>

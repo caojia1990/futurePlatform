@@ -2,6 +2,11 @@ package com.future.member.api.vo;
 
 import java.util.Date;
 
+/**
+ * 投资者实体类
+ * @author caojia
+ *
+ */
 public class MemberVO {
 
     /**
@@ -39,6 +44,9 @@ public class MemberVO {
      */
     private String idCard;
 
+    /**
+     * @return 客户编号
+     */
     public String getInvestorNo() {
         return investorNo;
     }

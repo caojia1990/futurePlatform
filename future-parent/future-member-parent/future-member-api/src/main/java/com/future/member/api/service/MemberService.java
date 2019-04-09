@@ -12,23 +12,23 @@ public interface MemberService {
 
     /**
      * 验证用户身份
-     * @param userName
-     * @param passwd
-     * @return
+     * @param userName 用户名
+     * @param passwd  密码
+     * @return 用户信息
      */
     public MemberVO checkUser(String userName, String passwd);
     
     /**
      * 注册用户
-     * @param userName
-     * @param passwd
+     * @param userName 用户名
+     * @param passwd 密码
      */
     public void signUp(String userName, String passwd);
     
 
     /**
      * 查询所有投资者信息
-     * @return
+     * @return 投资者列表
      */
     public List<MemberVO> queryMembers();
     
