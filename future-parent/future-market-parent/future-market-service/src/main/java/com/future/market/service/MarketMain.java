@@ -19,7 +19,7 @@ public class MarketMain {
     public static String PASSWORD = System.getProperty("password","caojiactp1");
     
   //行情地址
-    public static String marketFront = System.getProperty("address","tcp://180.168.146.187:10010");
+    public static String marketFront = System.getProperty("address","tcp://180.168.146.187:10110");
     /** 行情API **/
     public static CThostFtdcMdApi mdApi;
     static CThostFtdcMdSpi mdSpi;
@@ -27,9 +27,10 @@ public class MarketMain {
     static{
         
         try {
-            LibLoader.loadLib("thostmduserapi");
-            LibLoader.loadLib("thosttraderapi");
-            LibLoader.loadLib("thosttraderapi_wrap");
+            LibLoader.loadLib("thostmduserapi_se");
+            LibLoader.loadLib("thosttraderapi_se");
+            LibLoader.loadLib("libiconv");
+            LibLoader.loadLib("thosttraderapi_se_wrap");
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

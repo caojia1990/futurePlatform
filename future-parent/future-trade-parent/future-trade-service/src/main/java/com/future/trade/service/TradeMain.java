@@ -19,16 +19,17 @@ public class TradeMain {
     public static String USER_ID = System.getProperty("userId","105839");
     public static String PASSWORD = System.getProperty("password","caojiactp1");
     
-    public static String tradeFront = System.getProperty("address","tcp://180.168.146.187:10001");
+    public static String tradeFront = System.getProperty("address","tcp://180.168.146.187:10100");
     public static CThostFtdcTraderApi traderApi;
     static CThostFtdcTraderSpi traderSpi;
     
     static{
         
         try {
-            LibLoader.loadLib("thostmduserapi");
-            LibLoader.loadLib("thosttraderapi");
-            LibLoader.loadLib("thosttraderapi_wrap");
+            LibLoader.loadLib("thostmduserapi_se");
+            LibLoader.loadLib("thosttraderapi_se");
+            LibLoader.loadLib("libiconv");
+            LibLoader.loadLib("thosttraderapi_se_wrap");
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
