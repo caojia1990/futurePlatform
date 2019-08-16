@@ -27,9 +27,15 @@ public class MarketMain {
     static{
         
         try {
+            System.out.println("java.library.path:"+System.getProperty("java.library.path"));
+            String os = System.getProperty("os.name");
+            
+            if(os.toLowerCase().indexOf("win")>=0){
+                LibLoader.loadLib("libiconv");
+            }
+            
             LibLoader.loadLib("thostmduserapi_se");
             LibLoader.loadLib("thosttraderapi_se");
-            LibLoader.loadLib("libiconv");
             LibLoader.loadLib("thosttraderapi_se_wrap");
         } catch (IOException e) {
             // TODO Auto-generated catch block
