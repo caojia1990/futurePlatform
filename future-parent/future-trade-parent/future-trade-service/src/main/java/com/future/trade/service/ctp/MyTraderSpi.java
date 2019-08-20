@@ -22,10 +22,14 @@ import com.future.thost.api.CThostFtdcQryInstrumentField;
 import com.future.thost.api.CThostFtdcQryInstrumentMarginRateField;
 import com.future.thost.api.CThostFtdcQryInvestorPositionDetailField;
 import com.future.thost.api.CThostFtdcQryOrderField;
+import com.future.thost.api.CThostFtdcQrySettlementInfoField;
+import com.future.thost.api.CThostFtdcReqAuthenticateField;
 import com.future.thost.api.CThostFtdcReqUserLoginField;
+import com.future.thost.api.CThostFtdcRspAuthenticateField;
 import com.future.thost.api.CThostFtdcRspInfoField;
 import com.future.thost.api.CThostFtdcRspUserLoginField;
 import com.future.thost.api.CThostFtdcSettlementInfoConfirmField;
+import com.future.thost.api.CThostFtdcSettlementInfoField;
 import com.future.thost.api.CThostFtdcTradeField;
 import com.future.thost.api.CThostFtdcTraderApi;
 import com.future.thost.api.CThostFtdcTraderSpi;
@@ -80,21 +84,24 @@ public class MyTraderSpi extends CThostFtdcTraderSpi {
     public MyTraderSpi(CThostFtdcTraderApi traderApi, TradeMain main) {
         this.traderApi = traderApi;
     }
-    /*public void onFrontConnected() {
-        System.out.println("前置机连接");
-        CThostFtdcReqUserLoginField userLoginField = new CThostFtdcReqUserLoginField();
-        
-        userLoginField.setBrokerID(TradeMain.BROKER_ID);
-        userLoginField.setUserID(TradeMain.USER_ID);
-        userLoginField.setPassword(TradeMain.PASSWORD);
-        
-        traderApi.ReqUserLogin(userLoginField, 112);
-        
-    }*/
     
     @Override
     public void OnFrontConnected(){
         System.out.println("On Front Connected");
+        CThostFtdcReqAuthenticateField pReqAuthenticateField = new CThostFtdcReqAuthenticateField();
+        pReqAuthenticateField.setAppID(TradeMain.APP_ID);
+        pReqAuthenticateField.setAuthCode(TradeMain.AUTH_CODE);
+        pReqAuthenticateField.setBrokerID(TradeMain.BROKER_ID);
+        //认证
+        traderApi.ReqAuthenticate(pReqAuthenticateField, 0);
+        System.out.println("Send Authenticate ok");
+    }
+    
+    @Override
+    public void OnRspAuthenticate(CThostFtdcRspAuthenticateField pRspAuthenticateField, CThostFtdcRspInfoField pRspInfo,
+            int nRequestID, boolean bIsLast) {
+        
+        System.out.println("OnRspAuthenticate");
         CThostFtdcReqUserLoginField field = new CThostFtdcReqUserLoginField();
         field.setBrokerID(TradeMain.BROKER_ID);
         field.setUserID(TradeMain.USER_ID);
@@ -123,13 +130,32 @@ public class MyTraderSpi extends CThostFtdcTraderSpi {
         positionField.setInvestorID(TradeMain.USER_ID);
         //traderApi.reqQryInvestorPositionDetail(positionField, ++nRequestID);
         
+        {
+            //查询结算单
+            CThostFtdcQrySettlementInfoField field = new CThostFtdcQrySettlementInfoField();
+            field.setBrokerID(TradeMain.BROKER_ID);
+            field.setInvestorID(TradeMain.USER_ID);
+            int r = traderApi.ReqQrySettlementInfo(field, 3);
+            logger.debug("开始查询结算单:"+r);
+        }
         
-        //确认结算单
-        CThostFtdcSettlementInfoConfirmField confirmField = new CThostFtdcSettlementInfoConfirmField();
-        confirmField.setBrokerID(TradeMain.BROKER_ID);
-        confirmField.setInvestorID(TradeMain.USER_ID);
-        traderApi.ReqSettlementInfoConfirm(confirmField, ++nRequestID);
-        
+    }
+    
+    @Override
+    public void OnRspQrySettlementInfo(CThostFtdcSettlementInfoField pSettlementInfo, CThostFtdcRspInfoField pRspInfo,
+            int nRequestID, boolean bIsLast) {
+        if(pSettlementInfo != null){
+            logger.debug(pSettlementInfo.getContent());
+        }
+        if(bIsLast){
+            
+            //确认结算单
+            CThostFtdcSettlementInfoConfirmField confirmField = new CThostFtdcSettlementInfoConfirmField();
+            confirmField.setBrokerID(TradeMain.BROKER_ID);
+            confirmField.setInvestorID(TradeMain.USER_ID);
+            int r = traderApi.ReqSettlementInfoConfirm(confirmField, ++nRequestID);
+            logger.debug("开始确认结算单:"+r);
+        }
     }
     
     //报单回报
@@ -296,6 +322,7 @@ public class MyTraderSpi extends CThostFtdcTraderSpi {
             CThostFtdcRspInfoField pRspInfo, int nRequestID, boolean bIsLast) {
         logger.info("确认结算单："+JSON.toJSONString(pSettlementInfoConfirm));
         if(bIsLast){
+            logger.debug("开始查询合约信息");
             this.instrumentService.removeInstrument();
             //查询合约信息
             CThostFtdcQryInstrumentField pQryInstrument = new CThostFtdcQryInstrumentField();

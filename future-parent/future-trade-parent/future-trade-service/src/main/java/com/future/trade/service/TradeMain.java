@@ -18,6 +18,8 @@ public class TradeMain {
     public static String BROKER_ID = System.getProperty("brokerId","9999");
     public static String USER_ID = System.getProperty("userId","105839");
     public static String PASSWORD = System.getProperty("password","caojiactp1");
+    public static String APP_ID = System.getProperty("appId","simnow_client_test");
+    public static String AUTH_CODE = System.getProperty("authCode","0000000000000000");
     
     public static String tradeFront = System.getProperty("address","tcp://180.168.146.187:10100");
     public static CThostFtdcTraderApi traderApi;
