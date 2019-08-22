@@ -4,10 +4,6 @@ package com.future.market.api.vo;
  * 深度行情实体类
  * @author caojia
  */
-/**
- * @author BHQH-CXYWB
- *
- */
 public class DepthMarketData {
     
     /**
